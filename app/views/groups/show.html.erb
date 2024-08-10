@@ -1,2 +1,22 @@
-<h1>Groups#show</h1>
-<p>Find me in app/views/groups/show.html.erb</p>
+<!-- app/views/groups/show.html.erb -->
+<h1><%= @group.name %></h1>
+<p><%= @group.description %></p>
+
+<h2>Members</h2>
+<ul>
+  <% @group.users.each do |user| %>
+    <li><%= user.full_name %></li>
+  <% end %>
+</ul>
+
+<h2>Expenses</h2>
+<%= link_to 'Add New Expense', new_group_expense_path(@group) %>
+<% @group.expenses.each do |expense| %>
+  <div>
+    <p><%= expense.description %> - <%= number_to_currency(expense.amount) %></p>
+    <p>Paid by: <%= expense.user.full_name %> on <%= expense.date %></p>
+  </div>
+<% end %>
+
+<%= link_to 'Edit Group', edit_group_path(@group) %>
+<%= link_to 'Back to Groups', groups_path %>
