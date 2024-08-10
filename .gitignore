@@ -37,3 +37,45 @@
 /vendor/bundle
 /.idea/
 
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
+
+# Ignore Yarn and Node modules
+node_modules/
+yarn-error.log
+.yarn-integrity
+
+# Ignore Webpacker files
+public/packs
+public/packs-test
+public/assets
+app/assets/builds
+
+# Ignore Tailwind CSS cache and generated files
+app/assets/stylesheets/tailwind.css
+app/assets/builds/tailwind.css
+.tailwind-cache/
+
+# Ignore PostCSS cache
+.postcss-cache/
+
+# Ignore temporary files
+/tmp
+/.svelte-kit
+
+# Ignore log files and temp files
+/log/*
+!/log/.keep
+/tmp
+!/tmp/.keep
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Ignore compiled and bundled f

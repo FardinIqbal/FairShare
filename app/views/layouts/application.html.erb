@@ -1,35 +1,44 @@
-<!-- app/views/layouts/application.html.erb -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <title>FinShare</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
+  <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body>
-<nav>
-  <%= link_to "Home", root_path %>
-  <% if user_signed_in? %>
-    <%= link_to "Dashboard", dashboard_path %>
-    <%= link_to "Groups", groups_path %>
-    <%= link_to "Log Out", destroy_user_session_path, method: :delete, data: { turbo_method: :delete } %>
-  <% else %>
-    <%= link_to "Sign Up", new_user_registration_path %>
-    <%= link_to "Log In", new_user_session_path %>
-  <% end %>
+<body class="bg-gray-100">
+<nav class="bg-blue-600 text-white mb-8">
+  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <%= link_to "FinShare", root_path, class: "text-2xl font-bold" %>
+    <div class="space-x-4">
+      <% if user_signed_in? %>
+        <%= link_to "Dashboard", dashboard_path, class: "hover:text-blue-200" %>
+        <%= link_to "Groups", groups_path, class: "hover:text-blue-200" %>
+        <%= link_to "Log Out", destroy_user_session_path, data: { turbo_method: :delete }, class: "hover:text-blue-200" %>
+      <% else %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "hover:text-blue-200" %>
+        <%= link_to "Log In", new_user_session_path, class: "hover:text-blue-200" %>
+      <% end %>
+    </div>
+  </div>
 </nav>
 
-<% flash.each do |type, message| %>
-  <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %>">
-    <%= message %>
-  </div>
-<% end %>
+<div class="container mx-auto px-4">
+  <% flash.each do |type, message| %>
+    <div class="mb-4 p-4 rounded <%= type == 'notice' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %>">
+      <%= message %>
+    </div>
+  <% end %>
 
-<%= yield %>
+  <%= yield %>
+</div>
 </body>
 </html>
