@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
-  # This line automatically creates the RESTful routes for GroupsController:
-  resources :groups
+  # Nested resources: This creates routes for expenses within the context of a group
+  resources :groups do
+    resources :expenses
+  end
 
   # Devise routes for user authentication
   devise_for :users
