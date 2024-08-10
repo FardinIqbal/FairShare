@@ -1,2 +1,8 @@
-<h1>Expenses#show</h1>
-<p>Find me in app/views/expenses/show.html.erb</p>
+<!-- app/views/expenses/show.html.erb -->
+<h1><%= @expense.description %></h1>
+<p>Amount: <%= number_to_currency(@expense.amount) %></p>
+<p>Paid by: <%= @expense.user.full_name %></p>
+<p>Date: <%= @expense.date %></p>
+
+<%= link_to 'Edit Expense', edit_group_expense_path(@group, @expense) %>
+<%= link_to 'Back to Expenses', group_expenses_path(@group) %>
