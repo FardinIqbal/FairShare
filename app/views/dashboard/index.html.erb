@@ -19,3 +19,26 @@
 
 <h2>Financial Summary</h2>
 <p>Total Owed: <%= number_to_currency(@total_owed) %></p>
+
+<h2>Expenses by Month (Last 6 Months)</h2>
+<ul>
+  <% @expenses_by_month.each do |month, amount| %>
+    <li><%= month.strftime("%B %Y") %>: <%= number_to_currency(amount) %></li>
+  <% end %>
+</ul>
+
+<h2>Top Expense Categories</h2>
+<ul>
+  <% @top_expense_categories.each do |category, amount| %>
+    <li><%= category %>: <%= number_to_currency(amount) %></li>
+  <% end %>
+</ul>
+
+<h2>Upcoming Expenses</h2>
+<% @upcoming_expenses.each do |expense| %>
+  <div>
+    <p><%= expense.description %> - <%= number_to_currency(expense.amount) %></p>
+    <p>Due: <%= expense.date %></p>
+    <p>Group: <%= expense.group.name %></p>
+  </div>
+<% end %>

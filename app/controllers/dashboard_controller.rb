@@ -1,4 +1,3 @@
-# app/controllers/dashboard_controller.rb
 class DashboardController < ApplicationController
   before_action :authenticate_user!
 
@@ -6,6 +5,9 @@ class DashboardController < ApplicationController
     @groups = current_user.groups
     @recent_expenses = Expense.where(group: @groups).order(date: :desc).limit(5)
     @total_owed = calculate_total_owed
+    @expenses_by_month = expenses_by_month
+    @top_expense_categories = top_expense_categories
+    @upcoming_expenses = upcoming_expenses
   end
 
   private
@@ -18,5 +20,27 @@ class DashboardController < ApplicationController
       total += user_split[:net] if user_split
     end
     total
+  end
+
+  def expenses_by_month
+    Expense.where(group: @groups)
+           .where('date >= ?', 6.months.ago.beginning_of_month)
+           .group("DATE_TRUNC('month', date)")
+           .sum(:amount)
+  end
+
+  def top_expense_categories
+    Expense.where(group: @groups)
+           .group(:category)
+           .order('sum_amount DESC')
+           .limit(5)
+           .sum(:amount)
+  end
+
+  def upcoming_expenses
+    Expense.where(group: @groups)
+           .where('date > ?', Date.today)
+           .order(:date)
+           .limit(5)
   end
 end

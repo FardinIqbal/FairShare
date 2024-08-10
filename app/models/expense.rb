@@ -6,4 +6,8 @@ class Expense < ApplicationRecord
   validates :date, presence: true
   validates :user, presence: true
   validates :group, presence: true
+  validates :category, presence: true
+
+  CATEGORIES = %w[Food Transportation Housing Entertainment Utilities Other]
+  validates :category, inclusion: { in: CATEGORIES }
 end

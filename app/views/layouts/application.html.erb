@@ -1,6 +1,6 @@
 <!-- app/views/layouts/application.html.erb -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <title>FinShare</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -12,6 +12,18 @@
 </head>
 
 <body>
+<nav>
+  <%= link_to "Home", root_path %>
+  <% if user_signed_in? %>
+    <%= link_to "Dashboard", dashboard_path %>
+    <%= link_to "Groups", groups_path %>
+    <%= link_to "Log Out", destroy_user_session_path, method: :delete %>
+  <% else %>
+    <%= link_to "Sign Up", new_user_registration_path %>
+    <%= link_to "Log In", new_user_session_path %>
+  <% end %>
+</nav>
+
 <% flash.each do |type, message| %>
   <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %>">
     <%= message %>
