@@ -7,6 +7,8 @@ class GroupsController < ApplicationController
   end
 
   def show
+    @expenses = @group.expenses.order(date: :desc)
+    @splits = @group.calculate_splits
   end
 
   def new

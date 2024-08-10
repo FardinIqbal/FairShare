@@ -11,12 +11,34 @@
 
 <h2>Expenses</h2>
 <%= link_to 'Add New Expense', new_group_expense_path(@group) %>
-<% @group.expenses.each do |expense| %>
+<% @expenses.each do |expense| %>
   <div>
     <p><%= expense.description %> - <%= number_to_currency(expense.amount) %></p>
     <p>Paid by: <%= expense.user.full_name %> on <%= expense.date %></p>
   </div>
 <% end %>
+
+<h2>Expense Splits</h2>
+<table>
+  <thead>
+  <tr>
+    <th>User</th>
+    <th>Paid</th>
+    <th>Owed</th>
+    <th>Net</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @splits.each do |split| %>
+    <tr>
+      <td><%= split[:user].full_name %></td>
+      <td><%= number_to_currency(split[:paid]) %></td>
+      <td><%= number_to_currency(split[:owed]) %></td>
+      <td><%= number_to_currency(split[:net]) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
 
 <%= link_to 'Edit Group', edit_group_path(@group) %>
 <%= link_to 'Back to Groups', groups_path %>
