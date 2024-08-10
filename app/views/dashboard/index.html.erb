@@ -1,0 +1,21 @@
+<!-- app/views/dashboard/index.html.erb -->
+<h1>Dashboard</h1>
+
+<h2>Your Groups</h2>
+<ul>
+  <% @groups.each do |group| %>
+    <li><%= link_to group.name, group_path(group) %></li>
+  <% end %>
+</ul>
+
+<h2>Recent Expenses</h2>
+<% @recent_expenses.each do |expense| %>
+  <div>
+    <p><%= expense.description %> - <%= number_to_currency(expense.amount) %></p>
+    <p>Group: <%= expense.group.name %></p>
+    <p>Paid by: <%= expense.user.full_name %> on <%= expense.date %></p>
+  </div>
+<% end %>
+
+<h2>Financial Summary</h2>
+<p>Total Owed: <%= number_to_currency(@total_owed) %></p>
