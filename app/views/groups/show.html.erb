@@ -1,44 +1,60 @@
 <!-- app/views/groups/show.html.erb -->
-<h1><%= @group.name %></h1>
-<p><%= @group.description %></p>
+<div class="max-w-4xl mx-auto mt-8">
+  <h1 class="text-3xl font-bold mb-2"><%= @group.name %></h1>
+  <p class="text-gray-600 mb-6"><%= @group.description %></p>
 
-<h2>Members</h2>
-<ul>
-  <% @group.users.each do |user| %>
-    <li><%= user.full_name %></li>
-  <% end %>
-</ul>
-
-<h2>Expenses</h2>
-<%= link_to 'Add New Expense', new_group_expense_path(@group) %>
-<% @expenses.each do |expense| %>
-  <div>
-    <p><%= expense.description %> - <%= number_to_currency(expense.amount) %></p>
-    <p>Paid by: <%= expense.user.full_name %> on <%= expense.date %></p>
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Members</h2>
+    <ul class="bg-white shadow overflow-hidden sm:rounded-lg divide-y divide-gray-200">
+      <% @group.users.each do |user| %>
+        <li class="px-4 py-3"><%= user.full_name %></li>
+      <% end %>
+    </ul>
   </div>
-<% end %>
 
-<h2>Expense Splits</h2>
-<table>
-  <thead>
-  <tr>
-    <th>User</th>
-    <th>Paid</th>
-    <th>Owed</th>
-    <th>Net</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @splits.each do |split| %>
-    <tr>
-      <td><%= split[:user].full_name %></td>
-      <td><%= number_to_currency(split[:paid]) %></td>
-      <td><%= number_to_currency(split[:owed]) %></td>
-      <td><%= number_to_currency(split[:net]) %></td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+  <div class="mb-8">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-bold">Expenses</h2>
+      <%= link_to 'Add New Expense', new_group_expense_path(@group), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg divide-y divide-gray-200">
+      <% @expenses.each do |expense| %>
+        <div class="px-4 py-3">
+          <p class="font-semibold"><%= expense.description %> - <%= number_to_currency(expense.amount) %></p>
+          <p class="text-sm text-gray-500">Paid by: <%= expense.user.full_name %> on <%= expense.date %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
 
-<%= link_to 'Edit Group', edit_group_path(@group) %>
-<%= link_to 'Back to Groups', groups_path %>
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Expense Splits</h2>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paid</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owed</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+        <% @splits.each do |split| %>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap"><%= split[:user].full_name %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= number_to_currency(split[:paid]) %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= number_to_currency(split[:owed]) %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= number_to_currency(split[:net]) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-4 space-x-4">
+    <%= link_to 'Edit Group', edit_group_path(@group), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    <%= link_to 'Back to Groups', groups_path, class: "text-indigo-600 hover:text-indigo-900" %>
+  </div>
+</div>

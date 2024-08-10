@@ -1,29 +1,10 @@
 <!-- app/views/groups/new.html.erb -->
-<h1>Create New Group</h1>
+<div class="max-w-2xl mx-auto mt-8">
+  <h1 class="text-3xl font-bold mb-6">Create New Group</h1>
 
-<%= form_with(model: @group, local: true) do |form| %>
-  <% if @group.errors.any? %>
-    <div>
-      <h2><%= pluralize(@group.errors.count, "error") %> prohibited this group from being saved:</h2>
-      <ul>
-        <% @group.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render 'form', group: @group %>
 
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="mt-4">
+    <%= link_to 'Back to Groups', groups_path, class: "text-indigo-600 hover:text-indigo-900" %>
   </div>
-
-  <div>
-    <%= form.label :description %>
-    <%= form.text_area :description %>
-  </div>
-
-  <%= form.submit %>
-<% end %>
-
-<%= link_to 'Back to Groups', groups_path %>
+</div>

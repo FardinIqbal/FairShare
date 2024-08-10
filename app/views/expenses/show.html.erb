@@ -1,8 +1,32 @@
 <!-- app/views/expenses/show.html.erb -->
-<h1><%= @expense.description %></h1>
-<p>Amount: <%= number_to_currency(@expense.amount) %></p>
-<p>Paid by: <%= @expense.user.full_name %></p>
-<p>Date: <%= @expense.date %></p>
+<div class="max-w-2xl mx-auto mt-8">
+  <h1 class="text-3xl font-bold mb-6"><%= @expense.description %></h1>
 
-<%= link_to 'Edit Expense', edit_group_expense_path(@group, @expense) %>
-<%= link_to 'Back to Expenses', group_expenses_path(@group) %>
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Amount</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= number_to_currency(@expense.amount) %></dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Paid by</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @expense.user.full_name %></dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Date</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @expense.date %></dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Category</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @expense.category %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="mt-6 space-x-4">
+    <%= link_to 'Edit Expense', edit_group_expense_path(@group, @expense), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    <%= link_to 'Back to Expenses', group_expenses_path(@group), class: "text-indigo-600 hover:text-indigo-900" %>
+  </div>
+</div>

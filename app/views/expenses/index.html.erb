@@ -1,16 +1,43 @@
 <!-- app/views/expenses/index.html.erb -->
-<h1>Expenses for <%= @group.name %></h1>
+<div class="max-w-4xl mx-auto mt-8">
+  <h1 class="text-3xl font-bold mb-6">Expenses for <%= @group.name %></h1>
 
-<%= link_to 'Add New Expense', new_group_expense_path(@group) %>
+  <%= link_to 'Add New Expense', new_group_expense_path(@group), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-6" %>
 
-<% @expenses.each do |expense| %>
-  <div>
-    <h2><%= link_to expense.description, group_expense_path(@group, expense) %></h2>
-    <p>Amount: <%= number_to_currency(expense.amount) %></p>
-    <p>Paid by: <%= expense.user.full_name %> on <%= expense.date %></p>
-    <%= link_to 'Edit', edit_group_expense_path(@group, expense) %>
-    <%= link_to 'Delete', group_expense_path(@group, expense), method: :delete, data: { confirm: 'Are you sure?' } %>
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <ul class="divide-y divide-gray-200">
+      <% @expenses.each do |expense| %>
+        <li class="px-4 py-4 sm:px-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-medium text-indigo-600 truncate">
+              <%= link_to expense.description, group_expense_path(@group, expense), class: "hover:text-indigo-900" %>
+            </h2>
+            <div class="ml-2 flex-shrink-0 flex">
+              <%= link_to 'Edit', edit_group_expense_path(@group, expense), class: "font-medium text-indigo-600 hover:text-indigo-900 mr-2" %>
+              <%= button_to 'Delete', group_expense_path(@group, expense), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: "font-medium text-red-600 hover:text-red-900" %>
+            </div>
+          </div>
+          <div class="mt-2 sm:flex sm:justify-between">
+            <div class="sm:flex">
+              <p class="flex items-center text-sm text-gray-500">
+                Amount: <%= number_to_currency(expense.amount) %>
+              </p>
+              <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                Paid by: <%= expense.user.full_name %>
+              </p>
+            </div>
+            <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+              <p>
+                <%= expense.date %>
+              </p>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
   </div>
-<% end %>
 
-<%= link_to 'Back to Group', group_path(@group) %>
+  <div class="mt-6">
+    <%= link_to 'Back to Group', group_path(@group), class: "text-indigo-600 hover:text-indigo-900" %>
+  </div>
+</div>

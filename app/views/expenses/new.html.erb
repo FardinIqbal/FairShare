@@ -1,14 +1,10 @@
 <!-- app/views/expenses/new.html.erb -->
-<h1>Add New Expense for <%= @group.name %></h1>
+<div class="max-w-2xl mx-auto mt-8">
+  <h1 class="text-3xl font-bold mb-6">Add New Expense for <%= @group.name %></h1>
 
-<%= render 'form', group: @group, expense: @expense %>
+  <%= render 'form', group: @group, expense: @expense %>
 
-<%= link_to 'Back to Expenses', group_expenses_path(@group) %>
-
-<!-- app/views/expenses/edit.html.erb -->
-<h1>Edit Expense for <%= @group.name %></h1>
-
-<%= render 'form', group: @group, expense: @expense %>
-
-<%= link_to 'Show Expense', [@group, @expense] %> |
-<%= link_to 'Back to Expenses', group_expenses_path(@group) %>
+  <div class="mt-6">
+    <%= link_to 'Back to Expenses', group_expenses_path(@group), class: "text-indigo-600 hover:text-indigo-900" %>
+  </div>
+</div>
