@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'static_pages/home'
   # Nested resources: This creates routes for expenses within the context of a group
   resources :groups do
     resources :expenses
@@ -11,6 +12,5 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Define the root path route ("/")
-  # Uncomment and update this to point to your preferred root path
-  # root "posts#index"
+  root 'static_pages#home'
 end

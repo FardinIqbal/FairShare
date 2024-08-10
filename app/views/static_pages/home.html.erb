@@ -1,0 +1,9 @@
+<h1>Welcome to FinShare</h1>
+<p>FinShare is your go-to platform for easy expense sharing and group finance management.</p>
+
+<% if user_signed_in? %>
+  <%= link_to 'View My Groups', groups_path, class: 'btn btn-primary' %>
+<% else %>
+  <%= link_to 'Sign Up', new_user_registration_path, class: 'btn btn-primary' %>
+  <%= link_to 'Log In', new_user_session_path, class: 'btn btn-secondary' %>
+<% end %>
