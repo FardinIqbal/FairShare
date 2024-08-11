@@ -1,63 +1,134 @@
 <!-- app/views/groups/show.html.erb -->
-<div class="max-w-4xl mx-auto mt-8">
-  <h1 class="text-3xl font-bold mb-2"><%= @group.name %></h1>
-  <p class="text-gray-600 mb-6"><%= @group.description %></p>
 
-  <div class="mb-8">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-bold">Members</h2>
-      <%= link_to 'Add Users', add_users_group_path(@group), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
-    </div>
-    <ul class="bg-white shadow overflow-hidden sm:rounded-lg divide-y divide-gray-200">
+<div class="container mx-auto mt-8 space-y-8">
+  <h1 class="text-3xl font-bold mb-6"><%= @group.name %></h1>
+
+  <!-- Members section -->
+  <div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-semibold mb-4">Members</h2>
+    <ul class="divide-y divide-gray-200">
       <% @group.users.each do |user| %>
-        <li class="px-4 py-3"><%= user.full_name %> (<%= user.email %>)</li>
+        <li class="py-4"><%= user.full_name %> (<%= user.email %>)</li>
       <% end %>
     </ul>
+    <%= link_to 'Add Users', add_users_group_path(@group), class: "mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" %>
   </div>
 
-  <div class="mb-8">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-bold">Expenses</h2>
-      <%= link_to 'Add New Expense', new_group_expense_path(@group), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-    </div>
-    <div class="bg-white shadow overflow-hidden sm:rounded-lg divide-y divide-gray-200">
+  <!-- Expenses section -->
+  <div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-semibold mb-4">Expenses</h2>
+    <ul class="divide-y divide-gray-200">
       <% @expenses.each do |expense| %>
-        <div class="px-4 py-3">
-          <p class="font-semibold"><%= expense.description %> - <%= number_to_currency(expense.amount) %></p>
-          <p class="text-sm text-gray-500">Paid by: <%= expense.user.full_name %> on <%= expense.date %></p>
-        </div>
+        <li class="py-4">
+          <div class="font-semibold"><%= expense.description %> - <%= number_to_currency(expense.amount) %></div>
+          <div class="text-sm text-gray-500">Paid by: <%= expense.user.full_name %> on <%= expense.date.strftime("%Y-%m-%d") %></div>
+        </li>
       <% end %>
-    </div>
+    </ul>
+    <%= link_to 'Add New Expense', new_group_expense_path(@group), class: "mt-4 inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" %>
   </div>
 
-  <div class="mb-8">
-    <h2 class="text-2xl font-bold mb-4">Expense Splits</h2>
-    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-        <tr>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paid</th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owed</th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net</th>
+  <!-- Your Balance section -->
+  <div class="space-y-6">
+    <h2 class="text-2xl font-bold">Your Balance</h2>
+
+    <% if @you_owe.any? %>
+      <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+        <h3 class="text-xl font-semibold text-red-800 mb-2">You Owe</h3>
+        <% @you_owe.each do |debt| %>
+          <div class="flex items-center justify-between text-red-700 mb-2">
+            <span><%= debt[:user].full_name %>: <%= number_to_currency(debt[:amount]) %></span>
+            <%= button_to 'Pay', '#', method: :get, class: "bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @you_are_owed.any? %>
+      <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+        <h3 class="text-xl font-semibold text-green-800 mb-2">You are Owed</h3>
+        <% @you_are_owed.each do |credit| %>
+          <div class="flex items-center justify-between text-green-700 mb-2">
+            <span><%= credit[:user].full_name %> owes you: <%= number_to_currency(credit[:amount]) %></span>
+            <%= button_to 'Remind', '#', method: :get, class: "bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Expense Summary table -->
+    <div class="bg-white p-4 rounded-lg border border-gray-200">
+      <h3 class="text-xl font-semibold text-gray-800 mb-2">Expense Summary</h3>
+      <table class="w-full">
+        <thead>
+        <tr class="bg-gray-100">
+          <th class="p-2 text-left">User</th>
+          <th class="p-2 text-right">Total Paid</th>
+          <th class="p-2 text-right">Expense Count</th>
+          <th class="p-2 text-right">Largest Expense</th>
+          <th class="p-2 text-right">Net Balance</th>
         </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-        <% @splits.each do |split| %>
-          <tr>
-            <td class="px-6 py-4 whitespace-nowrap"><%= split[:user].full_name %></td>
-            <td class="px-6 py-4 whitespace-nowrap"><%= number_to_currency(split[:paid]) %></td>
-            <td class="px-6 py-4 whitespace-nowrap"><%= number_to_currency(split[:owed]) %></td>
-            <td class="px-6 py-4 whitespace-nowrap"><%= number_to_currency(split[:net]) %></td>
+        <tbody>
+        <% @user_summaries.each do |summary| %>
+          <tr class="border-t border-gray-200">
+            <td class="p-2"><%= summary[:user].full_name %></td>
+            <td class="p-2 text-right"><%= number_to_currency(summary[:total_paid]) %></td>
+            <td class="p-2 text-right"><%= summary[:expense_count] %></td>
+            <td class="p-2 text-right"><%= number_to_currency(summary[:largest_expense]) %></td>
+            <td class="p-2 text-right <%= summary[:net_balance] >= 0 ? 'text-green-600' : 'text-red-600' %>">
+              <%= number_to_currency(summary[:net_balance]) %>
+            </td>
           </tr>
         <% end %>
         </tbody>
       </table>
     </div>
-  </div>
 
-  <div class="mt-4 space-x-4">
-    <%= link_to 'Edit Group', edit_group_path(@group), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-    <%= link_to 'Back to Groups', groups_path, class: "text-indigo-600 hover:text-indigo-900" %>
+    <!-- Settle Up section -->
+    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+      <h3 class="text-xl font-semibold text-blue-800 mb-2">Settle Up</h3>
+      <div class="mb-4">
+        <button onclick="toggleSettlement()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+          Toggle Optimized Settlement
+        </button>
+      </div>
+
+      <div id="normal-settlement">
+        <p class="text-blue-700 mb-2">To settle all debts:</p>
+        <% @you_owe.each do |debt| %>
+          <div class="flex items-center space-x-2 text-blue-700">
+            <span>You pay <%= debt[:user].full_name %>:</span>
+            <span class="font-bold"><%= number_to_currency(debt[:amount]) %></span>
+            <span>→</span>
+          </div>
+        <% end %>
+      </div>
+
+      <div id="optimized-settlement" style="display: none;">
+        <p class="text-blue-700 mb-2">Optimized settlement (least number of transactions):</p>
+        <% @optimized_settlements.each do |settlement| %>
+          <div class="flex items-center space-x-2 text-blue-700">
+            <span><%= settlement[:from].full_name %> pays <%= settlement[:to].full_name %>:</span>
+            <span class="font-bold"><%= number_to_currency(settlement[:amount]) %></span>
+            <span>→</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
+
+<script>
+    function toggleSettlement() {
+        var normal = document.getElementById('normal-settlement');
+        var optimized = document.getElementById('optimized-settlement');
+        if (normal.style.display === 'none') {
+            normal.style.display = 'block';
+            optimized.style.display = 'none';
+        } else {
+            normal.style.display = 'none';
+            optimized.style.display = 'block';
+        }
+    }
+</script>
