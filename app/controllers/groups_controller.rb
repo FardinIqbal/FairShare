@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :add_users, :add_user]
   before_action :authorize_user, only: [:show, :edit, :update, :destroy]
   def index
     @groups = current_user.groups
@@ -47,6 +47,19 @@ class GroupsController < ApplicationController
     @group.destroy
     flash[:notice] = 'Group was successfully deleted.'
     redirect_to groups_url
+  end
+
+  def add_users
+    @users = User.where.not(id: @group.users.pluck(:id))
+  end
+
+  def add_user
+    user = User.find(params[:user_id])
+    if @group.users << user
+      redirect_to @group, notice: 'User was successfully added to the group.'
+    else
+      redirect_to add_users_group_path(@group), alert: 'Failed to add user to the group.'
+    end
   end
 
   private
