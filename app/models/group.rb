@@ -1,14 +1,19 @@
-# Step 4: Update the Group model (app/models/group.rb)
+# app/models/group.rb
+
 class Group < ApplicationRecord
+  # Associations
   has_many :expenses
   has_and_belongs_to_many :users
 
+  # Validations
   validates :name, presence: true, uniqueness: true
 
+  # Calculate the expense splits for all users in the group
   def calculate_splits
     total_expenses = expenses.sum(:amount)
-    per_person_share = total_expenses / users.count
+    per_person_share = total_expenses.to_f / users.count
 
+    # Calculate individual splits
     splits = users.map do |user|
       user_expenses = expenses.where(user: user).sum(:amount)
       {
@@ -19,6 +24,29 @@ class Group < ApplicationRecord
       }
     end
 
-    splits.sort_by { |split| -split[:net] }
+    # Calculate who owes whom
+    debts = []
+    splits.each do |payer|
+      if payer[:net] > 0
+        splits.each do |ower|
+          if ower[:net] < 0
+            amount = [payer[:net], -ower[:net]].min
+            debts << {
+              from: ower[:user],
+              to: payer[:user],
+              amount: amount.round(2)
+            }
+            payer[:net] -= amount
+            ower[:net] += amount
+            break if payer[:net].zero?
+          end
+        end
+      end
+    end
+
+    {
+      splits: splits,
+      debts: debts
+    }
   end
 end

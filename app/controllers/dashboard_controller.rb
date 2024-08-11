@@ -15,8 +15,8 @@ class DashboardController < ApplicationController
   def calculate_total_owed
     total = 0
     current_user.groups.each do |group|
-      splits = group.calculate_splits
-      user_split = splits.find { |split| split[:user] == current_user }
+      splits_result = group.calculate_splits
+      user_split = splits_result[:splits].find { |split| split[:user] == current_user }
       total += user_split[:net] if user_split
     end
     total
