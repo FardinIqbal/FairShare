@@ -79,3 +79,4 @@ app/assets/builds/tailwind.css
 .DS_Store
 
 # Ignore compiled and bundled f
+/config/master.key
