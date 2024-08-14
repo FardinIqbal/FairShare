@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  attribute :demo, :boolean, default: false
+
   # Associations
   has_and_belongs_to_many :groups  # A user can belong to many groups
   has_many :expenses  # A user can have many expenses
