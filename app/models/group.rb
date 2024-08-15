@@ -4,9 +4,12 @@ class Group < ApplicationRecord
   # Associations
   has_many :expenses
   has_and_belongs_to_many :users
+  belongs_to :leader, class_name: "User"  # Ensure this line is present
+
 
   # Validations
   validates :name, presence: true, uniqueness: true
+  validates :leader, presence: true
 
   # Calculate the expense splits for all users in the group
   def calculate_splits

@@ -65,7 +65,8 @@ class GroupsController < ApplicationController
   # POST /groups
   def create
     @group = Group.new(group_params)
-    @group.users << current_user
+    @group.leader = current_user  # Set the current user as the group leader
+    @group.users << current_user  # Add the current user to the group
 
     if @group.save
       flash[:notice] = 'Group was successfully created.'
