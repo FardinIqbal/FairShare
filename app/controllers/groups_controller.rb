@@ -11,6 +11,7 @@ class GroupsController < ApplicationController
   end
 
   # GET /groups/:id
+  # GET /groups/:id
   def show
     @group = Group.find(params[:id])
     @expenses = @group.expenses.order(date: :desc)
@@ -46,15 +47,13 @@ class GroupsController < ApplicationController
     @current_user_split = @splits.find { |split| split[:user] == current_user }
     @current_user_summary = @user_summaries.find { |summary| summary[:user] == current_user }
 
-
-    @you_owe = @splits.select { |split| split[:user] != current_user && split[:net] > @current_user_split[:net] }
-                      .map { |split| { user: split[:user], amount: split[:net] - @current_user_split[:net] } }
-
-    @you_are_owed = @splits.select { |split| split[:user] != current_user && split[:net] < @current_user_split[:net] }
-                           .map { |split| { user: split[:user], amount: @current_user_split[:net] - split[:net] } }
-
     @optimized_settlements = splits_result[:debts]
+
+    # use the optimized settlements to find out who owes current user and who current user owes
+    @current_user_owes = @optimized_settlements.select { |settlement| settlement[:from] == current_user }
+    @current_user_owed = @optimized_settlements.select { |settlement| settlement[:to] == current_user }
   end
+
 
 
   # GET /groups/new

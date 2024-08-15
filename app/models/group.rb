@@ -1,11 +1,8 @@
-# app/models/group.rb
-
 class Group < ApplicationRecord
   # Associations
   has_many :expenses
   has_and_belongs_to_many :users
-  belongs_to :leader, class_name: "User"  # Ensure this line is present
-
+  belongs_to :leader, class_name: "User"
 
   # Validations
   validates :name, presence: true, uniqueness: true
@@ -29,21 +26,21 @@ class Group < ApplicationRecord
 
     # Calculate who owes whom
     debts = []
-    splits.each do |payer|
-      if payer[:net] > 0
-        splits.each do |ower|
-          if ower[:net] < 0
-            amount = [payer[:net], -ower[:net]].min
-            debts << {
-              from: ower[:user],
-              to: payer[:user],
-              amount: amount.round(2)
-            }
-            payer[:net] -= amount
-            ower[:net] += amount
-            break if payer[:net].zero?
-          end
-        end
+    payers = splits.select { |split| split[:net] > 0 }.sort_by { |split| -split[:net] }
+    owers = splits.select { |split| split[:net] < 0 }.sort_by { |split| split[:net] }
+
+    payers.each do |payer|
+      owers.each do |ower|
+        next if payer[:net].zero? || ower[:net].zero?
+
+        amount = [payer[:net], -ower[:net]].min
+        debts << {
+          from: ower[:user],
+          to: payer[:user],
+          amount: amount.round(2)
+        }
+        payer[:net] -= amount
+        ower[:net] += amount
       end
     end
 
