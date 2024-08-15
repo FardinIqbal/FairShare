@@ -1,22 +1,87 @@
-<!-- app/views/groups/add_users.html.erb -->
-<div class="container mx-auto mt-8">
-  <h1 class="text-2xl font-bold mb-4">Add Users to <%= @group.name %></h1>
+<div style="max-width: 768px; margin: 32px auto; padding-left: 16px; padding-right: 16px;">
+  <!-- Header Section with Back Button and Search Bar -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <!-- Back to Group Button -->
+    <%= link_to 'Back to Group', @group, style: "display: inline-block; background-color: #4f46e5; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px; text-decoration: none; transition: background-color 0.2s ease-in-out;", onmouseover: "this.style.backgroundColor='#4338ca'", onmouseout: "this.style.backgroundColor='#4f46e5'" %>
+
+    <!-- Search Bar -->
+    <div style="position: relative; width: 100%; max-width: 300px;">
+      <input type="text" id="user-search" placeholder="Search users..." style="width: 100%; padding: 12px 16px 12px 48px; border: 2px solid #D1D5DB; border-radius: 8px; outline: none; font-size: 1rem; transition: border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;" onfocus="this.style.borderColor='#4f46e5'; this.style.backgroundColor='#f3f4f6'" onblur="this.style.borderColor='#D1D5DB'; this.style.backgroundColor='white'" onkeyup="filterUsers()">
+      <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; color: #6e67e8;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16s-4 0-6 4 8 4 8 4 8-4 8-4-4 0-6-4M15 11a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Page Title -->
+  <h1 style="font-size: 2rem; font-weight: bold; color: #4f46e5; margin-bottom: 24px;">Add Users to <%= @group.name %></h1>
+
+  <!-- Description and Action -->
+  <p style="color: #4A5568; margin-bottom: 16px;">Select users from the list below to add them to your group. Use the search bar to quickly find users by name or email.</p>
 
   <% if @users.any? %>
-    <ul class="divide-y divide-gray-200">
+    <ul id="user-list" style="background-color: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
       <% @users.each do |user| %>
-        <li class="py-4 flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-900"><%= user.full_name %></p>
-            <p class="text-sm text-gray-500"><%= user.email %></p>
+        <li class="user-item <%= 'group-leader' if user.id == @group.leader_id %>" data-name="<%= user.full_name.downcase %>" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #E2E8F0; transition: background-color 0.3s ease-in-out, opacity 0.6s ease; opacity: 1;" onmouseover="this.style.backgroundColor='#F7FAFC'" onmouseout="this.style.backgroundColor='white'">
+          <!-- User Details -->
+          <div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center;">
+            <p class="user-name" style="font-size: 1rem; font-weight: 600; color: #2D3748; transition: color 0.6s ease; margin-right: 8px;"><%= user.full_name %></p>
+            <% if user.id == @group.leader_id %>
+              <!-- Group Leader Icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: #4f46e5;" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.584 4.874a1 1 0 00.95.69h5.104c.969 0 1.371 1.24.588 1.81l-4.128 3a1 1 0 00-.364 1.118l1.584 4.874c.3.921-.755 1.688-1.54 1.118l-4.128-3a1 1 0 00-1.175 0l-4.128 3c-.784.57-1.838-.197-1.54-1.118l1.584-4.874a1 1 0 00-.364-1.118l-4.128-3c-.784-.57-.38-1.81.588-1.81h5.104a1 1 0 00.95-.69l1.584-4.874z" />
+              </svg>
+            <% end %>
           </div>
-          <%= button_to 'Add to Group', add_user_group_path(@group), params: { user_id: user.id }, method: :post, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+          <!-- Action Button -->
+          <%= button_to 'Add to Group', add_user_group_path(@group), params: { user_id: user.id }, method: :post, style: "background-color: #4f46e5; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px; border: none; text-decoration: none; cursor: pointer; transition: background-color 0.3s ease-in-out; flex-shrink: 0;", onmouseover: "this.style.backgroundColor='#4338ca'", onmouseout: "this.style.backgroundColor='#4f46e5'" %>
         </li>
       <% end %>
     </ul>
   <% else %>
-    <p class="text-gray-500">No users available to add to this group.</p>
+    <p style="color: #718096; font-size: 1rem; margin-top: 16px;">No users available to add to this group.</p>
   <% end %>
-
-  <%= link_to 'Back to Group', @group, class: "mt-4 inline-block bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded" %>
 </div>
+
+<script>
+    // Store the original list of users
+    var originalUserItems = Array.from(document.getElementsByClassName('user-item'));
+
+    function filterUsers() {
+        var input = document.getElementById('user-search');
+        var filter = input.value.toLowerCase();
+        var userList = document.getElementById('user-list');
+
+        // Sort the original list items alphabetically by name
+        var sortedUserItems = originalUserItems.slice().sort(function(a, b) {
+            var nameA = a.getAttribute('data-name');
+            var nameB = b.getAttribute('data-name');
+            return nameA.localeCompare(nameB);
+        });
+
+        // Clear the list and append the sorted and filtered items
+        userList.innerHTML = '';
+
+        sortedUserItems.forEach(function(userItem) {
+            var userNameElement = userItem.querySelector('.user-name');
+            var userName = userNameElement.textContent.toLowerCase();
+
+            if (userName.includes(filter) || filter === '') {
+                // Highlight the matching text with a smooth transition and indigo-200 color
+                var regex = new RegExp(`(${filter})`, 'gi');
+                userNameElement.innerHTML = userNameElement.textContent.replace(regex, '<span style="color: #818cf8; transition: color 0.3s ease;">$1</span>');
+                userItem.style.opacity = '0';
+                userItem.style.display = 'flex';
+                userList.appendChild(userItem);
+                setTimeout(function() {
+                    userItem.style.opacity = '1';
+                }, 10); // Small delay to trigger the transition effect
+            } else {
+                userItem.style.opacity = '0';
+                setTimeout(function() {
+                    userItem.style.display = 'none';
+                }, 600); // Wait for the opacity transition to finish
+            }
+        });
+    }
+</script>
