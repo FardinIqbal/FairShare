@@ -1,21 +1,46 @@
+// tailwind.config.js
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
   content: [
-    './app/views/**/*.html.erb',
+    './public/*.html',
     './app/helpers/**/*.rb',
     './app/javascript/**/*.js',
-    './app/assets/stylesheets/**/*.css',
-    './app/assets/stylesheets/**/*.scss'
+    './app/views/**/*.{erb,haml,html,slim}',
+    './app/components/**/*.{erb,haml,html,slim,rb}', // Add this line if you're using ViewComponents
+    './config/initializers/simple_form_tailwind.rb', // Add this line if you're using Simple Form with Tailwind
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+      },
       colors: {
-        'purple-500': '#9d4edd',
-        'red-500': '#e63946',
-        'pink-500': '#d6336c',
-        'green-400': '#68d391',
-        'blue-500': '#4299e1',
+        // You can add custom colors here
+        // Example:
+        // 'primary': '#3490dc',
+        // 'secondary': '#ffed4a',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/container-queries'),
+    require('@tailwindcss/aspect-ratio'), // Add this if you need it
+  ],
+  // Enable JIT mode for faster builds
+  mode: 'jit',
+  // Purge unused styles in production
+  purge: {
+    enabled: process.env.NODE_ENV === 'production',
+    content: [
+      './app/**/*.html.erb',
+      './app/helpers/**/*.rb',
+      './app/javascript/**/*.js',
+      './app/javascript/**/*.vue',
+      './app/**/*.html.slim',
+      './app/**/*.html.haml',
+    ],
+  },
 }
