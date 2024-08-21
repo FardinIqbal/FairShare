@@ -6,8 +6,8 @@ module.exports = {
     './app/helpers/**/*.rb',
     './app/javascript/**/*.js',
     './app/views/**/*.{erb,haml,html,slim}',
-    './app/components/**/*.{erb,haml,html,slim,rb}', // Add this line if you're using ViewComponents
-    './config/initializers/simple_form_tailwind.rb', // Add this line if you're using Simple Form with Tailwind
+    './app/components/**/*.{erb,haml,html,slim,rb}',
+    './config/initializers/simple_form_tailwind.rb',
   ],
   theme: {
     extend: {
@@ -35,22 +35,48 @@ module.exports = {
           DEFAULT: '#d1d5db', // Default gray for borders and text
           dark: '#374151',    // Dark gray for text
         },
-        white: '#ffffff',
-        black: '#000000',
       },
+      spacing: {
+        '72': '18rem',
+        '84': '21rem',
+        '96': '24rem',
+      },
+      maxHeight: {
+        '0': '0',
+        '1/4': '25%',
+        '1/2': '50%',
+        '3/4': '75%',
+        'full': '100%',
+      },
+      zIndex: {
+        '-10': '-10',
+        '-20': '-20',
+        '60': '60',
+        '70': '70',
+      },
+      transitionProperty: {
+        'height': 'height',
+        'spacing': 'margin, padding',
+      },
+    },
+  },
+  variants: {
+    extend: {
+      backgroundColor: ['hover', 'focus', 'active'],
+      textColor: ['hover', 'focus', 'active'],
+      borderColor: ['hover', 'focus', 'active'],
+      opacity: ['disabled'],
+      cursor: ['disabled'],
     },
   },
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
+    require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/container-queries'),
-    require('@tailwindcss/aspect-ratio'), // Add this if you need it
   ],
-  // Enable JIT mode for faster builds
   mode: 'jit',
-  // Purge unused styles in production
   purge: {
-    enabled: process.env.NODE_ENV === 'production',
     content: [
       './app/**/*.html.erb',
       './app/helpers/**/*.rb',
@@ -59,5 +85,21 @@ module.exports = {
       './app/**/*.html.slim',
       './app/**/*.html.haml',
     ],
+    options: {
+      safelist: [
+        /^bg-/,
+        /^text-/,
+        /^border-/,
+        /^hover:/,
+        /^focus:/,
+        /^active:/,
+        /^disabled:/,
+        /^sm:/,
+        /^md:/,
+        /^lg:/,
+        /^xl:/,
+        /^2xl:/,
+      ],
+    },
   },
 }
