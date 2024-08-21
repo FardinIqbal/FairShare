@@ -1,0 +1,35 @@
+<!-- app/views/groups/_balance.html.erb -->
+<div class="space-y-6">
+  <h2 class="text-2xl font-bold text-gray-800">Group Balance</h2>
+
+  <% if current_user_owes.any? %>
+    <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+      <h3 class="text-xl font-semibold text-red-800 mb-2">You Owe</h3>
+      <% current_user_owes.each do |debt| %>
+        <div class="flex items-center justify-between text-red-700 mb-2">
+          <span><%= debt[:to].full_name %>: <%= number_to_currency(debt[:amount]) %></span>
+          <%= button_to 'Pay', '#', method: :get, class: "bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded transition duration-200" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if current_user_owed.any? %>
+    <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+      <h3 class="text-xl font-semibold text-green-800 mb-2">You are Owed</h3>
+      <% current_user_owed.each do |credit| %>
+        <div class="flex items-center justify-between text-green-700 mb-2">
+          <span><%= credit[:from].full_name %> owes you: <%= number_to_currency(credit[:amount]) %></span>
+          <%= button_to 'Remind', '#', method: :get, class: "bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded transition duration-200" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if current_user_owes.empty? && current_user_owed.empty? %>
+    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+      <h3 class="text-xl font-semibold text-blue-800 mb-2">All Settled</h3>
+      <p class="text-blue-700">You are all settled up! You neither owe anyone nor are owed any money.</p>
+    </div>
+  <% end %>
+</div>

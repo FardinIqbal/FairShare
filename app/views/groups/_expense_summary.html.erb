@@ -1,0 +1,29 @@
+<!-- app/views/groups/_expense_summary.html.erb -->
+<div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+  <h3 class="text-xl font-semibold text-gray-800 mb-4">Expense Summary</h3>
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+      <tr class="bg-gray-100">
+        <th class="p-2 text-left">User</th>
+        <th class="p-2 text-right">Total Paid</th>
+        <th class="p-2 text-right">Expense Count</th>
+        <th class="p-2 text-right">Net Balance</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% user_summaries.each do |summary| %>
+        <tr class="bg-indigo-50 border-t border-indigo-200 transition duration-300 ease-in-out hover:bg-indigo-100 hover:shadow-md">
+          <td class="p-2"><%= summary[:user].full_name %></td>
+          <td class="p-2 text-right"><%= number_to_currency(summary[:total_paid]) %></td>
+          <td class="p-2 text-right"><%= summary[:expense_count] %></td>
+          <td class="p-2 text-right <%= summary[:net_balance] >= 0 ? 'text-green-600' : 'text-red-600' %>">
+            <%= number_to_currency(summary[:net_balance]) %>
+            (<%= summary[:net_balance] >= 0 ? 'to receive' : 'to pay' %>)
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
