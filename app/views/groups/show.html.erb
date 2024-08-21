@@ -36,7 +36,7 @@
     </div>
 
     <!-- Tab Content -->
-    <div id="expenses" class="tab-content">
+    <div id="expenses" class="tab-content active">
       <%= render partial: 'expenses', locals: { group: @group, expenses: @expenses } %>
     </div>
 
@@ -75,9 +75,21 @@
   <script>
       function showTab(tabName) {
           document.querySelectorAll('.tab-content').forEach(content => {
-              content.classList.add('hidden');
+              if (content.id === tabName) {
+                  content.classList.add('active');
+                  content.classList.remove('hidden');
+                  setTimeout(() => {
+                      content.style.height = 'auto';
+                  }, 300); // Match this with the transition duration
+              } else {
+                  content.classList.remove('active');
+                  setTimeout(() => {
+                      content.classList.add('hidden');
+                      content.style.height = '0';
+                  }, 300); // Match this with the transition duration
+              }
           });
-          document.getElementById(tabName).classList.remove('hidden');
+
           document.querySelectorAll('.tab-button').forEach(button => {
               if (button.dataset.tab === tabName) {
                   button.classList.add('text-indigo-600', 'border-indigo-600');
