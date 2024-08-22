@@ -1,0 +1,14 @@
+<!-- app/views/dashboard/_recent_activities.html.erb -->
+<div class="bg-white rounded-lg shadow overflow-hidden">
+  <div class="px-6 py-4 border-b border-gray-200">
+    <h2 class="text-xl font-semibold text-gray-900">Recent Activities</h2>
+  </div>
+  <ul class="divide-y divide-gray-200">
+    <% @recent_activities.each do |activity| %>
+      <li class="px-6 py-4 hover:bg-gray-50 transition duration-150 ease-in-out">
+        <%= render 'dashboard/activity', activity: activity %>
+      </li>
+    <% end %>
+  </ul>
+  <%= link_to "View All", "#", class: "block w-full text-center px-6 py-3 text-sm font-medium text-blue-600 hover:bg-gray-50 transition duration-150 ease-in-out" %>
+</div>

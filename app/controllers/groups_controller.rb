@@ -115,6 +115,7 @@ class GroupsController < ApplicationController
 
   private
 
+
   # Calculate optimized settlements to minimize the number of transactions
   def calculate_optimized_settlements(splits)
     debtors = splits.select { |s| s[:net] < 0 }.sort_by { |s| s[:net] }

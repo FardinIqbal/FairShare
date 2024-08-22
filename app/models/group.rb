@@ -10,19 +10,25 @@ class Group < ApplicationRecord
 
   # Calculate the expense splits for all users in the group
   def calculate_splits
+    Rails.logger.debug "Starting split calculation for group #{id}"
     total_expenses = expenses.sum(:amount)
+    Rails.logger.debug "Total expenses: #{total_expenses}"
     per_person_share = total_expenses.to_f / users.count
+    Rails.logger.debug "Per person share: #{per_person_share}"
 
-    # Calculate individual splits
     splits = users.map do |user|
       user_expenses = expenses.where(user: user).sum(:amount)
+      Rails.logger.debug "User #{user.id} expenses: #{user_expenses}"
+      net = user_expenses - per_person_share
+      Rails.logger.debug "User #{user.id} net: #{net}"
       {
         user: user,
         paid: user_expenses,
         owed: per_person_share,
-        net: user_expenses - per_person_share
+        net: net  # This is the key change
       }
     end
+    Rails.logger.debug "Calculated splits: #{splits}"
 
     # Calculate who owes whom
     debts = []
@@ -31,7 +37,7 @@ class Group < ApplicationRecord
 
     payers.each do |payer|
       owers.each do |ower|
-        next if payer[:net].zero? || ower[:net].zero?
+        break if payer[:net].zero? || ower[:net].zero?
 
         amount = [payer[:net], -ower[:net]].min
         debts << {
@@ -44,9 +50,11 @@ class Group < ApplicationRecord
       end
     end
 
-    {
+    result = {
       splits: splits,
       debts: debts
     }
+    Rails.logger.debug "Final split result for group #{id}: #{result}"
+    result
   end
 end

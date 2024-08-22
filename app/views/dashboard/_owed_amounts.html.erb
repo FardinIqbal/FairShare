@@ -1,0 +1,45 @@
+<!-- app/views/dashboard/_owed_amounts.html.erb -->
+<div class="bg-white rounded-lg shadow-lg overflow-hidden">
+  <div class="p-6 sm:p-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Owed Amounts</h2>
+    <div class="space-y-6">
+      <!-- You Owe Section -->
+      <div>
+        <h3 class="text-lg font-semibold text-red-600 mb-3">You Owe</h3>
+        <div class="space-y-3">
+          <% @owed_to_others.each do |debt| %>
+            <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+              <div>
+                <p class="font-medium"><%= debt[:user].full_name %></p>
+                <p class="text-sm text-gray-600"><%= debt[:group].name %></p>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-red-600"><%= number_to_currency(debt[:amount]) %></p>
+                <%= button_to "Pay", pay_debt_path(debt[:user], amount: debt[:amount]), method: :post, class: "mt-1 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-full hover:bg-red-700 transition duration-300" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- You are Owed Section -->
+      <div>
+        <h3 class="text-lg font-semibold text-green-600 mb-3">You are Owed</h3>
+        <div class="space-y-3">
+          <% @owed_by_others.each do |debt| %>
+            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div>
+                <p class="font-medium"><%= debt[:user].full_name %></p>
+                <p class="text-sm text-gray-600"><%= debt[:group].name %></p>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-green-600"><%= number_to_currency(debt[:amount]) %></p>
+                <%= button_to "Remind", remind_payment_path(debt[:user], amount: debt[:amount]), method: :post, class: "mt-1 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-full hover:bg-green-700 transition duration-300" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

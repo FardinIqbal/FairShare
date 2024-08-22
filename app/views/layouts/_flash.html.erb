@@ -1,0 +1,17 @@
+<!-- app/views/layouts/_flash.html.erb -->
+<% flash.each do |type, message| %>
+  <div class="mb-4 px-4 py-3 rounded relative <%= flash_class(type) %>" role="alert">
+    <% if message.is_a?(Hash) %>
+      <% if message[:action] == 'remind' %>
+        Reminder sent to <%= message[:user] %> for <%= number_to_currency(message[:amount]) %>!
+      <% else %>
+        Payment of <%= number_to_currency(message[:amount]) %> to <%= message[:user] %> was successful!
+      <% end %>
+    <% else %>
+      <%= message %>
+    <% end %>
+    <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% end %>

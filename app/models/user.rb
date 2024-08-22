@@ -19,4 +19,14 @@ class User < ApplicationRecord
   def full_name
     "#{first_name} #{last_name}"
   end
+
+  def calculate_total_balance
+    total = 0
+    groups.each do |group|
+      splits_result = group.calculate_splits
+      user_split = splits_result[:splits].find { |split| split[:user] == self }
+      total += user_split[:net] if user_split
+    end
+    total
+  end
 end
