@@ -9,4 +9,7 @@ module ApplicationHelper
     else "bg-gray-100 border-gray-500 text-gray-700"
     end
   end
+  def active_link?(path)
+    current_page?(path)
+  end
 end

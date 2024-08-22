@@ -1,27 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-100">
+<html lang="en" style="height: 100%; background-color: #f9fafb;">
 <head>
-  <title>FairShare</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= content_for?(:title) ? yield(:title) : "FairShare" %></title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
+
   <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
 
-<body class="h-full flex flex-col">
-<div class="flex-grow">
-  <%= render 'layouts/nav' %>
+<body style="height: 100%; display: flex; flex-direction: column;">
+<%= render 'layouts/header' %>
 
-  <main class="p-4 sm:p-6 lg:p-8">
-    <div class="max-w-7xl mx-auto">
-      <%= render 'layouts/flash' %>
-      <%= yield %>
-    </div>
+<div style="flex-grow: 1;">
+  <%= render 'layouts/flash' %>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <%= yield %>
   </main>
 </div>
 
 <%= render 'layouts/footer' %>
+
+<%= render 'layouts/bottom_nav' %>
+
+<%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
 </body>
 </html>
