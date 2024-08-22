@@ -1,11 +1,10 @@
 class ExpensesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group
-  before_action :authorize_user
   before_action :set_expense, only: [:show, :edit, :update, :destroy]
 
   def index
-    @expenses = @group.expenses
+    @expenses = @group.expenses.order(date: :desc)
   end
 
   def show
@@ -46,13 +45,6 @@ class ExpensesController < ApplicationController
 
   def set_group
     @group = current_user.groups.find(params[:group_id])
-  end
-
-  def authorize_user
-    unless @group.users.include?(current_user)
-      flash[:alert] = "You don't have permission to access expenses for this group."
-      redirect_to groups_path
-    end
   end
 
   def set_expense

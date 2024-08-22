@@ -1,24 +1,30 @@
-# app/controllers/payments_controller.rb
 class PaymentsController < ApplicationController
+  before_action :authenticate_user!
+
   def pay
-    user = User.find(params[:user_id])
-    amount = params[:amount]
+    @group = Group.find(params[:group_id])
+    @recipient = User.find(params[:user_id])
+    amount = params[:amount].to_f
 
-    # In a real system, you'd handle the actual payment here
-    # For now, we'll just show a success message
+    ActiveRecord::Base.transaction do
+      current_user_balance = @group.balances.find_by(user: current_user)
+      recipient_balance = @group.balances.find_by(user: @recipient)
 
-    flash[:notice] = { amount: amount, user: user.full_name }
-    redirect_to dashboard_path
+      current_user_balance.update!(amount: current_user_balance.amount + amount)
+      recipient_balance.update!(amount: recipient_balance.amount - amount)
+    end
+
+    redirect_to @group, notice: "Payment of #{number_to_currency(amount)} to #{@recipient.full_name} recorded."
   end
 
   def remind
-    user = User.find(params[:user_id])
+    @group = Group.find(params[:group_id])
+    @debtor = User.find(params[:user_id])
     amount = params[:amount]
 
     # In a real system, you'd send an actual reminder (e.g., email)
     # For now, we'll just show a success message
 
-    flash[:notice] = { amount: amount, user: user.full_name, action: 'remind' }
-    redirect_to dashboard_path
+    redirect_to @group, notice: "Reminder sent to #{@debtor.full_name} for #{number_to_currency(amount)}."
   end
 end
