@@ -29,8 +29,8 @@ class Group < ApplicationRecord
   end
 
   def calculate_debts
-    positive_balances = balances.where("amount > 0").order(amount: :desc)
-    negative_balances = balances.where("amount < 0").order(amount: :asc)
+    positive_balances = balances.where("amount > 0").order(amount: :desc).to_a
+    negative_balances = balances.where("amount < 0").order(amount: :asc).to_a
 
     debts = []
 

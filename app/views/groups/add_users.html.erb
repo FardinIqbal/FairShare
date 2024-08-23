@@ -1,87 +1,214 @@
-<div style="max-width: 768px; margin: 32px auto; padding-left: 16px; padding-right: 16px;">
-  <!-- Header Section with Back Button and Search Bar -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+<div style="max-width: 100%; padding: 20px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7fafc;">
+  <div style="display: flex; flex-direction: column; gap: 24px; max-width: 600px; margin: 0 auto;">
     <!-- Back to Group Button -->
-    <%= link_to 'Back to Group', @group, style: "display: inline-block; background-color: #4f46e5; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px; text-decoration: none; transition: background-color 0.2s ease-in-out;", onmouseover: "this.style.backgroundColor='#4338ca'", onmouseout: "this.style.backgroundColor='#4f46e5'" %>
+    <div style="margin-bottom: 16px;">
+      <%= link_to group_path(@group), class: "back-button", style: "
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 16px;
+        background-color: #4f46e5;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(79, 70, 229, 0.1);
+      " do %>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 20px; height: 20px; margin-right: 8px;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Group
+      <% end %>
+    </div>
 
-    <!-- Search Bar -->
-    <div style="position: relative; width: 100%; max-width: 300px;">
-      <input type="text" id="user-search" placeholder="Search users..." style="width: 100%; padding: 12px 16px 12px 48px; border: 2px solid #D1D5DB; border-radius: 8px; outline: none; font-size: 1rem; transition: border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;" onfocus="this.style.borderColor='#4f46e5'; this.style.backgroundColor='#f3f4f6'" onblur="this.style.borderColor='#D1D5DB'; this.style.backgroundColor='white'" onkeyup="filterUsers()">
-      <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; color: #6e67e8;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16s-4 0-6 4 8 4 8 4 8-4 8-4-4 0-6-4M15 11a4 4 0 11-8 0 4 4 0 018 0z" />
+    <!-- Animated Search Bar -->
+    <div style="position: relative; width: 100%;">
+      <input type="text" id="user-search" placeholder="Search users..." style="
+      width: 100%;
+        padding: 12px 40px 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        outline: none;
+      " onfocus="this.style.borderColor='#4f46e5'; this.style.boxShadow='0 0 0 3px rgba(79, 70, 229, 0.1)'; this.style.transform='translateY(-2px)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 2px 4px rgba(0, 0, 0, 0.05)'; this.style.transform='translateY(0)'">
+      <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: #a0aec0; pointer-events: none; transition: all 0.3s ease;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
     </div>
+
+    <!-- Animated User List -->
+    <% if @users.any? %>
+      <ul id="user-list" style="list-style-type: none; padding: 0; margin: 0; background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); overflow: hidden; transition: all 0.3s ease;">
+        <% @users.each_with_index do |user, index| %>
+          <li class="user-item" data-name="<%= user.full_name.downcase %>" style="
+          padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease-out <%= index * 0.1 %>s both;
+          ">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; flex-direction: column;">
+                <span class="user-name" style="font-weight: 500; color: #2d3748; margin-bottom: 4px; transition: all 0.3s ease;"><%= user.full_name %></span>
+                <span class="user-email" style="font-size: 0.875rem; color: #718096; transition: all 0.3s ease;"><%= user.email %></span>
+              </div>
+              <%= button_to 'Add', add_user_group_path(@group), params: { user_id: user.id }, method: :post, class: 'add-button', style: "
+                background-color: #4f46e5;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                overflow: hidden;
+                position: relative;
+              " %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p style="color: #718096; text-align: center; font-style: italic; animation: fadeIn 0.5s ease-out;">No users available to add to this group.</p>
+    <% end %>
   </div>
-
-  <!-- Page Title -->
-  <h1 style="font-size: 2rem; font-weight: bold; color: #4f46e5; margin-bottom: 24px;">Add Users to <%= @group.name %></h1>
-
-  <!-- Description and Action -->
-  <p style="color: #4A5568; margin-bottom: 16px;">Select users from the list below to add them to your group. Use the search bar to quickly find users by name or email.</p>
-
-  <% if @users.any? %>
-    <ul id="user-list" style="background-color: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
-      <% @users.each do |user| %>
-        <li class="user-item <%= 'group-leader' if user.id == @group.leader_id %>" data-name="<%= user.full_name.downcase %>" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #E2E8F0; transition: background-color 0.3s ease-in-out, opacity 0.6s ease; opacity: 1;" onmouseover="this.style.backgroundColor='#F7FAFC'" onmouseout="this.style.backgroundColor='white'">
-          <!-- User Details -->
-          <div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center;">
-            <p class="user-name" style="font-size: 1rem; font-weight: 600; color: #2D3748; transition: color 0.6s ease; margin-right: 8px;"><%= user.full_name %></p>
-            <% if user.id == @group.leader_id %>
-              <!-- Group Leader Icon -->
-              <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: #4f46e5;" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.584 4.874a1 1 0 00.95.69h5.104c.969 0 1.371 1.24.588 1.81l-4.128 3a1 1 0 00-.364 1.118l1.584 4.874c.3.921-.755 1.688-1.54 1.118l-4.128-3a1 1 0 00-1.175 0l-4.128 3c-.784.57-1.838-.197-1.54-1.118l1.584-4.874a1 1 0 00-.364-1.118l-4.128-3c-.784-.57-.38-1.81.588-1.81h5.104a1 1 0 00.95-.69l1.584-4.874z" />
-              </svg>
-            <% end %>
-          </div>
-          <!-- Action Button -->
-          <%= button_to 'Add to Group', add_user_group_path(@group), params: { user_id: user.id }, method: :post, style: "background-color: #4f46e5; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px; border: none; text-decoration: none; cursor: pointer; transition: background-color 0.3s ease-in-out; flex-shrink: 0;", onmouseover: "this.style.backgroundColor='#4338ca'", onmouseout: "this.style.backgroundColor='#4f46e5'" %>
-        </li>
-      <% end %>
-    </ul>
-  <% else %>
-    <p style="color: #718096; font-size: 1rem; margin-top: 16px;">No users available to add to this group.</p>
-  <% end %>
 </div>
 
-<script>
-    // Store the original list of users
-    var originalUserItems = Array.from(document.getElementsByClassName('user-item'));
-
-    function filterUsers() {
-        var input = document.getElementById('user-search');
-        var filter = input.value.toLowerCase();
-        var userList = document.getElementById('user-list');
-
-        // Sort the original list items alphabetically by name
-        var sortedUserItems = originalUserItems.slice().sort(function(a, b) {
-            var nameA = a.getAttribute('data-name');
-            var nameB = b.getAttribute('data-name');
-            return nameA.localeCompare(nameB);
-        });
-
-        // Clear the list and append the sorted and filtered items
-        userList.innerHTML = '';
-
-        sortedUserItems.forEach(function(userItem) {
-            var userNameElement = userItem.querySelector('.user-name');
-            var userName = userNameElement.textContent.toLowerCase();
-
-            if (userName.includes(filter) || filter === '') {
-                // Highlight the matching text with a smooth transition and indigo-200 color
-                var regex = new RegExp(`(${filter})`, 'gi');
-                userNameElement.innerHTML = userNameElement.textContent.replace(regex, '<span style="color: #818cf8; transition: color 0.3s ease;">$1</span>');
-                userItem.style.opacity = '0';
-                userItem.style.display = 'flex';
-                userList.appendChild(userItem);
-                setTimeout(function() {
-                    userItem.style.opacity = '1';
-                }, 10); // Small delay to trigger the transition effect
-            } else {
-                userItem.style.opacity = '0';
-                setTimeout(function() {
-                    userItem.style.display = 'none';
-                }, 600); // Wait for the opacity transition to finish
-            }
-        });
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+
+    .back-button:hover {
+        background-color: #4338ca;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+    }
+
+    .back-button:active {
+        transform: translateY(0);
+    }
+
+    .add-button::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+        transform: rotate(45deg);
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    .add-button:hover::after {
+        opacity: 1;
+        left: 100%;
+        transition: all 0.7s ease;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userSearch = document.getElementById('user-search');
+        const userItems = Array.from(document.getElementsByClassName('user-item'));
+        const searchIcon = userSearch.nextElementSibling;
+        const backButton = document.querySelector('.back-button');
+
+        userSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            userItems.forEach(item => {
+                const userName = item.getAttribute('data-name');
+                const userNameElement = item.querySelector('.user-name');
+                const userEmailElement = item.querySelector('.user-email');
+
+                const matches = userName.includes(searchTerm);
+
+                if (matches) {
+                    item.style.display = 'block';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+
+                    const highlightText = (text, term) => {
+                        if (term.trim() === '') return text;
+                        const regex = new RegExp(`(${term})`, 'gi');
+                        return text.replace(regex, '<span style="background-color: rgba(79, 70, 229, 0.1); color: #4f46e5; transition: all 0.3s ease;">$1</span>');
+                    };
+
+                    userNameElement.innerHTML = highlightText(userNameElement.textContent, searchTerm);
+                    userEmailElement.innerHTML = highlightText(userEmailElement.textContent, searchTerm);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+
+            // Animate search icon
+            searchIcon.style.transform = 'translateY(-50%) rotate(90deg)';
+            setTimeout(() => {
+                searchIcon.style.transform = 'translateY(-50%) rotate(0deg)';
+            }, 300);
+        });
+
+        // Enhanced hover effects for list items
+        userItems.forEach(item => {
+            item.addEventListener('mouseover', () => {
+                item.style.backgroundColor = '#f7fafc';
+                item.style.transform = 'translateX(5px)';
+                item.querySelector('.user-name').style.color = '#4f46e5';
+            });
+            item.addEventListener('mouseout', () => {
+                item.style.backgroundColor = 'white';
+                item.style.transform = 'translateX(0)';
+                item.querySelector('.user-name').style.color = '#2d3748';
+            });
+        });
+
+        // Pulse animation for search input on focus
+        userSearch.addEventListener('focus', () => {
+            userSearch.style.animation = 'pulse 0.5s ease-in-out';
+        });
+        userSearch.addEventListener('blur', () => {
+            userSearch.style.animation = 'none';
+        });
+
+        // Add shimmer effect to buttons
+        document.querySelectorAll('.add-button').forEach(button => {
+            button.addEventListener('mouseover', () => {
+                button.style.backgroundColor = '#4338ca';
+            });
+            button.addEventListener('mouseout', () => {
+                button.style.backgroundColor = '#4f46e5';
+            });
+        });
+
+        // Back button hover effect
+        backButton.addEventListener('mouseover', () => {
+            backButton.style.backgroundColor = '#4338ca';
+            backButton.style.transform = 'translateY(-2px)';
+        });
+        backButton.addEventListener('mouseout', () => {
+            backButton.style.backgroundColor = '#4f46e5';
+            backButton.style.transform = 'translateY(0)';
+        });
+    });
 </script>
