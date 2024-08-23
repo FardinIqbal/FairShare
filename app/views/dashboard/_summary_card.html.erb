@@ -4,7 +4,7 @@
   <div class="summary-grid">
     <div class="summary-item">
       <p class="summary-label">Total Balance</p>
-      <p class="summary-value <%= @total_balance >= 0 ? 'positive' : 'negative' %>">
+      <p class="summary-value <%= @total_balance >= 0 ? 'negative' : 'positive' %>">
         <%= number_to_currency(@total_balance.abs) %>
       </p>
       <p class="summary-subtext"><%= @total_balance >= 0 ? 'you are owed' : 'you owe' %></p>
