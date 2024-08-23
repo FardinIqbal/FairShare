@@ -1,25 +1,36 @@
+# app/controllers/dashboard_controller.rb
 class DashboardController < ApplicationController
-  before_action :authenticate_user!
-
   def index
-    @groups = current_user.groups
     @total_balance = current_user.total_balance
-    @recent_expenses = Expense.where(group: @groups).order(created_at: :desc).limit(5)
-    @owed_by_others = calculate_owed_by_others
-    @owed_to_others = calculate_owed_to_others
+    @total_expenses = current_user.expenses.sum(:amount)
+    @groups = current_user.groups
+    @owed_amounts = calculate_owed_amounts
+    @recent_activities = fetch_recent_activities
+    @expense_categories = current_user.expenses.group(:category).sum(:amount)
   end
 
   private
 
-  def calculate_owed_by_others
-    current_user.balances.where('amount > 0').includes(:group).map do |balance|
-      { group: balance.group, amount: balance.amount }
+  def calculate_owed_amounts
+    owed_to_others = []
+    owed_by_others = []
+
+    current_user.groups.each do |group|
+      balance = current_user.balance_in_group(group)
+      if balance < 0
+        owed_to_others << { group: group, amount: balance.abs }
+      elsif balance > 0
+        owed_by_others << { group: group, amount: balance }
+      end
     end
+
+    { owed_to_others: owed_to_others, owed_by_others: owed_by_others }
   end
 
-  def calculate_owed_to_others
-    current_user.balances.where('amount < 0').includes(:group).map do |balance|
-      { group: balance.group, amount: -balance.amount }
-    end
+  def fetch_recent_activities
+    Expense.where(group: current_user.groups)
+           .order(created_at: :desc)
+           .limit(5)
+           .includes(:user, :group)
   end
 end

@@ -1,4 +1,3 @@
-# app/models/user.rb
 class User < ApplicationRecord
   # Devise modules for authentication
   devise :database_authenticatable, :registerable,
@@ -7,8 +6,16 @@ class User < ApplicationRecord
   attribute :demo, :boolean, default: false
 
   # Associations
-  has_and_belongs_to_many :groups  # A user can belong to many groups
-  has_many :expenses  # A user can have many expenses
+  has_many :group_memberships
+  has_many :groups, through: :group_memberships
+  has_many :expenses
+  has_many :balances
+
+  has_many :friendships
+  has_many :friends, through: :friendships
+  has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
+  has_many :inverse_friends, through: :inverse_friendships, source: :user
+
 
   # Validations
   validates :first_name, presence: true
@@ -20,13 +27,11 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def calculate_total_balance
-    total = 0
-    groups.each do |group|
-      splits_result = group.calculate_splits
-      user_split = splits_result[:splits].find { |split| split[:user] == self }
-      total += user_split[:net] if user_split
-    end
-    total
+  def total_balance
+    balances.sum(:amount)
+  end
+
+  def balance_in_group(group)
+    balances.find_by(group: group).amount || 0
   end
 end

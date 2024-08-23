@@ -1,17 +1,17 @@
 <header style="background-color: white; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); position: sticky; top: 0; z-index: 1000;">
   <nav style="max-width: 1280px; margin: 0 auto; padding: 0.75rem 1rem;">
     <div style="display: flex; justify-content: space-between; align-items: center;">
-      <%= link_to "FairShare", root_path, class: "logo" %>
+      <%= link_to "FairShare", root_path, class: "logo", data: { turbo: false } %>
 
       <div class="nav-links">
-        <%= link_to "Home", root_path, class: "nav-link" %>
-        <%= link_to "Groups", groups_path, class: "nav-link" %>
-        <%= link_to "Activity", "#", class: "nav-link" %>
+        <%= link_to "Home", root_path, class: "nav-link", data: { turbo: false } %>
+        <%= link_to "Groups", groups_path, class: "nav-link", data: { turbo: false } %>
+        <%= link_to "Activity", "#", class: "nav-link", data: { turbo: false } %>
         <% if user_signed_in? %>
-          <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "btn-secondary" %>
+          <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "btn-secondary", data: { turbo: false } %>
         <% else %>
-          <%= link_to "Sign in", new_user_session_path, class: "btn-primary" %>
-          <%= link_to "Sign up", new_user_registration_path, class: "btn-secondary" %>
+          <%= link_to "Sign in", new_user_session_path, class: "btn-primary", data: { turbo: false } %>
+          <%= link_to "Sign up", new_user_registration_path, class: "btn-secondary", data: { turbo: false } %>
         <% end %>
       </div>
 
@@ -30,14 +30,14 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
-    <%= link_to "Home", root_path, class: "mobile-nav-link" %>
-    <%= link_to "Groups", groups_path, class: "mobile-nav-link" %>
-    <%= link_to "Activity", "#", class: "mobile-nav-link" %>
+    <%= link_to "Home", root_path, class: "mobile-nav-link", data: { turbo: false } %>
+    <%= link_to "Groups", groups_path, class: "mobile-nav-link", data: { turbo: false } %>
+    <%= link_to "Activity", "#", class: "mobile-nav-link", data: { turbo: false } %>
     <% if user_signed_in? %>
-      <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "mobile-nav-link" %>
+      <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "mobile-nav-link", data: { turbo: false } %>
     <% else %>
-      <%= link_to "Sign in", new_user_session_path, class: "mobile-nav-link" %>
-      <%= link_to "Sign up", new_user_registration_path, class: "mobile-nav-link" %>
+      <%= link_to "Sign in", new_user_session_path, class: "mobile-nav-link", data: { turbo: false } %>
+      <%= link_to "Sign up", new_user_registration_path, class: "mobile-nav-link", data: { turbo: false } %>
     <% end %>
   </div>
 </header>

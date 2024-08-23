@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_22_202353) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_23_170008) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,13 +36,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_202353) do
     t.string "category"
     t.index ["group_id"], name: "index_expenses_on_group_id"
     t.index ["user_id"], name: "index_expenses_on_user_id"
-  end
-
-  create_table "expenses_users", id: false, force: :cascade do |t|
-    t.bigint "expense_id", null: false
-    t.bigint "user_id", null: false
-    t.index ["expense_id", "user_id"], name: "index_expenses_users_on_expense_id_and_user_id"
-    t.index ["user_id", "expense_id"], name: "index_expenses_users_on_user_id_and_expense_id"
   end
 
   create_table "friendships", force: :cascade do |t|
@@ -79,6 +72,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_202353) do
     t.bigint "group_id", null: false
     t.index ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id"
     t.index ["user_id", "group_id"], name: "index_groups_users_on_user_id_and_group_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "recipient_id", null: false
+    t.bigint "actor_id", null: false
+    t.string "action"
+    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id", null: false
+    t.text "message"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_notifications_on_actor_id"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+    t.index ["recipient_id"], name: "index_notifications_on_recipient_id"
   end
 
   create_table "payments", force: :cascade do |t|
@@ -120,6 +128,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_202353) do
   add_foreign_key "group_memberships", "groups"
   add_foreign_key "group_memberships", "users"
   add_foreign_key "groups", "users", column: "leader_id"
+  add_foreign_key "notifications", "users", column: "actor_id"
+  add_foreign_key "notifications", "users", column: "recipient_id"
   add_foreign_key "payments", "groups"
   add_foreign_key "payments", "users", column: "payer_id"
   add_foreign_key "payments", "users", column: "recipient_id"

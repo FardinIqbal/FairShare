@@ -1,15 +1,53 @@
 <!-- app/views/dashboard/index.html.erb -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Hello, <%= current_user.first_name %></h1>
+<div class="dashboard-container">
+  <h1 class="dashboard-title">Dashboard</h1>
 
-  <%= render 'dashboard/summary_section' %>
-
-  <%= render 'dashboard/quick_actions' %>
-
+  <%= render 'dashboard/summary_card' %>
   <%= render 'dashboard/owed_amounts' %>
-
-  <div class="mt-8">
-    <%= render 'dashboard/recent_activities' %>
-  </div>
-
+  <%= render 'dashboard/expense_breakdown' %>
+  <%= render 'dashboard/recent_activities' %>
 </div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #F3F4F6;
+        color: #1F2937;
+        margin: 0;
+        padding: 0;
+    }
+
+    .dashboard-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .dashboard-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #4F46E5;
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #4F46E5;
+        margin-bottom: 15px;
+    }
+
+    .card {
+        background-color: #FFFFFF;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    @media (min-width: 640px) {
+        .dashboard-title {
+            font-size: 28px;
+        }
+    }
+</style>

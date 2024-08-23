@@ -9,7 +9,7 @@ class Expense < ApplicationRecord
   validates :group, presence: true
   validates :category, presence: true
 
-  CATEGORIES = %w[Food Transportation Housing Entertainment Utilities Other]
+  CATEGORIES = %w[Food Transportation Housing Entertainment Utilities Other Accommodation].freeze
   validates :category, inclusion: { in: CATEGORIES }
 
   after_create :update_group_balances

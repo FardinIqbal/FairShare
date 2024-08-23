@@ -1,43 +1,64 @@
-<nav style="background: linear-gradient(to bottom, #f9fafb, #f3f4f6); position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; border-top: 1px solid #e5e7eb; box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06); @media (min-width: 768px) { display: none; }" aria-label="Bottom">
+<nav style="background-color: #ffffff; position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; border-top: 1px solid #e5e7eb; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); @media (min-width: 768px) { display: none; }" aria-label="Bottom">
   <div style="max-width: 36rem; margin-left: auto; margin-right: auto; padding: 0.5rem 1rem 0.75rem; display: flex; justify-content: space-around; align-items: center; position: relative;">
-    <%= link_to root_path, class: "nav-item", style: "color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: all 0.3s ease; padding: 0.5rem; border-radius: 0.5rem;" do %>
-      <svg class="nav-icon" style="height: 1.5rem; width: 1.5rem; margin-bottom: 0.25rem; transition: all 0.3s ease;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-      <span style="font-size: 0.75rem; font-weight: 500; transition: all 0.3s ease;">Home</span>
+
+    <%= link_to "#", class: "nav-item", style: "color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: all 0.3s ease; padding: 0.5rem; border-radius: 0.5rem; flex: 1; max-width: 80px;" do %>
+      <svg class="nav-icon" style="height: 1.5rem; width: 1.5rem; margin-bottom: 0.25rem; transition: all 0.3s ease;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+      <span style="font-size: 0.75rem; font-weight: 500; transition: all 0.3s ease; text-align: center;">Alerts</span>
     <% end %>
 
-    <%= link_to groups_path, class: "nav-item", style: "color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: all 0.3s ease; padding: 0.5rem; border-radius: 0.5rem;" do %>
-      <svg class="nav-icon" style="height: 1.5rem; width: 1.5rem; margin-bottom: 0.25rem; transition: all 0.3s ease;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-      <span style="font-size: 0.75rem; font-weight: 500; transition: all 0.3s ease;">Groups</span>
+    <%= link_to dashboard_path, class: "nav-item", style: "color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: all 0.3s ease; padding: 0.5rem; border-radius: 0.5rem; flex: 1; max-width: 80px;" do %>
+      <svg class="nav-icon" style="height: 1.5rem; width: 1.5rem; margin-bottom: 0.25rem; transition: all 0.3s ease;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+      </svg>
+      <span style="font-size: 0.75rem; font-weight: 500; transition: all 0.3s ease; text-align: center;">Dashboard</span>
     <% end %>
 
-    <%= link_to "#", class: "nav-item-special", style: "background: linear-gradient(145deg, #4f46e5, #4338ca); color: white; padding: 1rem; border-radius: 9999px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06); display: flex; align-items: center; justify-content: center; position: absolute; top: -1.5rem; left: 50%; transform: translateX(-50%); transition: all 0.3s ease;" do %>
+    <%= link_to "#", class: "nav-item-special", style: "background-color: #4f46e5; color: white; padding: 1rem; border-radius: 9999px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06); display: flex; align-items: center; justify-content: center; position: absolute; top: -1.5rem; left: 50%; transform: translateX(-50%); transition: all 0.3s ease;" do %>
       <svg style="height: 1.75rem; width: 1.75rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
     <% end %>
 
-    <%= link_to "#", class: "nav-item", style: "color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: all 0.3s ease; padding: 0.5rem; border-radius: 0.5rem;" do %>
-      <svg class="nav-icon" style="height: 1.5rem; width: 1.5rem; margin-bottom: 0.25rem; transition: all 0.3s ease;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-      <span style="font-size: 0.75rem; font-weight: 500; transition: all 0.3s ease;">Alerts</span>
+
+    <%= link_to groups_path, class: "nav-item", style: "color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: all 0.3s ease; padding: 0.5rem; border-radius: 0.5rem; flex: 1; max-width: 80px;" do %>
+      <svg class="nav-icon" style="height: 1.5rem; width: 1.5rem; margin-bottom: 0.25rem; transition: all 0.3s ease;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+      <span style="font-size: 0.75rem; font-weight: 500; transition: all 0.3s ease; text-align: center;">Groups</span>
     <% end %>
 
-    <%= link_to edit_user_registration_path, class: "nav-item", style: "color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: all 0.3s ease; padding: 0.5rem; border-radius: 0.5rem;" do %>
+
+    <%= link_to edit_user_registration_path, class: "nav-item", style: "color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: all 0.3s ease; padding: 0.5rem; border-radius: 0.5rem; flex: 1; max-width: 80px;" do %>
       <svg class="nav-icon" style="height: 1.5rem; width: 1.5rem; margin-bottom: 0.25rem; transition: all 0.3s ease;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-      <span style="font-size: 0.75rem; font-weight: 500; transition: all 0.3s ease;">Profile</span>
+      <span style="font-size: 0.75rem; font-weight: 500; transition: all 0.3s ease; text-align: center;">Profile</span>
     <% end %>
   </div>
 </nav>
 
 <style>
+    .nav-item {
+        position: relative;
+        overflow: hidden;
+    }
+    .nav-item::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: #4f46e5;
+        transition: all 0.3s ease;
+    }
+    .nav-item:hover::after {
+        width: 100%;
+        left: 0;
+    }
     .nav-item:hover {
         color: #4f46e5;
-        background-color: rgba(79, 70, 229, 0.1);
-        transform: translateY(-2px);
     }
     .nav-item:hover .nav-icon {
-        transform: scale(1.1);
+        transform: translateY(-2px);
     }
     .nav-item-special:hover {
-        background: linear-gradient(145deg, #4338ca, #4f46e5);
-        transform: translateY(-4px) translateX(-50%) scale(1.05);
+        background-color: #4338ca;
+        transform: translateY(-4px) translateX(-50%);
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
     }
     .nav-item:active, .nav-item-special:active {
