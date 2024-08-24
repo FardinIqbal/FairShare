@@ -1,93 +1,212 @@
 <!-- app/views/groups/show.html.erb -->
-<div class="container mx-auto mt-4 space-y-4 px-4">
-  <h1 class="text-2xl md:text-4xl font-bold text-gray-800"><%= @group.name %></h1>
+<div style="max-width: 100%; padding: 1rem; background-color: #f3f4f6;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; opacity: 0; transform: translateY(-20px);" id="headerContainer">
+    <h1 style="font-size: 2rem; font-weight: 800; color: #1a202c;"><%= @group.name %></h1>
+    <%= link_to groups_path, style: "color: #4f46e5; text-decoration: none; display: flex; align-items: center; transition: all 0.3s ease;", onmouseover: "this.style.color='#4338ca';", onmouseout: "this.style.color='#4f46e5';" do %>
+      <svg style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Back to Groups
+    <% end %>
+  </div>
 
-  <!-- Common Content for Both Views -->
-  <%= render partial: 'summary', locals: { total_expenses: @total_expenses, per_person_share: @per_person_share, current_user_summary: @current_user_summary } %>
-  <%= render 'shared/group_balance', current_user_owes: @current_user_owes, current_user_owed: @current_user_owed %>
-
-  <!-- Desktop Content -->
-  <div class="hidden md:block space-y-8">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <%= render partial: 'expenses', locals: { group: @group, expenses: @expenses } %>
-      <div class="space-y-8">
-        <%= render partial: 'members', locals: { group: @group } %>
-        <%= render partial: 'expense_summary', locals: { user_summaries: @user_summaries } %>
+  <div class="card" id="overviewCard" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
+    <div style="padding: 1.5rem; border-bottom: 1px solid #e2e8f0;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Group Overview</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div style="text-align: center;">
+          <p style="color: #718096; margin-bottom: 0.25rem;">Total Expenses</p>
+          <p style="font-size: 1.5rem; font-weight: 600; color: #4f46e5;" class="animate-number"><%= number_to_currency(@total_expenses) %></p>
+        </div>
+        <div style="text-align: center;">
+          <p style="color: #718096; margin-bottom: 0.25rem;">Your Balance</p>
+          <p style="font-size: 1.5rem; font-weight: 600; color: <%= @current_user_summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;" class="animate-number">
+            <%= number_to_currency(@current_user_summary[:net_balance].abs) %>
+          </p>
+          <p style="font-size: 0.875rem; color: <%= @current_user_summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
+            (<%= @current_user_summary[:net_balance] >= 0 ? 'You are owed' : 'You owe' %>)
+          </p>
+        </div>
+        <div style="text-align: center;">
+          <p style="color: #718096; margin-bottom: 0.25rem;">Total Members</p>
+          <p style="font-size: 1.5rem; font-weight: 600; color: #4f46e5;"><%= @group.users.count %></p>
+        </div>
+        <div style="text-align: center;">
+          <p style="color: #718096; margin-bottom: 0.25rem;">Top Category</p>
+          <p style="font-size: 1.5rem; font-weight: 600; color: #4f46e5;"><%= @most_expensive_category || 'N/A' %></p>
+        </div>
       </div>
     </div>
-    <%= render partial: 'settle_up', locals: { optimized_settlements: @optimized_settlements } %>
   </div>
 
-  <!-- Mobile Content -->
-  <div class="md:hidden space-y-4">
-    <!-- Tab Navigation -->
-    <div class="bg-white shadow-sm rounded-lg">
-      <nav class="flex" aria-label="Tabs">
-        <button onclick="showTab('expenses')" class="tab-button text-gray-600 py-3 px-1 border-b-2 font-medium text-sm flex-1 rounded-tl-lg" data-tab="expenses">
-          Expenses
-        </button>
-        <button onclick="showTab('members')" class="tab-button text-gray-600 py-3 px-1 border-b-2 font-medium text-sm flex-1" data-tab="members">
-          Members
-        </button>
-        <button onclick="showTab('settle')" class="tab-button text-gray-600 py-3 px-1 border-b-2 font-medium text-sm flex-1 rounded-tr-lg" data-tab="settle">
-          Settle Up
-        </button>
-      </nav>
-    </div>
-
-    <!-- Tab Content -->
-    <div id="expenses" class="tab-content">
-      <%= render partial: 'expenses', locals: { group: @group, expenses: @expenses } %>
-    </div>
-
-    <div id="members" class="tab-content hidden">
-      <%= render partial: 'members', locals: { group: @group } %>
-      <%= render partial: 'expense_summary', locals: { user_summaries: @user_summaries } %>
-    </div>
-
-    <div id="settle" class="tab-content hidden">
-      <%= render partial: 'settle_up', locals: { optimized_settlements: @optimized_settlements } %>
+  <div style="display: flex; justify-content: center; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);" id="tabContainer">
+    <div style="background-color: white; border-radius: 9999px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden;">
+      <button class="tab-button" data-tab="expenses" style="background-color: #4f46e5; color: white; border: none; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.3s ease;">Expenses</button>
+      <button class="tab-button" data-tab="members" style="background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.3s ease;">Members</button>
+      <button class="tab-button" data-tab="settle" style="background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.3s ease;">Settle Up</button>
     </div>
   </div>
 
-  <!-- Floating Action Button for Adding Expense (visible on both mobile and desktop) -->
-  <%= link_to new_group_expense_path(@group), style: "
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  background-color: #FF6B6B;
-  color: white;
-  border-radius: 9999px;
-  padding: 1rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  outline: none;
-  z-index: 9999;
-  transition: all 300ms ease-in-out;
-", onmouseover: "this.style.backgroundColor='#E05555'; this.style.transform='scale(1.05)';", onmouseout: "this.style.backgroundColor='#FF6B6B'; this.style.transform='scale(1)';", onfocus: "this.style.boxShadow='0 0 0 2px #fff, 0 0 0 4px #FF6B6B'", onblur: "this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'" do %>
-    <svg xmlns="http://www.w3.org/2000/svg" style="width: 1.5rem; height: 1.5rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-    </svg>
-  <% end %>
+  <div id="tabContent">
+    <div id="expenses" class="tab-content card" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
+      <div style="padding: 1.5rem; border-bottom: 1px solid #e2e8f0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a202c;">Recent Expenses</h2>
+          <%= link_to new_group_expense_path(@group), style: "background-color: #4f46e5; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center;", onmouseover: "this.style.backgroundColor='#4338ca';", onmouseout: "this.style.backgroundColor='#4f46e5';" do %>
+            <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            Add Expense
+          <% end %>
+        </div>
+        <% @expenses.take(5).each do |expense| %>
+          <div style="border-bottom: 1px solid #e2e8f0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <p style="font-weight: 600; color: #1a202c;"><%= expense.description %></p>
+              <p style="font-size: 0.875rem; color: #718096;">
+                <%= expense.user.full_name %>
+                <%= ' (You)' if expense.user == current_user %>
+                • <%= expense.date.strftime("%b %d, %Y") %>
+              </p>
+              <p style="font-size: 0.875rem; color: #4f46e5;"><%= expense.category %></p>
+            </div>
+            <p style="font-weight: 600; color: #4f46e5;"><%= number_to_currency(expense.amount) %></p>
+          </div>
+        <% end %>
+      </div>
+      <div style="padding: 1rem; text-align: center;">
+        <%= link_to 'View All Expenses', group_expenses_path(@group), style: "color: #4f46e5; text-decoration: none; font-weight: 600; transition: all 0.3s ease;", onmouseover: "this.style.color='#4338ca';", onmouseout: "this.style.color='#4f46e5';" %>
+      </div>
+    </div>
 
-  <script>
-      function showTab(tabName) {
-          document.querySelectorAll('.tab-content').forEach(content => {
-              content.classList.add('hidden');
-          });
-          document.getElementById(tabName).classList.remove('hidden');
-          document.querySelectorAll('.tab-button').forEach(button => {
-              if (button.dataset.tab === tabName) {
-                  button.classList.add('text-indigo-600', 'border-indigo-600');
-                  button.classList.remove('text-gray-600', 'border-transparent');
-              } else {
-                  button.classList.remove('text-indigo-600', 'border-indigo-600');
-                  button.classList.add('text-gray-600', 'border-transparent');
-              }
-          });
-      }
-      showTab('expenses');
-  </script>
+    <div id="members" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
+      <div style="padding: 1.5rem; border-bottom: 1px solid #e2e8f0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a202c;">Group Members</h2>
+          <%= link_to add_users_group_path(@group), style: "background-color: #4f46e5; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center;", onmouseover: "this.style.backgroundColor='#4338ca';", onmouseout: "this.style.backgroundColor='#4f46e5';" do %>
+            <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+            Add Member
+          <% end %>
+        </div>
+        <% @user_summaries.each do |summary| %>
+          <div style="border-bottom: 1px solid #e2e8f0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <p style="font-weight: 600; color: #1a202c;"><%= summary[:user].full_name %> <%= summary[:user] == current_user ? '(You)' : '' %></p>
+              <p style="font-size: 0.875rem; color: #718096;"><%= summary[:user].email %></p>
+            </div>
+            <div style="text-align: right;">
+              <p style="font-weight: 600; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
+                <%= number_to_currency(summary[:net_balance].abs) %>
+              </p>
+              <p style="font-size: 0.875rem; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
+                (<%= summary[:net_balance] >= 0 ? 'to receive' : 'owes' %>)
+              </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div id="settle" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
+      <div style="padding: 1.5rem; border-bottom: 1px solid #e2e8f0;">
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Settle Up</h2>
+        <% if @optimized_settlements.any? %>
+          <% @optimized_settlements.each do |settlement| %>
+            <div style="border-bottom: 1px solid #e2e8f0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+              <p style="color: #1a202c;">
+                <%= settlement[:from] == current_user ? 'You' : settlement[:from].full_name %>
+                pays
+                <%= settlement[:to] == current_user ? 'you' : settlement[:to].full_name %>
+              </p>
+              <div style="display: flex; align-items: center;">
+                <p style="font-weight: 600; color: #4f46e5; margin-right: 1rem;"><%= number_to_currency(settlement[:amount]) %></p>
+                <% if settlement[:from] == current_user %>
+                  <%= button_to "Send", '#', method: :post, style: "background-color: #10B981; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease;", onmouseover: "this.style.backgroundColor='#059669';", onmouseout: "this.style.backgroundColor='#10B981';" %>
+                <% elsif settlement[:to] == current_user %>
+                  <%= button_to "Remind", '#', method: :post, style: "background-color: #F59E0B; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease;", onmouseover: "this.style.backgroundColor='#D97706';", onmouseout: "this.style.backgroundColor='#F59E0B';" %>
+                <% else %>
+                  <button disabled style="background-color: #E5E7EB; color: #9CA3AF; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: not-allowed;">Action</button>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p style="text-align: center; color: #718096;">All settled up! No payments needed.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const headerContainer = document.getElementById('headerContainer');
+        const overviewCard = document.getElementById('overviewCard');
+        const tabContainer = document.getElementById('tabContainer');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Fade in and slide down for header
+        headerContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        headerContainer.style.opacity = '1';
+        headerContainer.style.transform = 'translateY(0)';
+
+        // Fade in and slide up for overview card and tab container
+        overviewCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        tabContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        overviewCard.style.opacity = '1';
+        overviewCard.style.transform = 'translateY(0)';
+        tabContainer.style.opacity = '1';
+        tabContainer.style.transform = 'translateY(0)';
+
+        function showTab(tabName) {
+            tabButtons.forEach(button => {
+                if (button.dataset.tab === tabName) {
+                    button.style.backgroundColor = '#4f46e5';
+                    button.style.color = 'white';
+                } else {
+                    button.style.backgroundColor = 'transparent';
+                    button.style.color = '#4b5563';
+                }
+            });
+
+            tabContents.forEach(content => {
+                if (content.id === tabName) {
+                    content.style.display = 'block';
+                    setTimeout(() => {
+                        content.style.opacity = '1';
+                        content.style.transform = 'translateY(0)';
+                    }, 50);
+                } else {
+                    content.style.display = 'none';
+                    content.style.opacity = '0';
+                    content.style.transform = 'translateY(20px)';
+                }
+            });
+        }
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => showTab(button.dataset.tab));
+        });
+
+        // Show initial tab
+        showTab('expenses');
+
+        // Animate numbers
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = '$' + (progress * (end - start) + start).toFixed(2);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        document.querySelectorAll('.animate-number').forEach(el => {
+            const value = parseFloat(el.innerText.replace(/[^0-9.-]+/g,""));
+            animateValue(el, 0, value, 1000);
+        });
+    });
+</script>

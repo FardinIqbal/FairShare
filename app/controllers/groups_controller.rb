@@ -7,17 +7,38 @@ class GroupsController < ApplicationController
   end
 
   def show
+    @group = Group.find(params[:id])
     @expenses = @group.expenses.order(date: :desc)
+
     @total_expenses = @group.total_expenses
     @per_person_share = @total_expenses.to_f / @group.users.count
 
-    @current_user_summary = calculate_user_summary(current_user)
-    @user_summaries = @group.users.map { |user| calculate_user_summary(user) }
+    @group.update_balances  # Update balances before calculating debts
 
-    @current_user_balance = @group.balances.find_by(user: current_user).amount || 0
-    @current_user_owes = []
-    @current_user_owed = []
+    @user_summaries = @group.users.map do |user|
+      user_expenses = @group.expenses.where(user: user)
+      {
+        user: user,
+        total_paid: user_expenses.sum(:amount),
+        expense_count: user_expenses.count,
+        largest_expense: user_expenses.maximum(:amount) || 0,
+        net_balance: user.balance_in_group(@group)
+      }
+    end
+
+    @current_user_summary = @user_summaries.find { |summary| summary[:user] == current_user }
+
     @optimized_settlements = @group.calculate_debts
+
+    @current_user_owes = @optimized_settlements.select { |settlement| settlement[:from] == current_user }
+    @current_user_owed = @optimized_settlements.select { |settlement| settlement[:to] == current_user }
+
+    @most_expensive_category = @group.expenses
+                                     .select('category, SUM(amount) as total_amount')
+                                     .group(:category)
+                                     .order('total_amount DESC')
+                                     .first
+                                 &.category
   end
 
   def new
