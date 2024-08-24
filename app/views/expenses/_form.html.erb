@@ -1,46 +1,70 @@
-<!-- app/views/expenses/_form.html.erb -->
-<%= form_with(model: [@group, @expense], local: true, class: "space-y-6") do |form| %>
-  <% if @expense.errors.any? %>
-    <div class="bg-red-50 border-l-4 border-red-400 p-4">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h2 class="text-sm font-medium text-red-800">
-            <%= pluralize(@expense.errors.count, "error") %> prohibited this expense from being saved:
-          </h2>
-          <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
-            <% @expense.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
+<!-- app/views/groups/_form.html.erb -->
+<%= form_with(model: group, local: true, id: "group-form", style: "margin-top: 1.5rem;") do |form| %>
+  <% if group.errors.any? %>
+    <div id="error-messages" style="display: block; background-color: #FEE2E2; border: 1px solid #F87171; color: #B91C1C; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+      <h2 style="font-size: 0.875rem; font-weight: 600;">
+        <%= pluralize(group.errors.count, "error") %> prohibited this group from being saved:
+      </h2>
+      <ul style="margin-top: 0.5rem; list-style-type: disc; list-style-position: inside;">
+        <% group.errors.full_messages.each do |message| %>
+          <li style="font-size: 0.875rem;"><%= message %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
-    <%= form.text_field :description, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+  <div class="form-field" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(10px); transition: all 0.3s ease-out;">
+    <%= form.label :name, style: "display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;" %>
+    <%= form.text_field :name, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s ease;" %>
   </div>
 
-  <div>
-    <%= form.label :amount, class: "block text-sm font-medium text-gray-700" %>
-    <%= form.number_field :amount, step: 0.01, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+  <div class="form-field" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(10px); transition: all 0.3s ease-out;">
+    <%= form.label :description, style: "display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;" %>
+    <%= form.text_area :description, rows: 4, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s ease;" %>
   </div>
 
-  <div>
-    <%= form.label :date, class: "block text-sm font-medium text-gray-700" %>
-    <%= form.date_field :date, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+  <div style="text-align: right; opacity: 0; transform: translateY(10px); transition: all 0.3s ease-out;">
+    <%= form.submit "Create Group", style: "background-color: #4338ca; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 1rem;" %>
   </div>
-
-  <div>
-    <%= form.label :category, class: "block text-sm font-medium text-gray-700" %>
-    <%= form.select :category, Expense::CATEGORIES, { prompt: "Select a category" }, class: "mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
-  </div>
-
-  <%= form.submit class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
 <% end %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('group-form');
+        const formFields = form.querySelectorAll('.form-field, div[style*="text-align: right"]');
+
+        // Animate form fields
+        formFields.forEach((field, index) => {
+            setTimeout(() => {
+                field.style.opacity = '1';
+                field.style.transform = 'translateY(0)';
+            }, index * 200);
+        });
+
+        // Input focus effects
+        const inputs = form.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.style.borderColor = '#4338ca';
+                input.style.boxShadow = '0 0 0 3px rgba(67, 56, 202, 0.1)';
+            });
+            input.addEventListener('blur', () => {
+                input.style.borderColor = '#D1D5DB';
+                input.style.boxShadow = 'none';
+            });
+        });
+
+        // Submit button hover effect
+        const submitButton = form.querySelector('input[type="submit"]');
+        submitButton.addEventListener('mouseenter', () => {
+            submitButton.style.backgroundColor = '#3730a3';
+            submitButton.style.transform = 'translateY(-2px)';
+            submitButton.style.boxShadow = '0 4px 6px rgba(67, 56, 202, 0.25)';
+        });
+        submitButton.addEventListener('mouseleave', () => {
+            submitButton.style.backgroundColor = '#4338ca';
+            submitButton.style.transform = 'translateY(0)';
+            submitButton.style.boxShadow = 'none';
+        });
+    });
+</script>

@@ -16,7 +16,6 @@ class User < ApplicationRecord
   has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
   has_many :inverse_friends, through: :inverse_friendships, source: :user
 
-
   # Validations
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -32,6 +31,7 @@ class User < ApplicationRecord
   end
 
   def balance_in_group(group)
-    balances.find_by(group: group).amount || 0
+    balance = balances.find_by(group: group)
+    balance ? balance.amount : 0
   end
 end

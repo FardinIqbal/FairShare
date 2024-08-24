@@ -48,13 +48,16 @@ class GroupsController < ApplicationController
   def create
     @group = Group.new(group_params)
     @group.leader = current_user
+    @group.users << current_user
 
-    if @group.save
-      @group.group_memberships.create(user: current_user)
-      @group.balances.create(user: current_user, amount: 0)
-      redirect_to @group, notice: 'Group was successfully created.'
-    else
-      render :new
+    respond_to do |format|
+      if @group.save
+        format.html { redirect_to add_users_group_path(@group), notice: 'Group was successfully created.' }
+        format.json { render json: { success: true, redirect_url: add_users_group_path(@group) }, status: :created }
+      else
+        format.html { render :new }
+        format.json { render json: { success: false, errors: @group.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 

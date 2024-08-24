@@ -1,10 +1,59 @@
 <!-- app/views/groups/new.html.erb -->
-<div class="max-w-2xl mx-auto mt-8">
-  <h1 class="text-3xl font-bold mb-6">Create New Group</h1>
+<div id="newGroupContainer" style="max-width: 500px; margin: 2rem auto; padding: 2rem; background-color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out;">
+  <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 1.5rem; color: #4338ca; position: relative;">
+    Create New Group
+    <span id="titleUnderline" style="position: absolute; bottom: -5px; left: 0; width: 25%; height: 3px; background-color: #4338ca; transition: all 0.3s ease-in-out;"></span>
+  </h1>
+
+  <p style="color: #6b7280; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out;">Start your journey of shared expenses and easy financial management with friends, family, or roommates.</p>
 
   <%= render 'form', group: @group %>
 
-  <div class="mt-4">
-    <%= link_to 'Back to Groups', groups_path, class: "text-indigo-600 hover:text-indigo-900" %>
+  <div style="margin-top: 1.5rem; text-align: center;">
+    <%= link_to 'Back to Groups', groups_path, style: "color: #4338ca; text-decoration: none; transition: all 0.3s ease-in-out;" %>
   </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('newGroupContainer');
+        const description = container.querySelector('p');
+        const title = container.querySelector('h1');
+        const titleUnderline = document.getElementById('titleUnderline');
+
+        // Fade in animation
+        setTimeout(() => {
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+            description.style.opacity = '1';
+            description.style.transform = 'translateY(0)';
+        }, 100);
+
+        // Title hover effect
+        title.addEventListener('mouseenter', () => {
+            titleUnderline.style.width = '100%';
+        });
+        title.addEventListener('mouseleave', () => {
+            titleUnderline.style.width = '25%';
+        });
+
+        // Link hover effect
+        const link = container.querySelector('a');
+        link.addEventListener('mouseenter', () => {
+            link.style.color = '#1e1b4b';
+            link.style.textDecoration = 'underline';
+        });
+        link.addEventListener('mouseleave', () => {
+            link.style.color = '#4338ca';
+            link.style.textDecoration = 'none';
+        });
+    });
+</script>
+
+<style>
+    #newGroupContainer {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease-out;
+    }
+</style>
