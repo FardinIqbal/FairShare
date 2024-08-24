@@ -1,140 +1,195 @@
 <!-- app/views/groups/show.html.erb -->
-<div style="max-width: 100%; padding: 1rem; background-color: #f3f4f6;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; opacity: 0; transform: translateY(-20px);" id="headerContainer">
-    <h1 style="font-size: 2rem; font-weight: 800; color: #1a202c;"><%= @group.name %></h1>
-    <%= link_to groups_path, style: "color: #4f46e5; text-decoration: none; display: flex; align-items: center; transition: all 0.3s ease;", onmouseover: "this.style.color='#4338ca';", onmouseout: "this.style.color='#4f46e5';" do %>
-      <svg style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<div class="group-show-container" style="max-width: 100%; padding: 1rem; background-color: #f3f4f6;">
+  <div class="header" style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 1.5rem; opacity: 0; transform: translateY(-20px);" id="headerContainer">
+    <h1 style="font-size: 1.5rem; font-weight: 800; color: #1a202c; margin-bottom: 0.5rem;"><%= @group.name %></h1>
+    <%= link_to groups_path, class: "back-link", style: "color: #4f46e5; text-decoration: none; display: flex; align-items: center; transition: all 0.3s ease; font-size: 0.875rem;" do %>
+      <svg style="width: 1rem; height: 1rem; margin-right: 0.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
       </svg>
       Back to Groups
     <% end %>
   </div>
 
-  <div class="card" id="overviewCard" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
-    <div style="padding: 1.5rem; border-bottom: 1px solid #e2e8f0;">
-      <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Group Overview</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-        <div style="text-align: center;">
-          <p style="color: #718096; margin-bottom: 0.25rem;">Total Expenses</p>
-          <p style="font-size: 1.5rem; font-weight: 600; color: #4f46e5;" class="animate-number"><%= number_to_currency(@total_expenses) %></p>
+  <div class="overview-card" id="overviewCard" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
+    <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
+      <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Group Overview</h2>
+      <div class="overview-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
+        <div class="overview-item" style="text-align: center;">
+          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Total Expenses</p>
+          <p style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;" class="animate-number"><%= number_to_currency(@total_expenses) %></p>
         </div>
-        <div style="text-align: center;">
-          <p style="color: #718096; margin-bottom: 0.25rem;">Your Balance</p>
-          <p style="font-size: 1.5rem; font-weight: 600; color: <%= @current_user_summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;" class="animate-number">
+        <div class="overview-item" style="text-align: center;">
+          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Your Balance</p>
+          <p style="font-size: 1.25rem; font-weight: 600; color: <%= @current_user_summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;" class="animate-number">
             <%= number_to_currency(@current_user_summary[:net_balance].abs) %>
           </p>
-          <p style="font-size: 0.875rem; color: <%= @current_user_summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
+          <p style="font-size: 0.75rem; color: <%= @current_user_summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
             (<%= @current_user_summary[:net_balance] >= 0 ? 'You are owed' : 'You owe' %>)
           </p>
         </div>
-        <div style="text-align: center;">
-          <p style="color: #718096; margin-bottom: 0.25rem;">Total Members</p>
-          <p style="font-size: 1.5rem; font-weight: 600; color: #4f46e5;"><%= @group.users.count %></p>
+        <div class="overview-item" style="text-align: center;">
+          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Total Members</p>
+          <p style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;"><%= @group.users.count %></p>
         </div>
-        <div style="text-align: center;">
-          <p style="color: #718096; margin-bottom: 0.25rem;">Top Category</p>
-          <p style="font-size: 1.5rem; font-weight: 600; color: #4f46e5;"><%= @most_expensive_category || 'N/A' %></p>
+        <div class="overview-item" style="text-align: center;">
+          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Top Category</p>
+          <p style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;"><%= @most_expensive_category || 'N/A' %></p>
         </div>
       </div>
     </div>
   </div>
 
-  <div style="display: flex; justify-content: center; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);" id="tabContainer">
-    <div style="background-color: white; border-radius: 9999px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden;">
-      <button class="tab-button" data-tab="expenses" style="background-color: #4f46e5; color: white; border: none; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.3s ease;">Expenses</button>
-      <button class="tab-button" data-tab="members" style="background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.3s ease;">Members</button>
-      <button class="tab-button" data-tab="settle" style="background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.3s ease;">Settle Up</button>
+  <div class="tab-container" style="display: flex; justify-content: center; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);" id="tabContainer">
+    <div style="background-color: white; border-radius: 9999px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden; display: flex; width: 100%; max-width: 400px;">
+      <button class="tab-button" data-tab="expenses" style="flex: 1; background-color: #4f46e5; color: white; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Expenses</button>
+      <button class="tab-button" data-tab="members" style="flex: 1; background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Members</button>
+      <button class="tab-button" data-tab="settle" style="flex: 1; background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Settle Up</button>
     </div>
   </div>
 
   <div id="tabContent">
     <div id="expenses" class="tab-content card" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
-      <div style="padding: 1.5rem; border-bottom: 1px solid #e2e8f0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a202c;">Recent Expenses</h2>
-          <%= link_to new_group_expense_path(@group), style: "background-color: #4f46e5; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center;", onmouseover: "this.style.backgroundColor='#4338ca';", onmouseout: "this.style.backgroundColor='#4f46e5';" do %>
-            <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+      <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+          <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">Recent Expenses</h2>
+          <%= link_to new_group_expense_path(@group), class: "add-expense-btn", style: "background-color: #4f46e5; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; font-size: 0.875rem;" do %>
+            <svg style="width: 0.875rem; height: 0.875rem; margin-right: 0.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
             Add Expense
           <% end %>
         </div>
-        <% @expenses.take(5).each do |expense| %>
-          <div style="border-bottom: 1px solid #e2e8f0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <p style="font-weight: 600; color: #1a202c;"><%= expense.description %></p>
-              <p style="font-size: 0.875rem; color: #718096;">
-                <%= expense.user.full_name %>
-                <%= ' (You)' if expense.user == current_user %>
-                • <%= expense.date.strftime("%b %d, %Y") %>
-              </p>
-              <p style="font-size: 0.875rem; color: #4f46e5;"><%= expense.category %></p>
+        <div class="expense-list">
+          <% @expenses.take(5).each do |expense| %>
+            <div class="expense-item" style="border-bottom: 1px solid #e2e8f0; padding: 0.75rem 0; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="font-weight: 600; color: #1a202c; font-size: 0.875rem;"><%= expense.description %></p>
+                <p style="font-size: 0.75rem; color: #718096;">
+                  <%= expense.user.full_name %>
+                  <%= ' (You)' if expense.user == current_user %>
+                  • <%= expense.date.strftime("%b %d, %Y") %>
+                </p>
+                <p style="font-size: 0.75rem; color: #4f46e5;"><%= expense.category %></p>
+              </div>
+              <p style="font-weight: 600; color: #4f46e5; font-size: 0.875rem;"><%= number_to_currency(expense.amount) %></p>
             </div>
-            <p style="font-weight: 600; color: #4f46e5;"><%= number_to_currency(expense.amount) %></p>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
       <div style="padding: 1rem; text-align: center;">
-        <%= link_to 'View All Expenses', group_expenses_path(@group), style: "color: #4f46e5; text-decoration: none; font-weight: 600; transition: all 0.3s ease;", onmouseover: "this.style.color='#4338ca';", onmouseout: "this.style.color='#4f46e5';" %>
+        <%= link_to 'View All Expenses', group_expenses_path(@group), class: "view-all-link", style: "color: #4f46e5; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-size: 0.875rem;" %>
       </div>
     </div>
 
     <div id="members" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
-      <div style="padding: 1.5rem; border-bottom: 1px solid #e2e8f0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a202c;">Group Members</h2>
-          <%= link_to add_users_group_path(@group), style: "background-color: #4f46e5; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center;", onmouseover: "this.style.backgroundColor='#4338ca';", onmouseout: "this.style.backgroundColor='#4f46e5';" do %>
-            <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+      <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+          <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">Group Members</h2>
+          <%= link_to add_users_group_path(@group), class: "add-member-btn", style: "background-color: #4f46e5; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; font-size: 0.875rem;" do %>
+            <svg style="width: 0.875rem; height: 0.875rem; margin-right: 0.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
             Add Member
           <% end %>
         </div>
-        <% @user_summaries.each do |summary| %>
-          <div style="border-bottom: 1px solid #e2e8f0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <p style="font-weight: 600; color: #1a202c;"><%= summary[:user].full_name %> <%= summary[:user] == current_user ? '(You)' : '' %></p>
-              <p style="font-size: 0.875rem; color: #718096;"><%= summary[:user].email %></p>
+        <div class="member-list">
+          <% @user_summaries.each do |summary| %>
+            <div class="member-item" style="border-bottom: 1px solid #e2e8f0; padding: 0.75rem 0; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="font-weight: 600; color: #1a202c; font-size: 0.875rem;"><%= summary[:user].full_name %> <%= summary[:user] == current_user ? '(You)' : '' %></p>
+                <p style="font-size: 0.75rem; color: #718096;"><%= summary[:user].email %></p>
+              </div>
+              <div style="text-align: right;">
+                <p style="font-weight: 600; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>; font-size: 0.875rem;">
+                  <%= number_to_currency(summary[:net_balance].abs) %>
+                </p>
+                <p style="font-size: 0.75rem; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
+                  (<%= summary[:net_balance] >= 0 ? 'to receive' : 'owes' %>)
+                </p>
+              </div>
             </div>
-            <div style="text-align: right;">
-              <p style="font-weight: 600; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
-                <%= number_to_currency(summary[:net_balance].abs) %>
-              </p>
-              <p style="font-size: 0.875rem; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
-                (<%= summary[:net_balance] >= 0 ? 'to receive' : 'owes' %>)
-              </p>
-            </div>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
     </div>
 
     <div id="settle" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
-      <div style="padding: 1.5rem; border-bottom: 1px solid #e2e8f0;">
-        <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Settle Up</h2>
+      <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
+        <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Settle Up</h2>
         <% if @optimized_settlements.any? %>
-          <% @optimized_settlements.each do |settlement| %>
-            <div style="border-bottom: 1px solid #e2e8f0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
-              <p style="color: #1a202c;">
-                <%= settlement[:from] == current_user ? 'You' : settlement[:from].full_name %>
-                pays
-                <%= settlement[:to] == current_user ? 'you' : settlement[:to].full_name %>
-              </p>
-              <div style="display: flex; align-items: center;">
-                <p style="font-weight: 600; color: #4f46e5; margin-right: 1rem;"><%= number_to_currency(settlement[:amount]) %></p>
-                <% if settlement[:from] == current_user %>
-                  <%= button_to "Send", '#', method: :post, style: "background-color: #10B981; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease;", onmouseover: "this.style.backgroundColor='#059669';", onmouseout: "this.style.backgroundColor='#10B981';" %>
-                <% elsif settlement[:to] == current_user %>
-                  <%= button_to "Remind", '#', method: :post, style: "background-color: #F59E0B; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease;", onmouseover: "this.style.backgroundColor='#D97706';", onmouseout: "this.style.backgroundColor='#F59E0B';" %>
-                <% else %>
-                  <button disabled style="background-color: #E5E7EB; color: #9CA3AF; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: not-allowed;">Action</button>
-                <% end %>
+          <div class="settlement-list">
+            <% @optimized_settlements.each do |settlement| %>
+              <div class="settlement-item" style="border-bottom: 1px solid #e2e8f0; padding: 0.75rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <p style="color: #1a202c; font-size: 0.875rem; margin-bottom: 0.5rem; width: 100%;">
+                  <%= settlement[:from] == current_user ? 'You' : settlement[:from].full_name %>
+                  pays
+                  <%= settlement[:to] == current_user ? 'you' : settlement[:to].full_name %>
+                </p>
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                  <p style="font-weight: 600; color: #4f46e5; font-size: 0.875rem;"><%= number_to_currency(settlement[:amount]) %></p>
+                  <% if settlement[:from] == current_user %>
+                    <%= button_to "Send", '#', method: :post, class: "settle-btn", style: "background-color: #10B981; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
+                  <% elsif settlement[:to] == current_user %>
+    <%= button_to "Remind", '#', method: :post, class: "settle-btn", style: "background-color: #F59E0B; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
+                  <% else %>
+                    <button disabled class="settle-btn" style="background-color: #E5E7EB; color: #9CA3AF; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: not-allowed; font-size: 0.75rem;">Action</button>
+                  <% end %>
+                </div>
               </div>
-            </div>
-          <% end %>
+            <% end %>
+          </div>
         <% else %>
-          <p style="text-align: center; color: #718096;">All settled up! No payments needed.</p>
+          <p style="text-align: center; color: #718096; font-size: 0.875rem;">All settled up! No payments needed.</p>
         <% end %>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+    @media (min-width: 640px) {
+        .group-show-container {
+            padding: 2rem;
+        }
+        .header {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0;
+        }
+        .overview-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .tab-button {
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+        }
+        .expense-item, .member-item, .settlement-item {
+            flex-wrap: nowrap;
+        }
+        .settlement-item p {
+            width: auto;
+            margin-bottom: 0;
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .tab-button:hover, .back-link:hover, .add-expense-btn:hover, .add-member-btn:hover, .view-all-link:hover, .settle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-button:active, .back-link:active, .add-expense-btn:active, .add-member-btn:active, .view-all-link:active, .settle-btn:active {
+        transform: translateY(0);
+    }
+</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -171,14 +226,10 @@
             tabContents.forEach(content => {
                 if (content.id === tabName) {
                     content.style.display = 'block';
-                    setTimeout(() => {
-                        content.style.opacity = '1';
-                        content.style.transform = 'translateY(0)';
-                    }, 50);
+                    content.classList.add('animate-fade-in');
                 } else {
                     content.style.display = 'none';
-                    content.style.opacity = '0';
-                    content.style.transform = 'translateY(20px)';
+                    content.classList.remove('animate-fade-in');
                 }
             });
         }
