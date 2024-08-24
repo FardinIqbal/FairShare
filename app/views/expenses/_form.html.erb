@@ -1,70 +1,124 @@
-<!-- app/views/groups/_form.html.erb -->
-<%= form_with(model: group, local: true, id: "group-form", style: "margin-top: 1.5rem;") do |form| %>
-  <% if group.errors.any? %>
-    <div id="error-messages" style="display: block; background-color: #FEE2E2; border: 1px solid #F87171; color: #B91C1C; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-      <h2 style="font-size: 0.875rem; font-weight: 600;">
-        <%= pluralize(group.errors.count, "error") %> prohibited this group from being saved:
-      </h2>
-      <ul style="margin-top: 0.5rem; list-style-type: disc; list-style-position: inside;">
-        <% group.errors.full_messages.each do |message| %>
-          <li style="font-size: 0.875rem;"><%= message %></li>
-        <% end %>
-      </ul>
+<!-- app/views/expenses/_form.html.erb -->
+<div id="expense-form-container" style="max-width: 500px; margin: 0 auto; padding: 1rem; background-color: #f3f4f6; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+  <%= form_with(model: [@group, @expense], local: true, id: "expense-form") do |form| %>
+    <% if @expense.errors.any? %>
+      <div id="error-messages" style="background-color: #FEE2E2; border-left: 4px solid #EF4444; padding: 1rem; margin-bottom: 1rem; border-radius: 0.375rem; opacity: 0; transform: translateX(-20px); transition: opacity 0.3s ease-out, transform 0.3s ease-out;">
+        <div style="display: flex; align-items: flex-start;">
+          <svg style="width: 1.25rem; height: 1.25rem; color: #EF4444; margin-right: 0.75rem; flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+          <div>
+            <h2 style="font-size: 0.875rem; font-weight: 600; color: #991B1B; margin-bottom: 0.5rem;">
+              <%= pluralize(@expense.errors.count, "error") %> prohibited this expense from being saved:
+            </h2>
+            <ul style="list-style-type: disc; list-style-position: inside; font-size: 0.875rem; color: #B91C1C;">
+              <% @expense.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="form-group" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease-out, transform 0.3s ease-out;">
+      <%= form.label :description, style: "display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" %>
+      <%= form.text_field :description, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s ease-in-out;", data: { behavior: 'animated-input' } %>
+    </div>
+
+    <div class="form-group" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease-out, transform 0.3s ease-out;">
+      <%= form.label :amount, style: "display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" %>
+      <%= form.number_field :amount, step: 0.01, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s ease-in-out;", data: { behavior: 'animated-input' } %>
+    </div>
+
+    <div class="form-group" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease-out, transform 0.3s ease-out;">
+      <%= form.label :date, style: "display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" %>
+      <%= form.date_field :date, value: Date.today, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s ease-in-out;", data: { behavior: 'animated-input' } %>
+    </div>
+
+    <div class="form-group" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease-out, transform 0.3s ease-out;">
+      <%= form.label :category, style: "display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" %>
+      <%= form.select :category, Expense::CATEGORIES, { prompt: "Select a category" }, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; background-color: white; transition: all 0.3s ease-in-out; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 0.7rem top 50%; background-size: 0.65rem auto;", data: { behavior: 'animated-input' } %>
+    </div>
+
+    <div style="text-align: right;">
+      <%= form.submit "Add Expense", style: "display: inline-block; background-color: #4F46E5; color: white; font-weight: 500; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; font-size: 1rem; cursor: pointer; transition: all 0.3s ease-in-out; transform-origin: right center;", data: { behavior: 'submit-button' } %>
     </div>
   <% end %>
-
-  <div class="form-field" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(10px); transition: all 0.3s ease-out;">
-    <%= form.label :name, style: "display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;" %>
-    <%= form.text_field :name, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s ease;" %>
-  </div>
-
-  <div class="form-field" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(10px); transition: all 0.3s ease-out;">
-    <%= form.label :description, style: "display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;" %>
-    <%= form.text_area :description, rows: 4, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s ease;" %>
-  </div>
-
-  <div style="text-align: right; opacity: 0; transform: translateY(10px); transition: all 0.3s ease-out;">
-    <%= form.submit "Create Group", style: "background-color: #4338ca; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 1rem;" %>
-  </div>
-<% end %>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('group-form');
-        const formFields = form.querySelectorAll('.form-field, div[style*="text-align: right"]');
+        const formContainer = document.getElementById('expense-form-container');
+        const form = document.getElementById('expense-form');
+        const formGroups = document.querySelectorAll('.form-group');
+        const errorMessages = document.getElementById('error-messages');
+        const submitButton = document.querySelector('[data-behavior="submit-button"]');
 
-        // Animate form fields
-        formFields.forEach((field, index) => {
+        // Animate form container
+        setTimeout(() => {
+            formContainer.style.opacity = '1';
+            formContainer.style.transform = 'translateY(0)';
+        }, 100);
+
+        // Animate form groups
+        formGroups.forEach((group, index) => {
             setTimeout(() => {
-                field.style.opacity = '1';
-                field.style.transform = 'translateY(0)';
-            }, index * 200);
+                group.style.opacity = '1';
+                group.style.transform = 'translateY(0)';
+            }, 200 + index * 100);
         });
 
-        // Input focus effects
-        const inputs = form.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('focus', () => {
-                input.style.borderColor = '#4338ca';
-                input.style.boxShadow = '0 0 0 3px rgba(67, 56, 202, 0.1)';
+        // Animate error messages if present
+        if (errorMessages) {
+            setTimeout(() => {
+                errorMessages.style.opacity = '1';
+                errorMessages.style.transform = 'translateX(0)';
+            }, 300);
+        }
+
+        // Animated input behavior
+        document.querySelectorAll('[data-behavior="animated-input"]').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#6366F1';
+                this.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.2)';
+                this.style.transform = 'translateY(-2px)';
             });
-            input.addEventListener('blur', () => {
-                input.style.borderColor = '#D1D5DB';
-                input.style.boxShadow = 'none';
+
+            input.addEventListener('blur', function() {
+                this.style.borderColor = '#D1D5DB';
+                this.style.boxShadow = 'none';
+                this.style.transform = 'translateY(0)';
             });
         });
 
-        // Submit button hover effect
-        const submitButton = form.querySelector('input[type="submit"]');
-        submitButton.addEventListener('mouseenter', () => {
-            submitButton.style.backgroundColor = '#3730a3';
-            submitButton.style.transform = 'translateY(-2px)';
-            submitButton.style.boxShadow = '0 4px 6px rgba(67, 56, 202, 0.25)';
+        // Submit button behavior
+        submitButton.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#4338CA';
+            this.style.transform = 'scale(1.05)';
         });
-        submitButton.addEventListener('mouseleave', () => {
-            submitButton.style.backgroundColor = '#4338ca';
-            submitButton.style.transform = 'translateY(0)';
-            submitButton.style.boxShadow = 'none';
+
+        submitButton.addEventListener('mouseout', function() {
+            this.style.backgroundColor = '#4F46E5';
+            this.style.transform = 'scale(1)';
         });
+
+        submitButton.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+
+        // Mobile-friendly adjustments
+        function adjustForMobile() {
+            if (window.innerWidth <= 640) {
+                submitButton.style.width = '100%';
+                submitButton.style.marginTop = '1rem';
+            } else {
+                submitButton.style.width = 'auto';
+                submitButton.style.marginTop = '0';
+            }
+        }
+
+        window.addEventListener('resize', adjustForMobile);
+        adjustForMobile(); // Call once on load
     });
 </script>

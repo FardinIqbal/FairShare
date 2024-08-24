@@ -1,32 +1,124 @@
 <!-- app/views/expenses/show.html.erb -->
-<div class="max-w-2xl mx-auto mt-8">
-  <h1 class="text-3xl font-bold mb-6"><%= @expense.description %></h1>
+<div id="expense-show-container" style="max-width: 100%; padding: 1rem; background-color: #f3f4f6;">
+  <div style="max-width: 500px; margin: 0 auto;">
+    <h1 id="expense-title" style="font-size: 1.5rem; font-weight: 800; color: #1a202c; margin-bottom: 1rem; opacity: 0; transform: translateY(-20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+      <%= @expense.description %>
+    </h1>
 
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-    <div class="px-4 py-5 sm:px-6">
-      <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-        <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Amount</dt>
-          <dd class="mt-1 text-sm text-gray-900"><%= number_to_currency(@expense.amount) %></dd>
-        </div>
-        <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Paid by</dt>
-          <dd class="mt-1 text-sm text-gray-900"><%= @expense.user.full_name %></dd>
-        </div>
-        <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Date</dt>
-          <dd class="mt-1 text-sm text-gray-900"><%= @expense.date %></dd>
-        </div>
-        <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Category</dt>
-          <dd class="mt-1 text-sm text-gray-900"><%= @expense.category %></dd>
-        </div>
-      </dl>
+    <div id="expense-details" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+      <div style="padding: 1.5rem;">
+        <dl style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem;">
+          <div>
+            <dt style="font-size: 0.875rem; font-weight: 500; color: #6B7280; margin-bottom: 0.25rem;">Amount</dt>
+            <dd style="font-size: 1rem; font-weight: 600; color: #4F46E5;"><%= number_to_currency(@expense.amount) %></dd>
+          </div>
+          <div>
+            <dt style="font-size: 0.875rem; font-weight: 500; color: #6B7280; margin-bottom: 0.25rem;">Paid by</dt>
+            <dd style="font-size: 1rem; font-weight: 600; color: #1F2937;"><%= @expense.user.full_name %></dd>
+          </div>
+          <div>
+            <dt style="font-size: 0.875rem; font-weight: 500; color: #6B7280; margin-bottom: 0.25rem;">Date</dt>
+            <dd style="font-size: 1rem; font-weight: 600; color: #1F2937;"><%= @expense.date.strftime("%B %d, %Y") %></dd>
+          </div>
+          <div>
+            <dt style="font-size: 0.875rem; font-weight: 500; color: #6B7280; margin-bottom: 0.25rem;">Category</dt>
+            <dd style="font-size: 1rem; font-weight: 600; color: #1F2937;"><%= @expense.category %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div id="action-buttons" style="display: flex; justify-content: space-between; margin-top: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+      <%= link_to 'Edit', edit_group_expense_path(@group, @expense), id: "edit-button", style: "display: inline-block; background-color: #4F46E5; color: white; font-weight: 500; padding: 0.625rem 1.25rem; border: none; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.3s ease-in-out;" %>
+      <%= button_to 'Delete', group_expense_path(@group, @expense), method: :delete, id: "delete-button", data: { confirm: 'Are you sure you want to delete this expense?' }, style: "display: inline-block; background-color: #EF4444; color: white; font-weight: 500; padding: 0.625rem 1.25rem; border: none; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.3s ease-in-out; cursor: pointer;" %>
+      <%= link_to 'Back', group_expenses_path(@group), id: "back-button", style: "display: inline-block; color: #4F46E5; font-weight: 500; padding: 0.625rem 1.25rem; border: 2px solid #4F46E5; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.3s ease-in-out;" %>
     </div>
   </div>
-
-  <div class="mt-6 space-x-4">
-    <%= link_to 'Edit Expense', edit_group_expense_path(@group, @expense), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-    <%= link_to 'Back to Expenses', group_expenses_path(@group), class: "text-indigo-600 hover:text-indigo-900" %>
-  </div>
 </div>
+
+<style>
+    @media (min-width: 640px) {
+        #expense-show-container {
+            padding: 2rem;
+        }
+        #expense-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const expenseTitle = document.getElementById('expense-title');
+        const expenseDetails = document.getElementById('expense-details');
+        const actionButtons = document.getElementById('action-buttons');
+        const editButton = document.getElementById('edit-button');
+        const deleteButton = document.getElementById('delete-button');
+        const backButton = document.getElementById('back-button');
+
+        // Animate page elements
+        setTimeout(() => {
+            expenseTitle.style.opacity = '1';
+            expenseTitle.style.transform = 'translateY(0)';
+        }, 100);
+
+        setTimeout(() => {
+            expenseDetails.style.opacity = '1';
+            expenseDetails.style.transform = 'translateY(0)';
+        }, 200);
+
+        setTimeout(() => {
+            actionButtons.style.opacity = '1';
+            actionButtons.style.transform = 'translateY(0)';
+        }, 300);
+
+        // Button hover effects
+        [editButton, deleteButton, backButton].forEach(button => {
+            button.addEventListener('mouseover', function() {
+                this.style.transform = 'translateY(-2px)';
+                if (this.id === 'edit-button') {
+                    this.style.backgroundColor = '#4338CA';
+                } else if (this.id === 'delete-button') {
+                    this.style.backgroundColor = '#DC2626';
+                } else if (this.id === 'back-button') {
+                    this.style.backgroundColor = '#4F46E5';
+                    this.style.color = 'white';
+                }
+            });
+
+            button.addEventListener('mouseout', function() {
+                this.style.transform = 'translateY(0)';
+                if (this.id === 'edit-button') {
+                    this.style.backgroundColor = '#4F46E5';
+                } else if (this.id === 'delete-button') {
+                    this.style.backgroundColor = '#EF4444';
+                } else if (this.id === 'back-button') {
+                    this.style.backgroundColor = 'transparent';
+                    this.style.color = '#4F46E5';
+                }
+            });
+        });
+
+        // Adjust layout for mobile
+        function adjustForMobile() {
+            if (window.innerWidth <= 640) {
+                actionButtons.style.flexDirection = 'column';
+                actionButtons.style.gap = '1rem';
+                [editButton, deleteButton, backButton].forEach(button => {
+                    button.style.width = '100%';
+                    button.style.textAlign = 'center';
+                });
+            } else {
+                actionButtons.style.flexDirection = 'row';
+                actionButtons.style.gap = '0.5rem';
+                [editButton, deleteButton, backButton].forEach(button => {
+                    button.style.width = 'auto';
+                });
+            }
+        }
+
+        window.addEventListener('resize', adjustForMobile);
+        adjustForMobile(); // Call once on load
+    });
+</script>

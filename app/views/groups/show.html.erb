@@ -48,7 +48,7 @@
   </div>
 
   <div id="tabContent">
-    <div id="expenses" class="tab-content card" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
+    <div id="expenses" class="tab-content card" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
       <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
           <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">Recent Expenses</h2>
@@ -79,7 +79,7 @@
       </div>
     </div>
 
-    <div id="members" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
+    <div id="members" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
       <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
           <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">Group Members</h2>
@@ -109,7 +109,7 @@
       </div>
     </div>
 
-    <div id="settle" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
+    <div id="settle" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
       <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
         <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Settle Up</h2>
         <% if @optimized_settlements.any? %>
@@ -226,10 +226,14 @@
             tabContents.forEach(content => {
                 if (content.id === tabName) {
                     content.style.display = 'block';
-                    content.classList.add('animate-fade-in');
+                    setTimeout(() => {
+                        content.style.opacity = '1';
+                        content.style.transform = 'translateY(0)';
+                    }, 50);
                 } else {
+                    content.style.opacity = '0';
+                    content.style.transform = 'translateY(20px)';
                     content.style.display = 'none';
-                    content.classList.remove('animate-fade-in');
                 }
             });
         }

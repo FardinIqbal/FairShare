@@ -1,53 +1,13 @@
 <!-- app/views/dashboard/index.html.erb -->
-<style>
-    .dashboard {
-        max-width: 100%;
-        padding: 1rem;
-        background-color: #f3f4f6;
-    }
+<div class="dashboard-container" style="max-width: 100%; padding: 1rem; background-color: #f3f4f6;">
+  <h1 class="dashboard-title" style="font-size: 1.5rem; font-weight: 800; color: #1a202c; margin-bottom: 1.5rem; opacity: 0; transform: translateY(-20px);" id="dashboardTitle">Dashboard</h1>
 
-    @media (min-width: 640px) {
-        .dashboard {
-            padding: 2rem;
-        }
-
-        .dashboard-title {
-            font-size: 2rem;
-        }
-
-        .summary-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        #expenseChart {
-            height: 300px;
-        }
-    }
-
-    @media (min-width: 1024px) {
-        .dashboard {
-            max-width: 1024px;
-            margin: 0 auto;
-        }
-    }
-
-    /* Keeping the menu small on desktop */
-    .tab-button {
-        font-size: 0.875rem;
-        padding: 0.5rem;
-    }
-</style>
-
-
-<div class="dashboard" style="max-width: 100%; padding: 1rem; background-color: #f3f4f6;">
-  <h1 class="dashboard-title" style="font-size: 1.5rem; font-weight: 800; color: #1a202c; margin-bottom: 1rem; opacity: 0; transform: translateY(-20px);">Dashboard</h1>
-
-  <div class="summary-card" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1rem; opacity: 0; transform: translateY(20px);">
+  <div class="summary-card" id="summaryCard" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
     <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
-      <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">Summary</h2>
-      <div class="summary-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+      <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Summary</h2>
+      <div class="summary-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
         <div class="summary-item" style="text-align: center;">
-          <p style="color: #718096; font-size: 0.875rem;">Total Balance</p>
+          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Total Balance</p>
           <p class="animate-number" style="font-size: 1.25rem; font-weight: 600; color: <%= @total_balance >= 0 ? '#10B981' : '#EF4444' %>;">
             <%= number_to_currency(@total_balance.abs) %>
           </p>
@@ -56,26 +16,30 @@
           </p>
         </div>
         <div class="summary-item" style="text-align: center;">
-          <p style="color: #718096; font-size: 0.875rem;">Total Expenses</p>
+          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Total Expenses</p>
           <p class="animate-number" style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;">
             <%= number_to_currency(@total_expenses) %>
           </p>
           <p style="font-size: 0.75rem; color: #718096;">all groups</p>
         </div>
+        <div class="summary-item" style="text-align: center;">
+          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Active Groups</p>
+          <p style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;"><%= @groups.count %></p>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="tab-container" style="margin-bottom: 1rem; opacity: 0; transform: translateY(20px);">
-    <div style="display: flex; background-color: white; border-radius: 9999px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden;">
-      <button class="tab-button active" data-tab="owed" style="flex: 1; background-color: #4f46e5; color: white; border: none; padding: 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Owed</button>
-      <button class="tab-button" data-tab="expenses" style="flex: 1; background-color: transparent; color: #4b5563; border: none; padding: 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Expenses</button>
-      <button class="tab-button" data-tab="activities" style="flex: 1; background-color: transparent; color: #4b5563; border: none; padding: 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Activities</button>
+  <div class="tab-container" style="display: flex; justify-content: center; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);" id="tabContainer">
+    <div style="background-color: white; border-radius: 9999px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden; display: flex; width: 100%; max-width: 400px;">
+      <button class="tab-button" data-tab="owed" style="flex: 1; background-color: #4f46e5; color: white; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Owed</button>
+      <button class="tab-button" data-tab="expenses" style="flex: 1; background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Expenses</button>
+      <button class="tab-button" data-tab="activities" style="flex: 1; background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Activities</button>
     </div>
   </div>
 
   <div id="tabContent">
-    <div id="owed" class="tab-content active" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1rem; opacity: 0; transform: translateY(20px);">
+    <div id="owed" class="tab-content card" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
       <div style="padding: 1rem;">
         <h3 style="font-size: 1rem; font-weight: 600; color: #EF4444; margin-bottom: 0.5rem;">You Owe</h3>
         <% @owed_amounts[:owed_to_others].each do |debt| %>
@@ -83,7 +47,7 @@
             <span style="font-weight: 500; color: #1F2937; font-size: 0.875rem;"><%= debt[:group].name %></span>
             <div style="display: flex; align-items: center;">
               <span style="font-weight: 600; color: #EF4444; margin-right: 0.5rem; font-size: 0.875rem;"><%= number_to_currency(debt[:amount]) %></span>
-              <%= button_to "Pay", pay_debt_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, style: "background-color: #EF4444; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;", onmouseover: "this.style.backgroundColor='#DC2626';", onmouseout: "this.style.backgroundColor='#EF4444';" %>
+              <%= button_to "Pay", pay_debt_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "pay-btn", style: "background-color: #EF4444; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
             </div>
           </div>
         <% end %>
@@ -94,23 +58,23 @@
             <span style="font-weight: 500; color: #1F2937; font-size: 0.875rem;"><%= debt[:group].name %></span>
             <div style="display: flex; align-items: center;">
               <span style="font-weight: 600; color: #10B981; margin-right: 0.5rem; font-size: 0.875rem;"><%= number_to_currency(debt[:amount]) %></span>
-              <%= button_to "Remind", remind_payment_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, style: "background-color: #10B981; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;", onmouseover: "this.style.backgroundColor='#059669';", onmouseout: "this.style.backgroundColor='#10B981';" %>
+              <%= button_to "Remind", remind_payment_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "remind-btn", style: "background-color: #10B981; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
             </div>
           </div>
         <% end %>
       </div>
     </div>
 
-    <div id="expenses" class="tab-content" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1rem; opacity: 0; transform: translateY(20px);">
+    <div id="expenses" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
       <div style="padding: 1rem;">
         <h3 style="font-size: 1rem; font-weight: 600; color: #1a202c; margin-bottom: 0.5rem;">Expense Breakdown</h3>
-        <div style="height: 200px;">
+        <div style="height: 300px;">
           <canvas id="expenseChart"></canvas>
         </div>
       </div>
     </div>
 
-    <div id="activities" class="tab-content" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1rem; opacity: 0; transform: translateY(20px);">
+    <div id="activities" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
       <div style="padding: 1rem;">
         <h3 style="font-size: 1rem; font-weight: 600; color: #1a202c; margin-bottom: 0.5rem;">Recent Activities</h3>
         <ul style="list-style-type: none; padding: 0;">
@@ -127,13 +91,46 @@
   </div>
 </div>
 
+<style>
+    @media (min-width: 640px) {
+        .dashboard-container {
+            padding: 2rem;
+        }
+        .dashboard-title {
+            font-size: 2rem;
+        }
+        .summary-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .tab-button {
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .dashboard-container {
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+    }
+
+    .pay-btn:hover, .remind-btn:hover, .tab-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .pay-btn:active, .remind-btn:active, .tab-button:active {
+        transform: translateY(0);
+    }
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const dashboardTitle = document.querySelector('.dashboard-title');
-        const summaryCard = document.querySelector('.summary-card');
-        const tabContainer = document.querySelector('.tab-container');
+        const dashboardTitle = document.getElementById('dashboardTitle');
+        const summaryCard = document.getElementById('summaryCard');
+        const tabContainer = document.getElementById('tabContainer');
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
 
@@ -153,11 +150,9 @@
         function showTab(tabName) {
             tabButtons.forEach(button => {
                 if (button.dataset.tab === tabName) {
-                    button.classList.add('active');
                     button.style.backgroundColor = '#4f46e5';
                     button.style.color = 'white';
                 } else {
-                    button.classList.remove('active');
                     button.style.backgroundColor = 'transparent';
                     button.style.color = '#4b5563';
                 }
@@ -171,9 +166,11 @@
                         content.style.transform = 'translateY(0)';
                     }, 50);
                 } else {
-                    content.style.display = 'none';
                     content.style.opacity = '0';
                     content.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        content.style.display = 'none';
+                    }, 300);
                 }
             });
         }
@@ -220,13 +217,20 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        fontColor: '#1F2937',
-                        boxWidth: 12,
-                        padding: 10
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 12
+                            },
+                            padding: 20
+                        }
                     }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
                 }
             }
         });

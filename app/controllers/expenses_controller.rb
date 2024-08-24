@@ -5,6 +5,8 @@ class ExpensesController < ApplicationController
 
   def index
     @expenses = @group.expenses.order(date: :desc)
+    @total_expenses = @group.expenses.sum(:amount)
+    @user_balance = calculate_user_balance
   end
 
   def show
@@ -49,6 +51,10 @@ class ExpensesController < ApplicationController
 
   def set_expense
     @expense = @group.expenses.find(params[:id])
+  end
+
+  def calculate_user_balance
+    current_user.balance_in_group(@group)
   end
 
   def expense_params

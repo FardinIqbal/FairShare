@@ -1,10 +1,68 @@
 <!-- app/views/expenses/new.html.erb -->
-<div class="max-w-2xl mx-auto mt-8">
-  <h1 class="text-3xl font-bold mb-6">Add New Expense for <%= @group.name %></h1>
+<div id="new-expense-container" style="max-width: 100%; padding: 1rem; background-color: #f3f4f6;">
+  <div style="max-width: 500px; margin: 0 auto;">
+    <h1 id="page-title" style="font-size: 1.5rem; font-weight: 800; color: #1a202c; margin-bottom: 1rem; opacity: 0; transform: translateY(-20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+      Add New Expense for <%= @group.name %>
+    </h1>
 
-  <%= render 'form', group: @group, expense: @expense %>
+    <%= render 'form', group: @group, expense: @expense %>
 
-  <div class="mt-6">
-    <%= link_to 'Back to Expenses', group_expenses_path(@group), class: "text-indigo-600 hover:text-indigo-900" %>
+    <div id="back-link" style="margin-top: 1.5rem; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+      <%= link_to 'Back to Expenses', group_expenses_path(@group), style: "display: inline-block; color: #4F46E5; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border: 2px solid #4F46E5; border-radius: 0.375rem; transition: all 0.3s ease-in-out;", onmouseover: "this.style.backgroundColor='#4F46E5'; this.style.color='white';", onmouseout: "this.style.backgroundColor='transparent'; this.style.color='#4F46E5';" %>
+    </div>
   </div>
 </div>
+
+<style>
+    @media (min-width: 640px) {
+        #new-expense-container {
+            padding: 2rem;
+        }
+        #page-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const pageTitle = document.getElementById('page-title');
+        const backLink = document.getElementById('back-link');
+
+        // Animate page title
+        setTimeout(() => {
+            pageTitle.style.opacity = '1';
+            pageTitle.style.transform = 'translateY(0)';
+        }, 100);
+
+        // Animate back link
+        setTimeout(() => {
+            backLink.style.opacity = '1';
+            backLink.style.transform = 'translateY(0)';
+        }, 300);
+
+        // Add hover effect to back link
+        const link = backLink.querySelector('a');
+        link.addEventListener('mouseover', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        link.addEventListener('mouseout', function() {
+            this.style.transform = 'translateY(0)';
+        });
+
+        // Adjust layout for mobile
+        function adjustForMobile() {
+            if (window.innerWidth <= 640) {
+                backLink.style.textAlign = 'center';
+                link.style.width = '100%';
+            } else {
+                backLink.style.textAlign = 'left';
+                link.style.width = 'auto';
+            }
+        }
+
+        window.addEventListener('resize', adjustForMobile);
+        adjustForMobile(); // Call once on load
+    });
+</script>

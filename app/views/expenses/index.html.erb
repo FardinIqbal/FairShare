@@ -1,63 +1,278 @@
 <!-- app/views/expenses/index.html.erb -->
-<div class="max-w-md mx-auto px-4 sm:max-w-2xl sm:px-6 md:max-w-3xl lg:max-w-4xl lg:px-8 pb-20">
-  <!-- Sticky header with back button -->
-  <div class="sticky top-0 bg-white z-10 py-4 mb-4 flex items-center justify-between border-b border-gray-200">
-    <%= link_to group_path(@group), class: "text-indigo-600 hover:text-indigo-800 font-medium flex items-center" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-      </svg>
-      Back to Group
-    <% end %>
-    <h1 class="text-xl font-bold text-gray-900"><%= @group.name %></h1>
-  </div>
-
-  <h2 class="text-2xl font-semibold mb-6 text-center text-gray-700">Expenses</h2>
-
-  <div class="space-y-4 mb-8">
-    <% @expenses.each do |expense| %>
-      <div style="background-color: #e0e7ff; overflow: hidden; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;" onmouseover="this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'; this.style.transform='scale(1.01)';" onmouseout="this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'; this.style.transform='scale(1)';">
-        <%= link_to group_expense_path(@group, expense), class: "block p-4" do %>
-          <div class="flex items-center justify-between mb-2">
-            <h3 class="text-lg font-semibold text-indigo-600 truncate pr-2">
-              <%= expense.description %>
-            </h3>
-            <span class="text-lg font-bold text-gray-900 whitespace-nowrap">
-              <%= number_to_currency(expense.amount) %>
-            </span>
-          </div>
-          <div class="flex items-center justify-between text-sm text-gray-500">
-            <div class="flex items-center">
-              <svg class="h-4 w-4 mr-1 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              <span class="truncate"><%= expense.user.full_name %></span>
-            </div>
-            <div class="flex items-center ml-2">
-              <svg class="h-4 w-4 mr-1 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span><%= expense.date.strftime("%b %d, %Y") %></span>
-            </div>
-          </div>
+<div id="expenses-container" style="max-width: 100%; padding: 1rem; background-color: #f3f4f6; min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <div class="content-wrapper" style="max-width: 1200px; margin: 0 auto;">
+    <!-- Sticky header with back button and summary -->
+    <div id="sticky-header" style="position: sticky; top: 0; background-color: white; z-index: 10; padding: 1rem; margin-bottom: 1rem; display: flex; flex-direction: column; border-bottom: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <%= link_to group_path(@group), class: "back-link", style: "color: #4F46E5; text-decoration: none; font-weight: 500; display: flex; align-items: center; transition: all 0.3s ease-in-out;" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" style="height: 1.25rem; width: 1.25rem; margin-right: 0.25rem; transition: transform 0.3s ease-in-out;" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+          </svg>
+          Back to Group
         <% end %>
-        <div class="px-4 py-3 bg-indigo-100 flex justify-end space-x-2">
-          <%= link_to 'Edit', edit_group_expense_path(@group, expense), class: "px-3 py-1 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition duration-300" %>
-          <%= button_to 'Delete', group_expense_path(@group, expense), method: :delete, data: { turbo_confirm: 'Delete this expense?' }, class: "px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300" %>
+        <h1 style="font-size: 1.25rem; font-weight: 700; color: #1F2937;"><%= @group.name %></h1>
+      </div>
+      <div style="display: flex; justify-content: space-around; text-align: center;">
+        <div>
+          <p style="font-size: 0.875rem; color: #6B7280;">Total Expenses</p>
+          <p style="font-size: 1.25rem; font-weight: 600; color: #4F46E5;" id="totalExpenses"><%= number_to_currency(@total_expenses) %></p>
+        </div>
+        <div>
+          <p style="font-size: 0.875rem; color: #6B7280;">Your Balance</p>
+          <p style="font-size: 1.25rem; font-weight: 600; color: <%= @user_balance >= 0 ? '#10B981' : '#EF4444' %>;" id="userBalance"><%= number_to_currency(@user_balance.abs) %></p>
+        </div>
+        <div>
+          <p style="font-size: 0.875rem; color: #6B7280;">Expense Count</p>
+          <p style="font-size: 1.25rem; font-weight: 600; color: #4F46E5;" id="expenseCount"><%= @expenses.count %></p>
         </div>
       </div>
-    <% end %>
-  </div>
+    </div>
 
-  <!-- Bottom "Back to Group" button -->
-  <div class="mt-6 text-center">
-    <%= link_to 'Back to Group', group_path(@group), class: "inline-block text-indigo-600 hover:text-indigo-800 font-medium" %>
+    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; text-align: center; color: #4B5563;">Expenses</h2>
+
+    <!-- Search Bar -->
+    <div style="position: relative; width: 100%; max-width: 500px; margin: 0 auto 1.5rem auto;">
+      <input type="text" id="expense-search" placeholder="Search expenses..." style="
+      width: 100%;
+        padding: 12px 40px 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        outline: none;
+      " onfocus="this.style.borderColor='#4f46e5'; this.style.boxShadow='0 0 0 3px rgba(79, 70, 229, 0.1)'; this.style.transform='translateY(-2px)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 2px 4px rgba(0, 0, 0, 0.05)'; this.style.transform='translateY(0)'">
+      <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: #a0aec0; pointer-events: none; transition: all 0.3s ease;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+
+    <div id="expenses-list" style="display: grid; gap: 1rem;">
+      <% @expenses.each do |expense| %>
+        <div class="expense-item" data-description="<%= expense.description.downcase %>" data-category="<%= expense.category.downcase %>" style="background-color: white; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); overflow: hidden; transition: all 0.3s ease-in-out; opacity: 0; transform: translateY(20px);">
+          <%= link_to group_expense_path(@group, expense), style: "display: block; padding: 1rem; text-decoration: none;" do %>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <h3 class="expense-description" style="font-size: 1.125rem; font-weight: 600; color: #4F46E5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;"><%= expense.description %></h3>
+              <span style="font-size: 1.125rem; font-weight: 700; color: #1F2937;"><%= number_to_currency(expense.amount) %></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.875rem; color: #6B7280;">
+              <div style="display: flex; align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" style="height: 1rem; width: 1rem; margin-right: 0.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="expense-user-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;"><%= expense.user.full_name %></span>
+              </div>
+              <div style="display: flex; align-items: center; margin-left: 0.5rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" style="height: 1rem; width: 1rem; margin-right: 0.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span><%= expense.date.strftime("%b %d, %Y") %></span>
+              </div>
+            </div>
+            <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6B7280;">
+              <span class="expense-category" style="background-color: #EEF2FF; padding: 0.25rem 0.5rem; border-radius: 9999px;"><%= expense.category %></span>
+            </div>
+          <% end %>
+          <div style="padding: 0.75rem 1rem; background-color: #EEF2FF; display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <%= link_to 'Edit', edit_group_expense_path(@group, expense), class: "expense-action-btn", style: "padding: 0.375rem 0.75rem; background-color: #4F46E5; color: white; border-radius: 0.25rem; font-size: 0.875rem; text-decoration: none; transition: all 0.3s ease-in-out;" %>
+            <%= button_to 'Delete', group_expense_path(@group, expense), method: :delete, data: { confirm: 'Delete this expense?' }, class: "expense-action-btn", style: "padding: 0.375rem 0.75rem; background-color: #EF4444; color: white; border-radius: 0.25rem; font-size: 0.875rem; border: none; cursor: pointer; transition: all 0.3s ease-in-out;" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Floating Action Button -->
+    <%= link_to new_group_expense_path(@group), id: "add-expense-btn", style: "position: fixed; bottom: 1rem; right: 1rem; background-color: #4F46E5; color: white; font-weight: 700; padding: 1rem; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s ease-in-out; z-index: 50;" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" style="height: 1.5rem; width: 1.5rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+      <span style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">Add New Expense</span>
+    <% end %>
   </div>
 </div>
 
-<!-- Floating Action Button -->
-<%= link_to new_group_expense_path(@group), class: "fixed bottom-4 right-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-4 rounded-full shadow-lg flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out z-50" do %>
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-  </svg>
-  <span class="sr-only">Add New Expense</span>
-<% end %>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const expenseItems = document.querySelectorAll('.expense-item');
+        const addExpenseBtn = document.getElementById('add-expense-btn');
+        const backLink = document.querySelector('.back-link');
+        const stickyHeader = document.getElementById('sticky-header');
+        const expenseSearch = document.getElementById('expense-search');
+        const searchIcon = expenseSearch.nextElementSibling;
+
+        // Animate expense items
+        expenseItems.forEach((item, index) => {
+            setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+
+        // Expense item hover effect
+        expenseItems.forEach(item => {
+            item.addEventListener('mouseover', function() {
+                this.style.transform = 'translateY(-4px) scale(1.02)';
+                this.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+            });
+
+            item.addEventListener('mouseout', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';
+            });
+        });
+
+        // Add expense button hover effect
+        addExpenseBtn.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#4338CA';
+            this.style.transform = 'scale(1.1) rotate(180deg)';
+        });
+
+        addExpenseBtn.addEventListener('mouseout', function() {
+            this.style.backgroundColor = '#4F46E5';
+            this.style.transform = 'scale(1) rotate(0deg)';
+        });
+
+        // Back link hover effect
+        backLink.addEventListener('mouseover', function() {
+            this.style.color = '#4338CA';
+            this.querySelector('svg').style.transform = 'translateX(-4px)';
+        });
+
+        backLink.addEventListener('mouseout', function() {
+            this.style.color = '#4F46E5';
+            this.querySelector('svg').style.transform = 'translateX(0)';
+        });
+
+        // Sticky header scroll effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 10) {
+                stickyHeader.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+            } else {
+                stickyHeader.style.boxShadow = 'none';
+            }
+        });
+
+        // Action button hover effects
+        document.querySelectorAll('.expense-action-btn').forEach(btn => {
+            btn.addEventListener('mouseover', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+            });
+
+            btn.addEventListener('mouseout', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+
+        // Expense search functionality
+        expenseSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            expenseItems.forEach(item => {
+                const expenseDescription = item.getAttribute('data-description');
+                const expenseCategory = item.getAttribute('data-category');
+                const descriptionElement = item.querySelector('.expense-description');
+                const categoryElement = item.querySelector('.expense-category');
+
+                const matches = expenseDescription.includes(searchTerm) || expenseCategory.includes(searchTerm);
+
+                if (matches) {
+                    item.style.display = 'block';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+
+                    const highlightText = (text, term) => {
+                        if (term.trim() === '') return text;
+                        const regex = new RegExp(`(${term})`, 'gi');
+                        return text.replace(regex, '<span style="background-color: rgba(79, 70, 229, 0.1); color: #4f46e5; transition: all 0.3s ease;">$1</span>');
+                    };
+
+                    descriptionElement.innerHTML = highlightText(descriptionElement.textContent, searchTerm);
+                    categoryElement.innerHTML = highlightText(categoryElement.textContent, searchTerm);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+
+            // Animate search icon
+            searchIcon.style.transform = 'translateY(-50%) rotate(90deg)';
+            setTimeout(() => {
+                searchIcon.style.transform = 'translateY(-50%) rotate(0deg)';
+            }, 300);
+        });
+
+        // Pulse animation for search input on focus
+        expenseSearch.addEventListener('focus', () => {
+            expenseSearch.style.animation = 'pulse 0.5s ease-in-out';
+        });
+        expenseSearch.addEventListener('blur', () => {
+            expenseSearch.style.animation = 'none';
+        });
+
+        // Adjust layout for mobile
+        function adjustForMobile() {
+            if (window.innerWidth <= 640) {
+                addExpenseBtn.style.bottom = '5rem'; // Adjust for bottom navigation
+            } else {
+                addExpenseBtn.style.bottom = '1rem';
+            }
+        }
+
+        window.addEventListener('resize', adjustForMobile);
+        adjustForMobile(); // Call once on load
+    });
+</script>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .expense-item {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @media (max-width: 640px) {
+        #sticky-header {
+            padding: 0.5rem;
+        }
+
+        #expense-search {
+            font-size: 0.875rem;
+            padding: 8px 32px 8px 12px;
+        }
+
+        .expense-item h3 {
+            font-size: 1rem;
+        }
+
+        .expense-action-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+    }
+
+    @media (min-width: 641px) {
+        #sticky-header {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #sticky-header > div:first-child {
+            margin-bottom: 0;
+        }
+    }
+</style>
