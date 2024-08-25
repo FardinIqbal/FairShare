@@ -118,7 +118,8 @@ class GroupsController < ApplicationController
   end
 
   def create_new_member_notification(new_member)
-    @group.users.where.not(id: new_member.id).each do |user|
+    users_to_notify = @group.users # Include all users, including the new member
+    users_to_notify.each do |user|
       Notification.create(
         recipient: user,
         actor: new_member,

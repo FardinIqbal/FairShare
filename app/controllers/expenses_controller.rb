@@ -21,9 +21,11 @@ class ExpensesController < ApplicationController
     @expense.user = current_user
 
     if @expense.save
+      Rails.logger.info "Expense saved successfully: #{@expense.inspect}"
       create_new_expense_notification(@expense)
       redirect_to group_expense_path(@group, @expense), notice: 'Expense was successfully created.'
     else
+      Rails.logger.error "Failed to save expense: #{@expense.errors.full_messages}"
       render :new
     end
   end
@@ -63,14 +65,24 @@ class ExpensesController < ApplicationController
   end
 
   def create_new_expense_notification(expense)
-    @group.users.where.not(id: current_user.id).each do |user|
-      Notification.create(
+    Rails.logger.info "Creating notifications for expense: #{expense.id}"
+    users_to_notify = @group.users # Include all users, including the current user
+    Rails.logger.info "Users to notify: #{users_to_notify.pluck(:id)}"
+
+    users_to_notify.each do |user|
+      notification = Notification.new(
         recipient: user,
         actor: current_user,
         action: 'new_expense',
         notifiable: expense,
         message: "#{current_user.full_name} added a new expense of #{helpers.number_to_currency(expense.amount)} in #{@group.name}"
       )
+
+      if notification.save
+        Rails.logger.info "Notification created for user #{user.id}: #{notification.inspect}"
+      else
+        Rails.logger.error "Failed to create notification for user #{user.id}: #{notification.errors.full_messages}"
+      end
     end
   end
 end
