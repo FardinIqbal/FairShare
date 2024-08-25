@@ -1,28 +1,236 @@
-<!-- app/views/devise/passwords/edit.html.erb -->
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8">
-    <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Change your password
-      </h2>
-    </div>
-    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "mt-8 space-y-6" }) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
-      <%= f.hidden_field :reset_password_token %>
-      <div class="rounded-md shadow-sm -space-y-px">
-        <div>
-          <%= f.label :password, "New password", class: "sr-only" %>
-          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "New password (#{@minimum_password_length} characters minimum)" %>
+<!-- app/views/devise/passwords/new.html.erb -->
+<div class="password-reset-container">
+  <div class="password-reset-card">
+    <div class="password-reset-content">
+      <div class="form-section">
+        <div class="password-reset-header animate-fade-in-up">
+          <h2>Reset Your Password</h2>
+          <p>Enter your email to receive password reset instructions</p>
         </div>
-        <div>
-          <%= f.label :password_confirmation, "Confirm new password", class: "sr-only" %>
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Confirm new password" %>
+
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "password-reset-form" }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
+
+          <div class="form-group animate-fade-in-up" style="animation-delay: 0.2s;">
+            <%= f.label :email %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Your email address" %>
+          </div>
+
+          <div class="form-actions animate-fade-in-up" style="animation-delay: 0.3s;">
+            <%= f.submit "Send reset instructions", class: "password-reset-button" %>
+          </div>
+        <% end %>
+
+        <div class="additional-links animate-fade-in-up" style="animation-delay: 0.4s;">
+          <%= render "devise/shared/links" %>
         </div>
       </div>
 
-      <div>
-        <%= f.submit "Change my password", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      <div class="info-section">
+        <div class="reset-info animate-fade-in-up" style="animation-delay: 0.5s;">
+          <h3>Password Reset Process</h3>
+          <ol>
+            <li>Enter your email address</li>
+            <li>Check your inbox for reset instructions</li>
+            <li>Click the link in the email</li>
+            <li>Create a new, strong password</li>
+          </ol>
+        </div>
+
+        <div class="security-reminder animate-fade-in-up" style="animation-delay: 0.6s;">
+          <h3>Account Security</h3>
+          <p>If you're resetting your password due to a security concern, please contact our support team after changing your password. We're here to help ensure your account remains secure.</p>
+        </div>
       </div>
-    <% end %>
+    </div>
   </div>
 </div>
+
+<style>
+    .password-reset-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f3f4f6;
+        padding: 20px;
+    }
+
+    .password-reset-card {
+        max-width: 1000px;
+        width: 100%;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .password-reset-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-section, .info-section {
+        padding: 40px;
+    }
+
+    .password-reset-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .password-reset-header h2 {
+        font-size: 28px;
+        color: #4f46e5;
+        margin-bottom: 10px;
+    }
+
+    .password-reset-header p {
+        color: #6b7280;
+        font-size: 16px;
+    }
+
+    .password-reset-form {
+        margin-top: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #4b5563;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+
+    .password-reset-button {
+        width: 100%;
+        padding: 12px;
+        background-color: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .password-reset-button:hover {
+        background-color: #4338ca;
+        transform: translateY(-2px);
+    }
+
+    .additional-links {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .additional-links a {
+        color: #4f46e5;
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        margin: 0 10px;
+    }
+
+    .additional-links a:hover {
+        text-decoration: underline;
+    }
+
+    .reset-info, .security-reminder {
+        margin-bottom: 30px;
+    }
+
+    .reset-info h3, .security-reminder h3 {
+        font-size: 18px;
+        color: #4f46e5;
+        margin-bottom: 15px;
+    }
+
+    .reset-info ol {
+        list-style-type: decimal;
+        padding-left: 20px;
+    }
+
+    .reset-info li, .security-reminder p {
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #4b5563;
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (min-width: 768px) {
+        .password-reset-content {
+            flex-direction: row;
+        }
+
+        .form-section, .info-section {
+            width: 50%;
+        }
+
+        .form-section {
+            border-right: 1px solid #e5e7eb;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .password-reset-card {
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        .form-section, .info-section {
+            padding: 20px;
+        }
+
+        .password-reset-header h2 {
+            font-size: 24px;
+        }
+
+        .password-reset-header p {
+            font-size: 14px;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const formGroups = document.querySelectorAll('.form-group');
+        formGroups.forEach((group, index) => {
+            group.style.animationDelay = `${0.2 + (index * 0.1)}s`;
+        });
+    });
+</script>

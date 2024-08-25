@@ -1,43 +1,299 @@
 <!-- app/views/devise/registrations/new.html.erb -->
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8">
-    <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Sign up for an account
-      </h2>
-    </div>
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "mt-8 space-y-6" }) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
-      <div class="rounded-md shadow-sm -space-y-px">
-        <div>
-          <%= f.label :first_name, class: "sr-only" %>
-          <%= f.text_field :first_name, autofocus: true, class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "First name" %>
+<div class="signup-container">
+  <div class="signup-card">
+    <div class="signup-content">
+      <div class="form-section">
+        <div class="signup-header animate-fade-in-up">
+          <h2>Join FairShare</h2>
+          <p>Start your journey to hassle-free expense sharing</p>
         </div>
-        <div>
-          <%= f.label :last_name, class: "sr-only" %>
-          <%= f.text_field :last_name, class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Last name" %>
-        </div>
-        <div>
-          <%= f.label :email, class: "sr-only" %>
-          <%= f.email_field :email, autocomplete: "email", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Email address" %>
-        </div>
-        <div>
-          <%= f.label :password, class: "sr-only" %>
-          <%= f.password_field :password, autocomplete: "new-password", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Password (#{@minimum_password_length} characters minimum)" %>
-        </div>
-        <div>
-          <%= f.label :password_confirmation, class: "sr-only" %>
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Confirm password" %>
+
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "signup-form" }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
+
+          <div class="form-group animate-fade-in-up" style="animation-delay: 0.2s;">
+            <%= f.label :first_name %>
+            <%= f.text_field :first_name, autofocus: true, placeholder: "Your first name" %>
+          </div>
+
+          <div class="form-group animate-fade-in-up" style="animation-delay: 0.3s;">
+            <%= f.label :last_name %>
+            <%= f.text_field :last_name, placeholder: "Your last name" %>
+          </div>
+
+          <div class="form-group animate-fade-in-up" style="animation-delay: 0.4s;">
+            <%= f.label :email %>
+            <%= f.email_field :email, autocomplete: "email", placeholder: "Your email address" %>
+          </div>
+
+          <div class="form-group animate-fade-in-up" style="animation-delay: 0.5s;">
+            <%= f.label :password %>
+            <%= f.password_field :password, autocomplete: "new-password", placeholder: "Create a password (#{@minimum_password_length} characters minimum)" %>
+          </div>
+
+          <div class="form-group animate-fade-in-up" style="animation-delay: 0.6s;">
+            <%= f.label :password_confirmation %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm your password" %>
+          </div>
+
+          <div class="form-actions animate-fade-in-up" style="animation-delay: 0.7s;">
+            <%= f.submit "Sign Up", class: "signup-button" %>
+          </div>
+        <% end %>
+
+        <div class="login-link animate-fade-in-up" style="animation-delay: 0.8s;">
+          <%= render "devise/shared/links" %>
         </div>
       </div>
 
-      <div>
-        <%= f.submit "Sign up", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-      </div>
-    <% end %>
+      <div class="info-section">
+        <div class="benefits-section animate-fade-in-up" style="animation-delay: 0.9s;">
+          <h3>Why Join FairShare?</h3>
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="benefit-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Easy expense tracking and splitting
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="benefit-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Manage multiple groups for different occasions
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="benefit-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+              Clear financial summaries and reports
+            </li>
+          </ul>
+        </div>
 
-    <div class="text-sm text-center">
-      <%= render "devise/shared/links" %>
+        <div class="testimonial-section animate-fade-in-up" style="animation-delay: 1s;">
+          <h3>What Our Users Say</h3>
+          <div class="testimonial">
+            <p>"FairShare has made managing expenses with my roommates so much easier. No more awkward money conversations!"</p>
+            <p class="testimonial-author">- Sarah K., New York</p>
+          </div>
+        </div>
+
+        <div class="feature-highlight animate-fade-in-up" style="animation-delay: 1.1s;">
+          <h3>Featured: Real-time Balance Updates</h3>
+          <p>Stay on top of your finances with instant notifications and live balance tracking across all your groups.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+<style>
+    .signup-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f3f4f6;
+        padding: 20px;
+    }
+
+    .signup-card {
+        max-width: 1200px;
+        width: 100%;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .signup-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-section, .info-section {
+        padding: 40px;
+    }
+
+    .signup-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .signup-header h2 {
+        font-size: 28px;
+        color: #4f46e5;
+        margin-bottom: 10px;
+    }
+
+    .signup-header p {
+        color: #6b7280;
+        font-size: 16px;
+    }
+
+    .signup-form {
+        margin-top: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #4b5563;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+
+    .signup-button {
+        width: 100%;
+        padding: 12px;
+        background-color: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .signup-button:hover {
+        background-color: #4338ca;
+        transform: translateY(-2px);
+    }
+
+    .login-link {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .login-link a {
+        color: #4f46e5;
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .benefits-section, .testimonial-section, .feature-highlight {
+        margin-bottom: 30px;
+    }
+
+    .benefits-section h3, .testimonial-section h3, .feature-highlight h3 {
+        font-size: 18px;
+        color: #4f46e5;
+        margin-bottom: 15px;
+    }
+
+    .benefits-section ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .benefits-section li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #4b5563;
+    }
+
+    .benefit-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        color: #4f46e5;
+    }
+
+    .testimonial {
+        background-color: #f3f4f6;
+        padding: 15px;
+        border-radius: 5px;
+        font-style: italic;
+    }
+
+    .testimonial-author {
+        margin-top: 10px;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (min-width: 768px) {
+        .signup-content {
+            flex-direction: row;
+        }
+
+        .form-section, .info-section {
+            width: 50%;
+        }
+
+        .form-section {
+            border-right: 1px solid #e5e7eb;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .signup-card {
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        .form-section, .info-section {
+            padding: 20px;
+        }
+
+        .signup-header h2 {
+            font-size: 24px;
+        }
+
+        .signup-header p {
+            font-size: 14px;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const formGroups = document.querySelectorAll('.form-group');
+        formGroups.forEach((group, index) => {
+            group.style.animationDelay = `${0.2 + (index * 0.1)}s`;
+        });
+    });
+</script>
