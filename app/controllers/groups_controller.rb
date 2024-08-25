@@ -82,10 +82,12 @@ class GroupsController < ApplicationController
     @users = User.where.not(id: @group.users.pluck(:id))
   end
 
+
   def add_user
     @group = Group.find(params[:id])
     user = User.find(params[:user_id])
     if @group.users << user
+      create_new_member_notification(user)
       redirect_to @group, notice: 'User was successfully added to the group.'
     else
       redirect_to add_users_group_path(@group), alert: 'Failed to add user to the group.'
@@ -113,5 +115,17 @@ class GroupsController < ApplicationController
       largest_expense: user_expenses.maximum(:amount) || 0,
       net_balance: total_paid - @per_person_share
     }
+  end
+
+  def create_new_member_notification(new_member)
+    @group.users.where.not(id: new_member.id).each do |user|
+      Notification.create(
+        recipient: user,
+        actor: new_member,
+        action: 'new_member',
+        notifiable: @group,
+        message: "#{new_member.full_name} joined the group #{@group.name}"
+      )
+    end
   end
 end

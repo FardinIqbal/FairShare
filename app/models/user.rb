@@ -16,10 +16,14 @@ class User < ApplicationRecord
   has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
   has_many :inverse_friends, through: :inverse_friendships, source: :user
 
+  has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
+
+
   # Validations
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :email, presence: true, uniqueness: true
+
 
   # Instance Methods
   def full_name

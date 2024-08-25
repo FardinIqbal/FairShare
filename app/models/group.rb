@@ -1,9 +1,9 @@
 class Group < ApplicationRecord
   # Associations
-  has_many :group_memberships
+  has_many :group_memberships, dependent: :destroy
   has_many :users, through: :group_memberships
   has_many :expenses
-  has_many :balances
+  has_many :balances, dependent: :destroy
   belongs_to :leader, class_name: "User"
 
   # Validations

@@ -21,6 +21,7 @@ class ExpensesController < ApplicationController
     @expense.user = current_user
 
     if @expense.save
+      create_new_expense_notification(@expense)
       redirect_to group_expense_path(@group, @expense), notice: 'Expense was successfully created.'
     else
       render :new
@@ -59,5 +60,17 @@ class ExpensesController < ApplicationController
 
   def expense_params
     params.require(:expense).permit(:amount, :description, :date, :category)
+  end
+
+  def create_new_expense_notification(expense)
+    @group.users.where.not(id: current_user.id).each do |user|
+      Notification.create(
+        recipient: user,
+        actor: current_user,
+        action: 'new_expense',
+        notifiable: expense,
+        message: "#{current_user.full_name} added a new expense of #{helpers.number_to_currency(expense.amount)} in #{@group.name}"
+      )
+    end
   end
 end

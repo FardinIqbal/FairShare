@@ -1,3 +1,4 @@
+# config/routes.rb
 Rails.application.routes.draw do
   root 'static_pages#home'
 
@@ -5,6 +6,15 @@ Rails.application.routes.draw do
 
   get 'dashboard', to: 'dashboard#index'
   get 'dashboard/expense_categories', to: 'dashboard#expense_categories'
+
+  resources :notifications, only: [:index] do
+    member do
+      patch :mark_as_read
+    end
+    collection do
+      post :mark_all_as_read
+    end
+  end
 
   resources :groups do
     member do

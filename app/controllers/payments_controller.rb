@@ -1,13 +1,13 @@
 class PaymentsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_group
+  before_action :set_recipient_or_debtor, only: [:pay, :remind]
 
   def pay
-    @group = Group.find(params[:group_id])
-    @recipient = User.find(params[:user_id])
     amount = params[:amount].to_f
 
     ActiveRecord::Base.transaction do
-      payment = Payment.create!(
+      @payment = Payment.new(
         payer: current_user,
         recipient: @recipient,
         group: @group,
@@ -16,25 +16,35 @@ class PaymentsController < ApplicationController
         notes: params[:notes]
       )
 
-      update_balances(payment)
-
-      create_notification(payment, 'payment_made')
+      if @payment.save
+        update_balances(@payment)
+        create_payment_notification(@payment)
+        redirect_to @group, notice: "Payment of #{helpers.number_to_currency(amount)} to #{@recipient.full_name} recorded."
+      else
+        redirect_to @group, alert: "Failed to process payment. Please try again."
+      end
     end
-
-    redirect_to @group, notice: "Payment of #{helpers.number_to_currency(amount)} to #{@recipient.full_name} recorded."
   end
 
   def remind
-    @group = Group.find(params[:group_id])
-    @debtor = User.find(params[:user_id])
     amount = params[:amount].to_f
-
-    notification = create_notification(nil, 'payment_reminder')
-
+    create_reminder_notification(amount)
     redirect_to @group, notice: "Reminder sent to #{@debtor.full_name} for #{helpers.number_to_currency(amount)}."
   end
 
   private
+
+  def set_group
+    @group = Group.find(params[:group_id])
+  end
+
+  def set_recipient_or_debtor
+    if params[:action] == 'pay'
+      @recipient = User.find(params[:user_id])
+    else
+      @debtor = User.find(params[:user_id])
+    end
+  end
 
   def update_balances(payment)
     payer_balance = payment.group.balances.find_by(user: payment.payer)
@@ -44,22 +54,23 @@ class PaymentsController < ApplicationController
     recipient_balance.update!(amount: recipient_balance.amount - payment.amount)
   end
 
-  def create_notification(notifiable, action)
+  def create_payment_notification(payment)
     Notification.create!(
-      recipient: action == 'payment_made' ? notifiable.recipient : @debtor,
+      recipient: payment.recipient,
       actor: current_user,
-      action: action,
-      notifiable: notifiable,
-      message: notification_message(action, notifiable)
+      action: 'payment_made',
+      notifiable: payment,
+      message: "#{current_user.full_name} paid you #{helpers.number_to_currency(payment.amount)} in the group #{@group.name}"
     )
   end
 
-  def notification_message(action, notifiable)
-    case action
-    when 'payment_made'
-      "#{current_user.full_name} paid you #{helpers.number_to_currency(notifiable.amount)} in the group #{notifiable.group.name}"
-    when 'payment_reminder'
-      "#{current_user.full_name} reminded you about a payment of #{helpers.number_to_currency(params[:amount])} in the group #{@group.name}"
-    end
+  def create_reminder_notification(amount)
+    Notification.create!(
+      recipient: @debtor,
+      actor: current_user,
+      action: 'payment_reminder',
+      notifiable: @group,
+      message: "#{current_user.full_name} reminded you about a payment of #{helpers.number_to_currency(amount)} in the group #{@group.name}"
+    )
   end
 end
