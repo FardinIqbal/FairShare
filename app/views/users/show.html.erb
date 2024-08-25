@@ -1,0 +1,225 @@
+<!-- app/views/users/show.html.erb -->
+<div class="user-profile-container" style="max-width: 800px; margin: 0 auto; padding: 2rem 1rem; background-color: #f3f4f6;">
+  <div class="profile-header" style="display: flex; flex-direction: column; align-items: center; margin-bottom: 2rem; text-align: center;" id="profileHeader">
+    <div class="profile-avatar" style="width: 120px; height: 120px; border-radius: 50%; background-color: #4f46e5; display: flex; justify-content: center; align-items: center; margin-bottom: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+      <span style="font-size: 3rem; color: white;"><%= @user.first_name[0] %><%= @user.last_name[0] %></span>
+    </div>
+    <h1 style="font-size: 2rem; font-weight: 800; color: #1a202c; margin-bottom: 0.5rem;"><%= @user.full_name %></h1>
+    <p style="color: #4b5563; font-size: 1rem; margin-bottom: 1rem;"><%= @user.email %></p>
+    <% if current_user == @user %>
+      <%= link_to edit_user_registration_path, class: "edit-profile-btn", style: "background-color: #4f46e5; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center;" do %>
+        <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+        Edit Profile
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="profile-stats" style="margin-bottom: 2.5rem;" id="profileStats">
+    <div class="main-stat-card" style="background-color: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center; margin-bottom: 1rem;">
+      <h3 style="font-size: 1.25rem; color: #4b5563; margin-bottom: 0.5rem;">
+        Overall <%= @total_balance >= 0 ? 'You Are Owed' : 'You Owe' %>
+      </h3>
+      <p style="font-size: 2.5rem; font-weight: 700; color: <%= @total_balance >= 0 ? '#10B981' : '#EF4444' %>;" class="animate-number">
+        <%= number_to_currency(@total_balance.abs) %>
+      </p>
+      <p style="font-size: 1rem; color: #4B5563; margin-top: 0.5rem;">
+        across all groups
+      </p>
+    </div>
+    <div style="display: flex; justify-content: space-between; gap: 1rem;">
+      <div class="stat-card" style="flex: 1; background-color: white; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center;">
+        <h3 style="font-size: 1rem; color: #4b5563; margin-bottom: 0.5rem;">You're part of</h3>
+        <p style="font-size: 1.75rem; font-weight: 700; color: #4f46e5;"><%= @groups.count %></p>
+        <p style="font-size: 0.875rem; color: #4b5563; margin-top: 0.25rem;">Active Groups</p>
+      </div>
+      <div class="stat-card" style="flex: 1; background-color: white; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center;">
+        <h3 style="font-size: 1rem; color: #4b5563; margin-bottom: 0.5rem;">Total Expenses</h3>
+        <p style="font-size: 1.75rem; font-weight: 700; color: #4f46e5;" class="animate-number"><%= number_to_currency(@user.expenses.sum(:amount)) %></p>
+        <p style="font-size: 0.875rem; color: #4b5563; margin-top: 0.25rem;">You've added</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-content" style="display: grid; grid-template-columns: 1fr; gap: 2rem;" id="profileContent">
+    <div class="content-card" style="background-color: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+      <h2 style="font-size: 1.5rem; font-weight: 700; color: #1a202c; margin-bottom: 1.5rem; text-align: center;">Your Groups</h2>
+      <% if @groups.any? %>
+        <div class="group-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+          <% @groups.each do |group| %>
+            <%= link_to group_path(group), class: "group-card", style: "background-color: #f3f4f6; border-radius: 1rem; padding: 1.5rem; text-decoration: none; transition: all 0.3s ease; display: block; position: relative;" do %>
+              <h3 style="font-size: 1.25rem; font-weight: 600; color: #1a202c; margin-bottom: 0.75rem; padding-right: 1.5rem;">
+                <%= group.name %>
+                <svg class="link-icon" style="display: inline-block; vertical-align: middle; width: 1rem; height: 1rem; margin-left: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </h3>
+              <p style="font-size: 0.875rem; color: #4b5563; margin-bottom: 0.75rem;"><%= pluralize(group.users.count, 'member') %></p>
+              <% balance = @user.balance_in_group(group) %>
+              <p style="font-size: 1rem; font-weight: 600; color: <%= balance >= 0 ? '#10B981' : '#EF4444' %>;">
+                <%= balance >= 0 ? 'You are owed' : 'You owe' %> <%= number_to_currency(balance.abs) %>
+              </p>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <p style="text-align: center; color: #4b5563; font-size: 1rem;">You're not part of any groups yet.</p>
+      <% end %>
+    </div>
+
+    <div class="content-card" style="background-color: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+      <h2 style="font-size: 1.5rem; font-weight: 700; color: #1a202c; margin-bottom: 1.5rem; text-align: center;">Recent Expenses</h2>
+      <div class="expense-list" style="max-height: 400px; overflow-y: auto;">
+        <% if @recent_expenses.any? %>
+          <% @recent_expenses.each do |expense| %>
+            <%= link_to group_expense_path(expense.group, expense), class: "expense-item", style: "display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #e2e8f0; text-decoration: none; color: inherit; transition: all 0.3s ease;" do %>
+              <div style="flex: 1;">
+                <p style="font-weight: 600; color: #1a202c; font-size: 1rem;">
+                  <%= expense.description %>
+                  <svg class="link-icon" style="display: inline-block; vertical-align: middle; width: 1rem; height: 1rem; margin-left: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                  </svg>
+                </p>
+                <p style="font-size: 0.875rem; color: #4b5563; margin-top: 0.25rem;"><%= expense.group.name %> • <%= expense.date.strftime("%b %d, %Y") %></p>
+              </div>
+              <div style="text-align: right;">
+                <p style="font-weight: 600; color: #4f46e5; font-size: 1rem;"><%= number_to_currency(expense.amount) %></p>
+              </div>
+            <% end %>
+          <% end %>
+        <% else %>
+          <p style="text-align: center; color: #4b5563; font-size: 1rem;">No recent expenses to show.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="content-card" style="background-color: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+      <h2 style="font-size: 1.5rem; font-weight: 700; color: #1a202c; margin-bottom: 1.5rem; text-align: center;">Expense Breakdown</h2>
+      <% if @expense_categories.any? %>
+        <div id="expenseCategoriesChart" style="height: 300px;"></div>
+      <% else %>
+        <p style="text-align: center; color: #4b5563; font-size: 1rem;">No expense data available yet.</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+    @media (max-width: 640px) {
+        .profile-stats > div:last-child {
+            flex-direction: row;
+        }
+        .stat-card {
+            padding: 1rem;
+        }
+        .stat-card h3 {
+            font-size: 0.875rem;
+        }
+        .stat-card p:first-of-type {
+            font-size: 1.5rem;
+        }
+        .stat-card p:last-of-type {
+            font-size: 0.75rem;
+        }
+        .group-list {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .stat-card:hover, .content-card:hover, .edit-profile-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .group-card, .expense-item {
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    .group-card:hover, .group-card:focus, .expense-item:hover, .expense-item:focus {
+        background-color: #e5e7eb;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .link-icon {
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .group-card:hover .link-icon, .expense-item:hover .link-icon {
+        color: #4F46E5FF;
+        transform: scale(1.2);
+    }
+
+    .animate-in {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function initializeUserProfile() {
+        // Animate elements
+        const elements = [
+            document.getElementById('profileHeader'),
+            document.getElementById('profileStats'),
+            document.getElementById('profileContent')
+        ];
+
+        elements.forEach((el, index) => {
+            setTimeout(() => {
+                el.classList.add('animate-in');
+            }, index * 200);
+        });
+
+        // Animate numbers
+        document.querySelectorAll('.animate-number').forEach(el => {
+            const finalValue = parseFloat(el.innerText.replace(/[^0-9.-]+/g,""));
+            let startValue = 0;
+            const duration = 1000;
+            const startTime = performance.now();
+
+            function updateNumber(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                if (elapsedTime < duration) {
+                    const progress = elapsedTime / duration;
+                    const currentValue = startValue + progress * (finalValue - startValue);
+                    el.innerText = '$' + currentValue.toFixed(2);
+                    requestAnimationFrame(updateNumber);
+                } else {
+                    el.innerText = '$' + finalValue.toFixed(2);
+                }
+            }
+
+            requestAnimationFrame(updateNumber);
+        });
+
+        // Create expense categories chart
+        const chartElement = document.getElementById('expenseCategoriesChart');
+        if (chartElement) {
+            const ctx = chartElement.getContext('2d');
+            new Chart(ctx, {
+                // ... (your existing chart configuration)
+            });
+        }
+    }
+
+    // Run on initial page load
+    document.addEventListener('DOMContentLoaded', initializeUserProfile);
+
+    // Run on Turbo Drive page load
+    document.addEventListener('turbo:load', initializeUserProfile);
+
+    // Run on Turbo Drive render
+    document.addEventListener('turbo:render', initializeUserProfile);
+</script>
