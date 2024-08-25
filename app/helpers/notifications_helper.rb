@@ -5,20 +5,20 @@ module NotificationsHelper
     actor_name = notification.actor.full_name
     case notification.action
     when 'new_member'
-      "#{actor_name} joined #{notification.notifiable.name}"
+      "#{actor_name} added #{notification.notifiable.users.last.full_name} to the group '#{notification.notifiable.name}'"
     when 'new_expense'
       expense = notification.notifiable
-      "#{actor_name} added a new expense of #{number_to_currency(expense.amount)} in #{expense.group.name}"
+      "#{actor_name} added a new expense '#{expense.description}' for #{number_to_currency(expense.amount)} in '#{expense.group.name}'. Category: #{expense.category}"
     when 'payment_made'
       payment = notification.notifiable
-      "#{actor_name} paid you #{number_to_currency(payment.amount)} in the group #{payment.group.name}"
+      "#{actor_name} paid you #{number_to_currency(payment.amount)} in the group '#{payment.group.name}'"
     when 'payment_reminder'
       group = notification.notifiable
       amount = notification.message.match(/\$[\d,.]+/).to_s
-      "#{actor_name} reminded you about a payment of #{amount} in the group #{group.name}"
+      "#{actor_name} reminded you about a payment of #{amount} in the group '#{group.name}'"
     when 'payment_received'
       payment = notification.notifiable
-      "You received a payment of #{number_to_currency(payment.amount)} from #{actor_name}"
+      "You received a payment of #{number_to_currency(payment.amount)} from #{actor_name} in '#{payment.group.name}'"
     else
       notification.message
     end
@@ -74,6 +74,32 @@ module NotificationsHelper
       content_tag(:svg, class: "w-6 h-6", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg") do
         content_tag(:path, nil, stroke_linecap: "round", stroke_linejoin: "round", stroke_width: "2", d: icon_class)
       end
+    end
+  end
+
+  def notification_action_text(notification)
+    case notification.action
+    when 'new_member'
+      'View Group'
+    when 'new_expense'
+      'View Expense'
+    when 'payment_made', 'payment_received', 'payment_reminder'
+      'View Payment'
+    else
+      'View Details'
+    end
+  end
+
+  def notification_action_path(notification)
+    case notification.action
+    when 'new_member'
+      group_path(notification.notifiable)
+    when 'new_expense'
+      group_expense_path(notification.notifiable.group, notification.notifiable)
+    when 'payment_made', 'payment_received', 'payment_reminder'
+      group_path(notification.notifiable.group)
+    else
+      '#'
     end
   end
 end

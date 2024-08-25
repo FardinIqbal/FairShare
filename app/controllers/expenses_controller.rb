@@ -75,7 +75,7 @@ class ExpensesController < ApplicationController
         actor: current_user,
         action: 'new_expense',
         notifiable: expense,
-        message: "#{current_user.full_name} added a new expense of #{helpers.number_to_currency(expense.amount)} in #{@group.name}"
+        message: "#{current_user.full_name} added a new expense '#{expense.description}' for #{helpers.number_to_currency(expense.amount)} in the group '#{@group.name}'. Category: #{expense.category}"
       )
 
       if notification.save

@@ -122,10 +122,10 @@ class GroupsController < ApplicationController
     users_to_notify.each do |user|
       Notification.create(
         recipient: user,
-        actor: new_member,
+        actor: current_user,
         action: 'new_member',
         notifiable: @group,
-        message: "#{new_member.full_name} joined the group #{@group.name}"
+        message: "#{current_user.full_name} added #{new_member.full_name} to the group '#{@group.name}'"
       )
     end
   end
