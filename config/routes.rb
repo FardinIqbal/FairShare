@@ -32,6 +32,9 @@ Rails.application.routes.draw do
     resources :group_memberships, only: [:index, :create, :destroy]
   end
 
+  # New route for expense group selection
+  get 'expenses/new', to: 'expenses#new_with_group_selection', as: 'new_expense_with_group_selection'
+
   # Payment routes
   post 'payments/pay', to: 'payments#pay'
   post 'payments/remind', to: 'payments#remind'

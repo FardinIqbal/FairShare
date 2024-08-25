@@ -1,6 +1,6 @@
 class ExpensesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group
+  before_action :set_group, except: [:new_with_group_selection]
   before_action :set_expense, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -10,6 +10,10 @@ class ExpensesController < ApplicationController
   end
 
   def show
+  end
+
+  def new_with_group_selection
+    @groups = current_user.groups
   end
 
   def new
@@ -23,7 +27,7 @@ class ExpensesController < ApplicationController
     if @expense.save
       Rails.logger.info "Expense saved successfully: #{@expense.inspect}"
       create_new_expense_notification(@expense)
-      redirect_to group_expense_path(@group, @expense), notice: 'Expense was successfully created.'
+      redirect_to group_path(@group), notice: 'Expense was successfully created.'
     else
       Rails.logger.error "Failed to save expense: #{@expense.errors.full_messages}"
       render :new

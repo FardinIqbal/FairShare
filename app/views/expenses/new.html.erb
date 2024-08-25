@@ -1,68 +1,128 @@
-<!-- app/views/expenses/new.html.erb -->
-<div id="new-expense-container" style="max-width: 100%; padding: 1rem; background-color: #f3f4f6;">
-  <div style="max-width: 500px; margin: 0 auto;">
-    <h1 id="page-title" style="font-size: 1.5rem; font-weight: 800; color: #1a202c; margin-bottom: 1rem; opacity: 0; transform: translateY(-20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
-      Add New Expense for <%= @group.name %>
+<div id="new-expense-container" class="min-h-screen bg-gradient-to-b from-indigo-50 to-white p-4 sm:p-6 md:p-8 lg:p-12">
+  <div class="max-w-4xl mx-auto">
+    <h1 id="page-title" class="text-3xl sm:text-4xl font-extrabold text-indigo-900 mb-4 opacity-0 transform -translate-y-4 transition-all duration-500 ease-out text-center">
+      <%= @group ? "Add New Expense for #{@group.name}" : "Add New Expense" %>
     </h1>
 
-    <%= render 'form', group: @group, expense: @expense %>
+    <p id="page-description" class="text-lg text-gray-600 mb-8 opacity-0 transform -translate-y-4 transition-all duration-500 ease-out delay-100 text-center max-w-2xl mx-auto">
+      Keep track of your expenses easily. Fill out the form below to add a new expense to your group. This helps maintain transparency and makes splitting costs simpler.
+    </p>
 
-    <div id="back-link" style="margin-top: 1.5rem; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
-      <%= link_to 'Back to Expenses', group_expenses_path(@group), style: "display: inline-block; color: #4F46E5; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border: 2px solid #4F46E5; border-radius: 0.375rem; transition: all 0.3s ease-in-out;", onmouseover: "this.style.backgroundColor='#4F46E5'; this.style.color='white';", onmouseout: "this.style.backgroundColor='transparent'; this.style.color='#4F46E5';" %>
+    <div class="lg:flex lg:space-x-8">
+      <div class="lg:w-2/3">
+        <%= form_with(model: [@group, @expense].compact, local: true, id: "expense-form", class: "bg-white shadow-md rounded-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500 ease-out delay-200") do |form| %>
+          <% if @expense.errors.any? %>
+            <div id="error_explanation" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6">
+              <h2 class="font-bold"><%= pluralize(@expense.errors.count, "error") %> prohibited this expense from being saved:</h2>
+              <ul class="list-disc list-inside">
+                <% @expense.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <% unless @group %>
+            <div class="mb-6">
+              <%= form.label :group_id, "Select Group", class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <%= form.collection_select :group_id, current_user.groups, :id, :name, { prompt: "Choose a group" }, { class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" } %>
+            </div>
+          <% end %>
+
+          <div class="mb-6">
+            <%= form.label :amount, class: "block text-gray-700 text-sm font-bold mb-2" %>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-600">$</span>
+              <%= form.number_field :amount, step: 0.01, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pl-8", placeholder: "0.00" %>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <%= form.label :description, class: "block text-gray-700 text-sm font-bold mb-2" %>
+            <%= form.text_area :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", rows: 3, placeholder: "What was this expense for?" %>
+          </div>
+
+          <div class="mb-6">
+            <%= form.label :date, class: "block text-gray-700 text-sm font-bold mb-2" %>
+            <%= form.date_field :date, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+          </div>
+
+          <div class="mb-6">
+            <%= form.label :category, class: "block text-gray-700 text-sm font-bold mb-2" %>
+            <%= form.select :category, Expense::CATEGORIES, { prompt: "Select a category" }, { class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" } %>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <%= form.submit "Create Expense", class: "bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105" %>
+            <%= link_to (@group ? 'Cancel' : 'Back to Dashboard'), (@group ? group_path(@group) : dashboard_path), class: "inline-block align-baseline font-bold text-sm text-indigo-600 hover:text-indigo-800" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="lg:w-1/3">
+        <div id="expense-tips" class="bg-indigo-50 rounded-lg p-6 opacity-0 transform translate-y-4 transition-all duration-500 ease-out delay-300">
+          <h2 class="text-xl font-bold text-indigo-900 mb-4">Expense Tips</h2>
+          <ul class="space-y-2 text-indigo-800">
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-indigo-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              Be as specific as possible in the description.
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-indigo-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              Choose the most appropriate category for easy tracking.
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-indigo-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              Add expenses promptly to keep the group balance up-to-date.
+            </li>
+          </ul>
+        </div>
+
+        <div id="expense-summary" class="bg-white rounded-lg shadow-md p-6 mt-6 opacity-0 transform translate-y-4 transition-all duration-500 ease-out delay-400">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">Group Summary</h2>
+          <div class="space-y-2">
+            <p class="flex justify-between"><span class="font-medium">Total Expenses:</span> <span><%= number_to_currency(@group.expenses.sum(:amount)) %></span></p>
+            <p class="flex justify-between"><span class="font-medium">Your Balance:</span> <span class="<%= current_user.balance_in_group(@group) >= 0 ? 'text-green-600' : 'text-red-600' %>"><%= number_to_currency(current_user.balance_in_group(@group).abs) %> <%= current_user.balance_in_group(@group) >= 0 ? 'to receive' : 'to pay' %></span></p>
+            <p class="flex justify-between"><span class="font-medium">Last Expense:</span> <span><%= @group.expenses.order(date: :desc).first&.date&.strftime("%B %d, %Y") || "N/A" %></span></p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<style>
-    @media (min-width: 640px) {
-        #new-expense-container {
-            padding: 2rem;
-        }
-        #page-title {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-    }
-</style>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const pageTitle = document.getElementById('page-title');
-        const backLink = document.getElementById('back-link');
+        const elements = [
+            document.getElementById('page-title'),
+            document.getElementById('page-description'),
+            document.getElementById('expense-form'),
+            document.getElementById('expense-tips'),
+            document.getElementById('expense-summary')
+        ];
 
-        // Animate page title
-        setTimeout(() => {
-            pageTitle.style.opacity = '1';
-            pageTitle.style.transform = 'translateY(0)';
-        }, 100);
-
-        // Animate back link
-        setTimeout(() => {
-            backLink.style.opacity = '1';
-            backLink.style.transform = 'translateY(0)';
-        }, 300);
-
-        // Add hover effect to back link
-        const link = backLink.querySelector('a');
-        link.addEventListener('mouseover', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
-        link.addEventListener('mouseout', function() {
-            this.style.transform = 'translateY(0)';
+        elements.forEach((el, index) => {
+            setTimeout(() => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, 100 * (index + 1));
         });
 
-        // Adjust layout for mobile
-        function adjustForMobile() {
-            if (window.innerWidth <= 640) {
-                backLink.style.textAlign = 'center';
-                link.style.width = '100%';
-            } else {
-                backLink.style.textAlign = 'left';
-                link.style.width = 'auto';
-            }
-        }
-
-        window.addEventListener('resize', adjustForMobile);
-        adjustForMobile(); // Call once on load
+        // Add hover effect to form inputs
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.2)';
+            });
+            input.addEventListener('blur', () => {
+                input.style.boxShadow = '';
+            });
+        });
     });
 </script>
