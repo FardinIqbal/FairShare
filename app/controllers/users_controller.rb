@@ -2,8 +2,6 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user, only: [:show, :destroy]
 
-  has_many :expenses, dependent: :destroy
-  has_many :balances, dependent: :destroy
   def show
     @groups = @user.groups
     @total_balance = @user.total_balance
