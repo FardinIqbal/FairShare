@@ -1,5 +1,5 @@
-# config/routes.rb
 Rails.application.routes.draw do
+  # Root route
   root 'static_pages#home'
 
   # Devise routes for user authentication
@@ -27,7 +27,9 @@ Rails.application.routes.draw do
     member do
       get 'add_users'
       post 'add_user'
+      post 'add_multiple_users'
     end
+
     resources :expenses
     resources :group_memberships, only: [:index, :create, :destroy]
   end

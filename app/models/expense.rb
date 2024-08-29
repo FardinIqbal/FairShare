@@ -15,6 +15,8 @@ class Expense < ApplicationRecord
 
   CATEGORIES = %w[Food Transportation Housing Entertainment Utilities Other Accommodation].freeze
   validates :category, inclusion: { in: CATEGORIES }
+  validates :amount, numericality: { greater_than: 0, less_than_or_equal_to: 10_000 }
+
 
   after_create :update_group_balances
   after_update :update_group_balances

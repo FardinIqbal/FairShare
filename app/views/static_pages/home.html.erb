@@ -1,101 +1,80 @@
 <!-- app/views/static_pages/home.html.erb -->
-<div class="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="text-center mb-16 animate-fade-in-up">
-      <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl mb-4">
-        Welcome to <span class="text-indigo-600 animate-color-pulse">FairShare</span>
+<div style="background-image: linear-gradient(to bottom, #eef2ff, #ffffff); min-height: 100vh;">
+  <div style="max-width: 80rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; padding-top: 4rem; padding-bottom: 4rem;">
+    <div style="text-align: center; margin-bottom: 4rem; opacity: 0; transform: translateY(1rem); transition: all 1s ease-out;" data-animate>
+      <h1 style="font-size: 2.25rem; font-weight: 800; color: #111827; margin-bottom: 1rem; letter-spacing: -0.025em;">
+        Welcome to <span style="color: #4f46e5; animation: colorPulse 4s infinite;">FairShare</span>
       </h1>
-      <p class="mt-3 max-w-md mx-auto text-xl text-gray-600 sm:text-2xl md:mt-5 md:max-w-3xl">
+      <p style="margin-top: 0.75rem; max-width: 28rem; margin-left: auto; margin-right: auto; font-size: 1.25rem; color: #4b5563;">
         Your go-to platform for easy expense sharing and group finance management.
       </p>
-      <div class="mt-8 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
+      <div style="margin-top: 2rem; max-width: 28rem; margin-left: auto; margin-right: auto;">
         <% if user_signed_in? %>
-          <%= link_to 'View My Groups', groups_path, class: 'inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500' %>
+          <%= link_to 'View My Groups', groups_path, style: "display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border: transparent; font-size: 1rem; font-weight: 500; border-radius: 0.375rem; color: white; background-color: #4f46e5; transition: all 0.3s ease-in-out;", onmouseover: "this.style.backgroundColor='#4338ca'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.1)';", onmouseout: "this.style.backgroundColor='#4f46e5'; this.style.transform='translateY(0)'; this.style.boxShadow='none';", role: "button" %>
         <% else %>
-          <div class="rounded-md shadow">
-            <%= link_to 'Sign Up', new_user_registration_path, class: 'w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500' %>
+          <div style="display: inline-block; border-radius: 0.375rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
+            <%= link_to 'Sign Up', new_user_registration_path, style: "display: flex; width: 100%; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border: transparent; font-size: 1rem; font-weight: 500; border-radius: 0.375rem; color: white; background-color: #4f46e5; transition: all 0.3s ease-in-out;", onmouseover: "this.style.backgroundColor='#4338ca'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.1)';", onmouseout: "this.style.backgroundColor='#4f46e5'; this.style.transform='translateY(0)'; this.style.boxShadow='none';", role: "button" %>
           </div>
-          <div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-            <%= link_to 'Log In', new_user_session_path, class: 'w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500' %>
+          <div style="display: inline-block; margin-top: 0.75rem; margin-left: 0.75rem; border-radius: 0.375rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
+            <%= link_to 'Log In', new_user_session_path, style: "display: flex; width: 100%; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border: transparent; font-size: 1rem; font-weight: 500; border-radius: 0.375rem; color: #4f46e5; background-color: white; transition: all 0.3s ease-in-out;", onmouseover: "this.style.backgroundColor='#f9fafb'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.1)';", onmouseout: "this.style.backgroundColor='white'; this.style.transform='translateY(0)'; this.style.boxShadow='none';", role: "button" %>
           </div>
         <% end %>
       </div>
     </div>
 
-    <div class="mt-24 animate-fade-in-up">
-      <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-12">
+    <div style="margin-top: 6rem; opacity: 0; transform: translateY(1rem); transition: all 1s ease-out;" data-animate>
+      <h2 style="font-size: 1.875rem; font-weight: 800; color: #111827; text-align: center; margin-bottom: 3rem;">
         Why Choose FairShare?
       </h2>
-      <div class="mt-10">
-        <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
-          <% [
-               { title: "Easy Group Management", description: "Create and manage multiple groups for different occasions or shared living situations.", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" },
-               { title: "Effortless Expense Tracking", description: "Add and categorize expenses quickly, keeping a clear record of all shared costs.", icon: "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" },
-               { title: "Smart Balance Calculation", description: "Automatically calculate who owes what, eliminating the hassle of manual calculations.", icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" },
-               { title: "Simplified Settlements", description: "Easily settle up with friends and keep track of who has paid their share.", icon: "M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" }
-             ].each do |feature| %>
-            <div class="relative p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
-              <dt>
-                <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                  <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<%= feature[:icon] %>" />
-                  </svg>
-                </div>
-                <p class="ml-16 text-lg leading-6 font-medium text-gray-900"><%= feature[:title] %></p>
-              </dt>
-              <dd class="mt-2 ml-16 text-base text-gray-500">
-                <%= feature[:description] %>
-              </dd>
-            </div>
-          <% end %>
-        </dl>
+      <div style="margin-top: 2.5rem; display: grid; gap: 2rem;">
+        <% [
+             { title: "Easy Group Management", description: "Create and manage multiple groups for different occasions or shared living situations.", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" },
+             { title: "Effortless Expense Tracking", description: "Add and categorize expenses quickly, keeping a clear record of all shared costs.", icon: "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" },
+             { title: "Smart Balance Calculation", description: "Automatically calculate who owes what, eliminating the hassle of manual calculations.", icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" },
+             { title: "Simplified Settlements", description: "Easily settle up with friends and keep track of who has paid their share.", icon: "M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" }
+           ].each do |feature| %>
+          <div style="position: relative; padding: 1.5rem; background-color: white; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); transition: all 0.3s ease-in-out;" onmouseover="this.style.transform='translateY(-0.25rem)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+            <dt>
+              <div style="position: absolute; display: flex; align-items: center; justify-content: center; height: 3rem; width: 3rem; border-radius: 0.375rem; background-color: #4f46e5; color: white;">
+                <svg style="height: 1.5rem; width: 1.5rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<%= feature[:icon] %>" />
+                </svg>
+              </div>
+              <p style="margin-left: 4rem; font-size: 1.125rem; font-weight: 500; color: #111827;"><%= feature[:title] %></p>
+            </dt>
+            <dd style="margin-top: 0.5rem; margin-left: 4rem; font-size: 1rem; color: #6b7280;">
+              <%= feature[:description] %>
+            </dd>
+          </div>
+        <% end %>
       </div>
     </div>
 
-    <div class="mt-24 bg-white rounded-lg shadow-xl overflow-hidden lg:grid lg:grid-cols-2 lg:gap-4 animate-fade-in-up">
-      <div class="pt-10 pb-12 px-6 sm:pt-16 sm:px-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
-        <div class="lg:self-center">
-          <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-            <span class="block">Ready to get started?</span>
-            <span class="block text-indigo-600">Join FairShare today.</span>
+    <div style="margin-top: 6rem; background-color: white; border-radius: 0.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; opacity: 0; transform: translateY(1rem); transition: all 1s ease-out;" data-animate>
+      <div style="padding: 2.5rem 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.875rem; font-weight: 800; color: #111827;">
+            <span style="display: block;">Ready to get started?</span>
+            <span style="display: block; color: #4f46e5;">Join FairShare today.</span>
           </h2>
-          <p class="mt-4 text-lg leading-6 text-gray-500">
+          <p style="margin-top: 1rem; font-size: 1.125rem; color: #6b7280;">
             Sign up now and experience hassle-free expense sharing with your friends, roommates, or travel buddies.
           </p>
           <% unless user_signed_in? %>
-            <a href="<%= new_user_registration_path %>" class="mt-8 bg-indigo-600 border border-transparent rounded-md shadow px-5 py-3 inline-flex items-center text-base font-medium text-white hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <a href="<%= new_user_registration_path %>" style="display: inline-flex; margin-top: 2rem; padding: 0.75rem 1.5rem; background-color: #4f46e5; color: white; font-size: 1rem; font-weight: 500; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease-in-out;" onmouseover="this.style.backgroundColor='#4338ca'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.1)';" onmouseout="this.style.backgroundColor='#4f46e5'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" role="button">
               Create your account
             </a>
           <% end %>
         </div>
       </div>
-      <div class="relative -mt-6 aspect-w-5 aspect-h-3 md:aspect-w-2 md:aspect-h-1">
-        <%= image_tag "valiant-made-UrzN-8K1PCE-unsplash.jpg", class: "transform translate-x-6 translate-y-6 rounded-md object-cover object-left-top sm:translate-x-16 lg:translate-y-20 transition duration-700 ease-in-out hover:scale-105", alt: "People collaborating on finances" %>
+      <div style="position: relative; margin-top: -1.5rem; aspect-ratio: 5 / 3;">
+        <%= image_tag "valiant-made-UrzN-8K1PCE-unsplash.jpg", style: "width: 100%; height: 100%; object-fit: cover; object-position: left top; border-radius: 0.375rem; transform: translate(1.5rem, 1.5rem); transition: all 0.7s ease-in-out;", onmouseover: "this.style.transform='translate(1.5rem, 1.5rem) scale(1.05)';", onmouseout: "this.style.transform='translate(1.5rem, 1.5rem) scale(1)';", alt: "People collaborating on finances" %>
       </div>
     </div>
   </div>
 </div>
 
 <style>
-    .animate-fade-in-up {
-        animation: fadeInUp 1s ease-out;
-    }
-
-    .animate-color-pulse {
-        animation: colorPulse 4s infinite;
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
     @keyframes colorPulse {
         0%, 100% {
             color: #4f46e5;
@@ -104,4 +83,31 @@
             color: #818cf8;
         }
     }
+
+    @media (max-width: 640px) {
+        h1 {
+            font-size: 2rem !important;
+        }
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const animatedElements = document.querySelectorAll('[data-animate]');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        animatedElements.forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>
