@@ -1,127 +1,380 @@
-<div id="new-expense-container" class="min-h-screen bg-gradient-to-b from-indigo-50 to-white p-4 sm:p-6 md:p-8 lg:p-12">
-  <div class="max-w-4xl mx-auto">
-    <h1 id="page-title" class="text-3xl sm:text-4xl font-extrabold text-indigo-900 mb-4 opacity-0 transform -translate-y-4 transition-all duration-500 ease-out text-center">
+<div class="expense-container">
+  <div class="expense-header">
+    <h1 class="expense-title">
       <%= @group ? "Add New Expense for #{@group.name}" : "Add New Expense" %>
     </h1>
-
-    <p id="page-description" class="text-lg text-gray-600 mb-8 opacity-0 transform -translate-y-4 transition-all duration-500 ease-out delay-100 text-center max-w-2xl mx-auto">
-      Keep track of your expenses easily. Fill out the form below to add a new expense to your group. This helps maintain transparency and makes splitting costs simpler.
+    <p class="expense-subtitle">
+      Keep track of your expenses easily. Fill out the form below to add a new expense to your group.
     </p>
+  </div>
 
-    <div class="lg:flex lg:space-x-8">
-      <div class="lg:w-2/3">
-        <%= form_with(model: [@group, @expense].compact, local: true, id: "expense-form", class: "bg-white shadow-md rounded-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500 ease-out delay-200") do |form| %>
-          <% if @expense.errors.any? %>
-            <div id="error_explanation" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6">
-              <h2 class="font-bold"><%= pluralize(@expense.errors.count, "error") %> prohibited this expense from being saved:</h2>
-              <ul class="list-disc list-inside">
-                <% @expense.errors.full_messages.each do |message| %>
-                  <li><%= message %></li>
-                <% end %>
-              </ul>
-            </div>
-          <% end %>
-
-          <% unless @group %>
-            <div class="mb-6">
-              <%= form.label :group_id, "Select Group", class: "block text-gray-700 text-sm font-bold mb-2" %>
-              <%= form.collection_select :group_id, current_user.groups, :id, :name, { prompt: "Choose a group" }, { class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" } %>
-            </div>
-          <% end %>
-
-          <div class="mb-6">
-            <%= form.label :amount, class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-600">$</span>
-              <%= form.number_field :amount, step: 0.01, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pl-8", placeholder: "0.00" %>
-            </div>
-          </div>
-
-          <div class="mb-6">
-            <%= form.label :description, class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= form.text_area :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", rows: 3, placeholder: "What was this expense for?" %>
-          </div>
-
-          <div class="mb-6">
-            <%= form.label :date, class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= form.date_field :date, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-          </div>
-
-          <div class="mb-6">
-            <%= form.label :category, class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= form.select :category, Expense::CATEGORIES, { prompt: "Select a category" }, { class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" } %>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <%= form.submit "Create Expense", class: "bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105" %>
-            <%= link_to (@group ? 'Cancel' : 'Back to Dashboard'), (@group ? group_path(@group) : dashboard_path), class: "inline-block align-baseline font-bold text-sm text-indigo-600 hover:text-indigo-800" %>
+  <div class="expense-content">
+    <div class="expense-form-wrapper">
+      <%= form_with(model: [@group, @expense].compact, local: true, class: "expense-form") do |form| %>
+        <% if @expense.errors.any? %>
+          <div class="error-explanation">
+            <h2><%= pluralize(@expense.errors.count, "error") %> prohibited this expense from being saved:</h2>
+            <ul>
+              <% @expense.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
           </div>
         <% end %>
-      </div>
 
-      <div class="lg:w-1/3">
-        <div id="expense-tips" class="bg-indigo-50 rounded-lg p-6 opacity-0 transform translate-y-4 transition-all duration-500 ease-out delay-300">
-          <h2 class="text-xl font-bold text-indigo-900 mb-4">Expense Tips</h2>
-          <ul class="space-y-2 text-indigo-800">
-            <li class="flex items-start">
-              <svg class="w-5 h-5 text-indigo-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
-              Be as specific as possible in the description.
-            </li>
-            <li class="flex items-start">
-              <svg class="w-5 h-5 text-indigo-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
-              Choose the most appropriate category for easy tracking.
-            </li>
-            <li class="flex items-start">
-              <svg class="w-5 h-5 text-indigo-600 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
-              Add expenses promptly to keep the group balance up-to-date.
-            </li>
-          </ul>
+        <% unless @group %>
+          <div class="form-group">
+            <%= form.label :group_id, "Select Group" %>
+            <%= form.collection_select :group_id, current_user.groups, :id, :name, { prompt: "Choose a group" }, { class: "form-input" } %>
+          </div>
+        <% end %>
+
+        <div class="form-group">
+          <%= form.label :amount %>
+          <div class="amount-input-wrapper">
+            <span class="currency-symbol">$</span>
+            <%= form.number_field :amount, step: 0.01, class: "form-input amount-input", placeholder: "0.00" %>
+          </div>
         </div>
 
-        <div id="expense-summary" class="bg-white rounded-lg shadow-md p-6 mt-6 opacity-0 transform translate-y-4 transition-all duration-500 ease-out delay-400">
-          <h2 class="text-xl font-bold text-gray-800 mb-4">Group Summary</h2>
-          <div class="space-y-2">
-            <p class="flex justify-between"><span class="font-medium">Total Expenses:</span> <span><%= number_to_currency(@group.expenses.sum(:amount)) %></span></p>
-            <p class="flex justify-between"><span class="font-medium">Your Balance:</span> <span class="<%= current_user.balance_in_group(@group) >= 0 ? 'text-green-600' : 'text-red-600' %>"><%= number_to_currency(current_user.balance_in_group(@group).abs) %> <%= current_user.balance_in_group(@group) >= 0 ? 'to receive' : 'to pay' %></span></p>
-            <p class="flex justify-between"><span class="font-medium">Last Expense:</span> <span><%= @group.expenses.order(date: :desc).first&.date&.strftime("%B %d, %Y") || "N/A" %></span></p>
-          </div>
+        <div class="form-group">
+          <%= form.label :description %>
+          <%= form.text_area :description, class: "form-input", rows: 3, placeholder: "What was this expense for?" %>
+        </div>
+
+        <div class="form-group">
+          <%= form.label :date %>
+          <%= form.date_field :date, value: Date.current, class: "form-input" %>
+        </div>
+
+        <div class="form-group">
+          <%= form.label :category %>
+          <%= form.select :category, Expense::CATEGORIES, { prompt: "Select a category" }, { class: "form-input" } %>
+        </div>
+
+        <div class="btn-container">
+          <button type="submit" class="btn btn-primary">Add Expense</button>
+          <a href="#" class="btn btn-secondary">Cancel</a>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="expense-sidebar">
+      <div class="expense-tips">
+        <h2>Expense Tips</h2>
+        <ul>
+          <li>Be specific in the description</li>
+          <li>Choose the appropriate category</li>
+          <li>Add expenses promptly</li>
+        </ul>
+      </div>
+
+      <div class="expense-summary">
+        <h2>Group Summary</h2>
+        <div class="summary-item">
+          <span>Total Expenses:</span>
+          <span><%= number_to_currency(@group.expenses.sum(:amount)) %></span>
+        </div>
+        <div class="summary-item">
+          <span>Your Balance:</span>
+          <span class="<%= current_user.balance_in_group(@group) >= 0 ? 'positive-balance' : 'negative-balance' %>">
+            <%= number_to_currency(current_user.balance_in_group(@group).abs) %>
+            <%= current_user.balance_in_group(@group) >= 0 ? 'to receive' : 'to pay' %>
+          </span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+
+<style>
+    :root {
+        --primary-color: #4F46E5;
+        --secondary-color: #E5E7EB;
+        --background-color: #F9FAFB;
+        --text-color: #1F2937;
+        --heading-color: #111827;
+        --hover-color: #4338CA;
+        --transition-speed: 0.3s;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+    }
+
+    .expense-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .expense-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .expense-title {
+        color: var(--primary-color);
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        transition: color var(--transition-speed);
+    }
+
+    .expense-title:hover {
+        color: var(--hover-color);
+    }
+
+    .expense-subtitle {
+        color: #6B7280;
+        font-size: 1rem;
+    }
+
+    .expense-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .expense-form-wrapper {
+        flex: 1 1 500px;
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        transition: box-shadow var(--transition-speed);
+    }
+
+    .expense-form-wrapper:hover {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .expense-sidebar {
+        flex: 1 1 250px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        color: var(--heading-color);
+        transition: color var(--transition-speed);
+    }
+
+    label:hover {
+        color: var(--primary-color);
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid var(--secondary-color);
+        border-radius: 0.25rem;
+        font-size: 1rem;
+        transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+    }
+
+    .form-input:hover {
+        border-color: #D1D5DB;
+    }
+
+    .amount-input-wrapper {
+        position: relative;
+    }
+
+    .currency-symbol {
+        position: absolute;
+        left: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6B7280;
+        transition: color var(--transition-speed);
+    }
+
+    .amount-input {
+        padding-left: 1.25rem;
+    }
+
+    .amount-input:focus + .currency-symbol {
+        color: var(--primary-color);
+    }
+
+    .btn-container {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background-color var(--transition-speed), color var(--transition-speed), transform 0.1s, border-color var(--transition-speed);
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn:active {
+        transform: translateY(1px);
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--hover-color);
+    }
+
+    .btn-secondary {
+        background-color: white;
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+    }
+
+    .btn-secondary:hover {
+        background-color: #F3F4F6;
+        color: var(--hover-color);
+        border-color: var(--hover-color);
+    }
+
+    .expense-tips, .expense-summary {
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        transition: box-shadow var(--transition-speed);
+    }
+
+    .expense-tips:hover, .expense-summary:hover {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .expense-tips h2, .expense-summary h2 {
+        color: var(--heading-color);
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        transition: color var(--transition-speed);
+    }
+
+    .expense-tips:hover h2, .expense-summary:hover h2 {
+        color: var(--primary-color);
+    }
+
+    .expense-tips ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .expense-tips li {
+        margin-bottom: 0.25rem;
+        transition: transform var(--transition-speed);
+    }
+
+    .expense-tips li:hover {
+        transform: translateX(5px);
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.25rem;
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+        transition: background-color var(--transition-speed);
+    }
+
+    .summary-item:hover {
+        background-color: #F3F4F6;
+    }
+
+    .positive-balance {
+        color: #10B981;
+    }
+
+    .negative-balance {
+        color: #EF4444;
+    }
+
+    @media (max-width: 768px) {
+        .expense-content {
+            flex-direction: column;
+        }
+
+        .expense-form-wrapper, .expense-sidebar {
+            flex-basis: 100%;
+        }
+
+        .expense-title {
+            font-size: 1.75rem;
+        }
+
+        .expense-subtitle {
+            font-size: 0.875rem;
+        }
+
+        .btn-container {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const elements = [
-            document.getElementById('page-title'),
-            document.getElementById('page-description'),
-            document.getElementById('expense-form'),
-            document.getElementById('expense-tips'),
-            document.getElementById('expense-summary')
-        ];
+        const form = document.querySelector('.expense-form');
+        const amountInput = form.querySelector('input[name="expense[amount]"]');
 
-        elements.forEach((el, index) => {
-            setTimeout(() => {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            }, 100 * (index + 1));
+        amountInput.addEventListener('input', function() {
+            let value = this.value;
+            value = value.replace(/[^0-9.]/g, '');
+            const parts = value.split('.');
+            if (parts.length > 1) {
+                parts[1] = parts[1].slice(0, 2);
+                value = parts.join('.');
+            }
+            this.value = value;
         });
 
-        // Add hover effect to form inputs
-        const inputs = document.querySelectorAll('input, textarea, select');
-        inputs.forEach(input => {
-            input.addEventListener('focus', () => {
-                input.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.2)';
+        // Add subtle animation to form inputs
+        const formInputs = document.querySelectorAll('.form-input');
+        formInputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transition = 'transform 0.3s';
+                this.style.transform = 'scale(1.02)';
             });
-            input.addEventListener('blur', () => {
-                input.style.boxShadow = '';
+            input.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
             });
         });
     });

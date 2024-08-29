@@ -1,259 +1,333 @@
-<div class="user-search-container" style="max-width: 100%; padding: 20px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7fafc;">
-  <div class="content-wrapper" style="max-width: 1200px; margin: 0 auto;">
-    <!-- Back to Group Button -->
-    <div class="back-button-container" style="margin-bottom: 24px;">
-      <%= link_to group_path(@group), class: "back-button", style: "
-        display: inline-flex;
-        align-items: center;
-        padding: 10px 16px;
-        background-color: #4f46e5;
-        color: white;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(79, 70, 229, 0.1);
-      " do %>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 20px; height: 20px; margin-right: 8px;">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Back to Group
-      <% end %>
+<div class="group-members-container">
+  <div class="group-members-card">
+    <div class="group-members-header animate-fade-in-up">
+      <h2>Manage Group Members</h2>
+      <p>Add new members or remove existing ones from your group</p>
     </div>
 
-    <div class="desktop-layout" style="display: flex; gap: 32px;">
-      <!-- Search Section -->
-      <div class="search-section" style="flex: 1;">
-        <h2 style="font-size: 1.5rem; color: #2d3748; margin-bottom: 16px;">Add Users to Group</h2>
-        <!-- Animated Search Bar -->
-        <div style="position: relative; width: 100%; margin-bottom: 24px;">
-          <input type="text" id="user-search" placeholder="Search users..." style="
-          width: 100%;
-            padding: 12px 40px 12px 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            outline: none;
-          " onfocus="this.style.borderColor='#4f46e5'; this.style.boxShadow='0 0 0 3px rgba(79, 70, 229, 0.1)'; this.style.transform='translateY(-2px)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 2px 4px rgba(0, 0, 0, 0.05)'; this.style.transform='translateY(0)'">
-          <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: #a0aec0; pointer-events: none; transition: all 0.3s ease;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
+    <div class="group-members-content">
+      <div class="group-members-search animate-fade-in-up" style="animation-delay: 0.2s;">
+        <input type="text" id="group-members-search-input" placeholder="Search users...">
       </div>
 
-      <!-- User List Section -->
-      <div class="user-list-section" style="flex: 2;">
-        <% if @users.any? %>
-          <ul id="user-list" style="list-style-type: none; padding: 0; margin: 0; background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); overflow: hidden; transition: all 0.3s ease;">
+      <div class="group-members-sections">
+        <div class="group-members-list">
+          <h3 class="animate-fade-in-up" style="animation-delay: 0.3s;">Add New Members</h3>
+          <div class="group-members-scroll-area" id="available_group_members">
             <% @users.each_with_index do |user, index| %>
-              <li class="user-item" data-name="<%= user.full_name.downcase %>" style="
-              padding: 16px;
-                border-bottom: 1px solid #e2e8f0;
-                transition: all 0.3s ease;
-                animation: fadeIn 0.5s ease-out <%= index * 0.1 %>s both;
-              ">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div style="display: flex; flex-direction: column;">
-                    <span class="user-name" style="font-weight: 500; color: #2d3748; margin-bottom: 4px; transition: all 0.3s ease;"><%= user.full_name %></span>
-                    <span class="user-email" style="font-size: 0.875rem; color: #718096; transition: all 0.3s ease;"><%= user.email %></span>
-                  </div>
-                  <%= button_to 'Add', add_user_group_path(@group), params: { user_id: user.id }, method: :post, class: 'add-button', style: "
-                    background-color: #4f46e5;
-                    color: white;
-                    border: none;
-                    padding: 8px 16px;
-                    border-radius: 6px;
-                    font-size: 0.875rem;
-                    font-weight: 500;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    overflow: hidden;
-                    position: relative;
-                  " %>
-                </div>
-              </li>
+              <div id="<%= ActionView::RecordIdentifier.dom_id(user) %>" class="group-members-user-item animate-fade-in-up" style="animation-delay: <%= 0.4 + (index * 0.05) %>s;" data-name="<%= user.full_name.downcase %>" data-user-id="<%= user.id %>">
+                <span class="group-members-user-name"><%= user.full_name %></span>
+                <span class="group-members-user-email"><%= user.email %></span>
+                <%= button_to add_user_group_path(@group, user_id: user.id), method: :post, remote: true, class: "group-members-action-button group-members-add-button" do %>
+                  Add
+                <% end %>
+              </div>
             <% end %>
-          </ul>
-        <% else %>
-          <p style="color: #718096; text-align: center; font-style: italic; animation: fadeIn 0.5s ease-out;">No users available to add to this group.</p>
-        <% end %>
+          </div>
+        </div>
+
+        <div class="group-members-existing-section">
+          <h3 class="animate-fade-in-up" style="animation-delay: 0.7s;">Current Group Members</h3>
+          <div class="group-members-scroll-area" id="current_group_members">
+            <% @group.users.each_with_index do |member, index| %>
+              <div id="<%= ActionView::RecordIdentifier.dom_id(member) %>" class="group-members-existing-item animate-fade-in-up" style="animation-delay: <%= 0.8 + (index * 0.05) %>s;" data-name="<%= member.full_name.downcase %>" data-member-id="<%= member.id %>">
+                <span class="group-members-user-name"><%= member.full_name %></span>
+                <span class="group-members-user-email"><%= member.email %></span>
+
+                <% if member == current_user %>
+                  <span class="group-members-remove-button-disabled">You cannot remove yourself</span>
+                <% elsif member == @group.leader %>
+                  <span class="group-members-remove-button-disabled">Leader cannot be removed</span>
+                <% else %>
+                  <%= button_to group_group_membership_path(@group, member), method: :delete, remote: true, class: "group-members-action-button group-members-remove-button", data: { confirm: "Are you sure you want to remove this member?" } do %>
+                    Remove
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-members-info-section">
+      <div class="group-members-benefits-section animate-fade-in-up" style="animation-delay: 0.9s;">
+        <h3>Benefits of Group Collaboration</h3>
+        <ul>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" class="group-members-benefit-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Easier expense sharing and tracking
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" class="group-members-benefit-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Fair distribution of costs
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" class="group-members-benefit-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Simplified event planning
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </div>
 
 <style>
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+    .group-members-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f3f4f6;
+        padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
+    .group-members-card {
+        max-width: 1200px;
+        width: 100%;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
     }
 
-    .back-button:hover {
+    .group-members-header {
+        text-align: center;
+        padding: 30px;
+        background-color: #4f46e5;
+        color: white;
+    }
+
+    .group-members-header h2 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .group-members-header p {
+        font-size: 16px;
+        opacity: 0.8;
+    }
+
+    .group-members-content {
+        padding: 30px;
+    }
+
+    .group-members-search {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .group-members-search input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .group-members-search input:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+
+    .group-members-sections {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .group-members-list,
+    .group-members-existing-section {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .group-members-scroll-area {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 5px;
+    }
+
+    .group-members-user-item,
+    .group-members-existing-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        justify-content: space-between;
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .group-members-user-item:last-child,
+    .group-members-existing-item:last-child {
+        border-bottom: none;
+    }
+
+    .group-members-user-item:hover,
+    .group-members-existing-item:hover {
+        background-color: #f3f4f6;
+    }
+
+    .group-members-user-name {
+        font-weight: 500;
+        margin-right: 10px;
+    }
+
+    .group-members-user-email {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .group-members-action-button {
+        padding: 6px 12px;
+        font-size: 14px;
+        background-color: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .group-members-action-button:hover {
         background-color: #4338ca;
         transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
     }
 
-    .back-button:active {
-        transform: translateY(0);
+    .group-members-remove-button {
+        background-color: #ef4444;
     }
 
-    .add-button::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-        transform: rotate(45deg);
-        transition: all 0.3s ease;
+    .group-members-remove-button:hover {
+        background-color: #dc2626;
+    }
+
+    .group-members-remove-button-disabled {
+        padding: 6px 12px;
+        font-size: 14px;
+        background-color: #cccccc;
+        color: #ffffff;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: not-allowed;
+    }
+
+    .group-members-info-section {
+        padding: 30px;
+        background-color: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .group-members-benefits-section h3 {
+        font-size: 20px;
+        color: #4f46e5;
+        margin-bottom: 15px;
+    }
+
+    .group-members-benefits-section ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .group-members-benefits-section li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #4b5563;
+    }
+
+    .group-members-benefit-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 12px;
+        color: #4f46e5;
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
         opacity: 0;
     }
 
-    .add-button:hover::after {
-        opacity: 1;
-        left: 100%;
-        transition: all 0.7s ease;
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     @media (max-width: 768px) {
-        .desktop-layout {
+        .group-members-sections {
             flex-direction: column;
         }
 
-        .search-section, .user-list-section {
-            width: 100%;
-        }
-    }
-
-    @media (min-width: 769px) {
-        .user-search-container {
-            padding: 40px;
+        .group-members-card {
+            border-radius: 0;
+            box-shadow: none;
         }
 
-        .back-button-container {
-            margin-bottom: 32px;
+        .group-members-header h2 {
+            font-size: 24px;
         }
 
-        #user-search {
-            font-size: 1.125rem;
-            padding: 16px 48px 16px 20px;
-        }
-
-        .user-item {
-            padding: 20px;
-        }
-
-        .user-name {
-            font-size: 1.125rem;
-        }
-
-        .user-email {
-            font-size: 1rem;
-        }
-
-        .add-button {
-            padding: 10px 20px;
-            font-size: 1rem;
+        .group-members-header p {
+            font-size: 14px;
         }
     }
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const userSearch = document.getElementById('user-search');
-        const userItems = Array.from(document.getElementsByClassName('user-item'));
-        const searchIcon = userSearch.nextElementSibling;
-        const backButton = document.querySelector('.back-button');
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('group-members-search-input');
+        const availableGroupMembers = document.getElementById('available_group_members');
+        const currentGroupMembers = document.getElementById('current_group_members');
+        let allUserItems = document.querySelectorAll('.group-members-user-item, .group-members-existing-item');
+        let allUserItemsArray = Array.from(allUserItems);
 
-        userSearch.addEventListener('input', function() {
+        searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
 
-            userItems.forEach(item => {
+            // Clear the current items
+            availableGroupMembers.innerHTML = '';
+            currentGroupMembers.innerHTML = '';
+
+            // Filter and re-append the matching items
+            allUserItemsArray.forEach(item => {
                 const userName = item.getAttribute('data-name');
-                const userNameElement = item.querySelector('.user-name');
-                const userEmailElement = item.querySelector('.user-email');
+                const nameSpan = item.querySelector('.group-members-user-name');
 
-                const matches = userName.includes(searchTerm);
+                if (userName.includes(searchTerm)) {
+                    if (searchTerm.length > 0) {
+                        nameSpan.innerHTML = userName.replace(new RegExp(searchTerm, 'gi'), match => `<mark>${match}</mark>`);
+                    } else {
+                        nameSpan.innerHTML = userName;
+                    }
 
-                if (matches) {
-                    item.style.display = 'block';
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateY(0)';
-
-                    const highlightText = (text, term) => {
-                        if (term.trim() === '') return text;
-                        const regex = new RegExp(`(${term})`, 'gi');
-                        return text.replace(regex, '<span style="background-color: rgba(79, 70, 229, 0.1); color: #4f46e5; transition: all 0.3s ease;">$1</span>');
-                    };
-
-                    userNameElement.innerHTML = highlightText(userNameElement.textContent, searchTerm);
-                    userEmailElement.innerHTML = highlightText(userEmailElement.textContent, searchTerm);
-                } else {
-                    item.style.opacity = '0';
-                    item.style.transform = 'translateY(-10px)';
-                    setTimeout(() => {
-                        item.style.display = 'none';
-                    }, 300);
+                    if (item.classList.contains('group-members-user-item')) {
+                        availableGroupMembers.appendChild(item);
+                    } else if (item.classList.contains('group-members-existing-item')) {
+                        currentGroupMembers.appendChild(item);
+                    }
                 }
             });
-
-            // Animate search icon
-            searchIcon.style.transform = 'translateY(-50%) rotate(90deg)';
-            setTimeout(() => {
-                searchIcon.style.transform = 'translateY(-50%) rotate(0deg)';
-            }, 300);
-        });
-
-        // Enhanced hover effects for list items
-        userItems.forEach(item => {
-            item.addEventListener('mouseover', () => {
-                item.style.backgroundColor = '#f7fafc';
-                item.style.transform = 'translateX(5px)';
-                item.querySelector('.user-name').style.color = '#4f46e5';
-            });
-            item.addEventListener('mouseout', () => {
-                item.style.backgroundColor = 'white';
-                item.style.transform = 'translateX(0)';
-                item.querySelector('.user-name').style.color = '#2d3748';
-            });
-        });
-
-        // Pulse animation for search input on focus
-        userSearch.addEventListener('focus', () => {
-            userSearch.style.animation = 'pulse 0.5s ease-in-out';
-        });
-        userSearch.addEventListener('blur', () => {
-            userSearch.style.animation = 'none';
-        });
-
-        // Add shimmer effect to buttons
-        document.querySelectorAll('.add-button').forEach(button => {
-            button.addEventListener('mouseover', () => {
-                button.style.backgroundColor = '#4338ca';
-            });
-            button.addEventListener('mouseout', () => {
-                button.style.backgroundColor = '#4f46e5';
-            });
-        });
-
-        // Back button hover effect
-        backButton.addEventListener('mouseover', () => {
-            backButton.style.backgroundColor = '#4338ca';
-            backButton.style.transform = 'translateY(-2px)';
-        });
-        backButton.addEventListener('mouseout', () => {
-            backButton.style.backgroundColor = '#4f46e5';
-            backButton.style.transform = 'translateY(0)';
         });
     });
 </script>
