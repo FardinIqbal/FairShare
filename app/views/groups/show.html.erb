@@ -1,192 +1,417 @@
 <!-- app/views/groups/show.html.erb -->
-<div class="group-show-container" style="max-width: 100%; padding: 1rem; background-color: #f3f4f6;">
-  <div class="header" style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 1.5rem; opacity: 0; transform: translateY(-20px);" id="headerContainer">
-    <h1 style="font-size: 1.5rem; font-weight: 800; color: #1a202c; margin-bottom: 0.5rem;"><%= @group.name %></h1>
-    <%= link_to groups_path, class: "back-link", style: "color: #4f46e5; text-decoration: none; display: flex; align-items: center; transition: all 0.3s ease; font-size: 0.875rem;" do %>
-      <svg style="width: 1rem; height: 1rem; margin-right: 0.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+<div class="group-show-container">
+  <header class="group-show-header" id="headerContainer">
+    <h1 class="group-show-title"><%= @group.name %></h1>
+    <%= link_to groups_path, class: "group-show-back-link" do %>
+      <svg class="group-show-back-icon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
       </svg>
-      Back to Groups
+      <span>Back to Groups</span>
     <% end %>
-  </div>
+  </header>
 
-  <div class="overview-card" id="overviewCard" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);">
-    <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
-      <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Group Overview</h2>
-      <div class="overview-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
-        <div class="overview-item" style="text-align: center;">
-          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Total Expenses</p>
-          <p style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;" class="animate-number"><%= number_to_currency(@total_expenses) %></p>
-        </div>
-        <div class="overview-item" style="text-align: center;">
-          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Your Balance</p>
-          <p style="font-size: 1.25rem; font-weight: 600; color: <%= @current_user_summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;" class="animate-number">
-            <%= number_to_currency(@current_user_summary[:net_balance].abs) %>
-          </p>
-          <p style="font-size: 0.75rem; color: <%= @current_user_summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
-            (<%= @current_user_summary[:net_balance] >= 0 ? 'You are owed' : 'You owe' %>)
-          </p>
-        </div>
-        <div class="overview-item" style="text-align: center;">
-          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Total Members</p>
-          <p style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;"><%= @group.users.count %></p>
-        </div>
-        <div class="overview-item" style="text-align: center;">
-          <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Top Category</p>
-          <p style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;"><%= @most_expensive_category || 'N/A' %></p>
-        </div>
+  <section class="group-show-overview-card" id="overviewCard">
+    <h2 class="group-show-section-title">Group Overview</h2>
+    <div class="group-show-overview-grid">
+      <div class="group-show-overview-item">
+        <p class="group-show-overview-label">Total Expenses</p>
+        <p class="group-show-overview-value group-show-animate-number"><%= number_to_currency(@total_expenses) %></p>
+      </div>
+      <div class="group-show-overview-item">
+        <p class="group-show-overview-label">Your Balance</p>
+        <p class="group-show-overview-value group-show-animate-number <%= @current_user_summary[:net_balance] >= 0 ? 'group-show-positive' : 'group-show-negative' %>">
+          <%= number_to_currency(@current_user_summary[:net_balance].abs) %>
+        </p>
+        <p class="group-show-overview-subtext <%= @current_user_summary[:net_balance] >= 0 ? 'group-show-positive' : 'group-show-negative' %>">
+          (<%= @current_user_summary[:net_balance] >= 0 ? 'You are owed' : 'You owe' %>)
+        </p>
+      </div>
+      <div class="group-show-overview-item">
+        <p class="group-show-overview-label">Total Members</p>
+        <p class="group-show-overview-value"><%= @group.users.count %></p>
+      </div>
+      <div class="group-show-overview-item">
+        <p class="group-show-overview-label">Top Category</p>
+        <p class="group-show-overview-value"><%= @most_expensive_category || 'N/A' %></p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="tab-container" style="display: flex; justify-content: center; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);" id="tabContainer">
-    <div style="background-color: white; border-radius: 9999px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden; display: flex; width: 100%; max-width: 400px;">
-      <button class="tab-button" data-tab="expenses" style="flex: 1; background-color: #4f46e5; color: white; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Expenses</button>
-      <button class="tab-button" data-tab="members" style="flex: 1; background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Members</button>
-      <button class="tab-button" data-tab="settle" style="flex: 1; background-color: transparent; color: #4b5563; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Settle Up</button>
-    </div>
-  </div>
+  <nav class="group-show-tab-container" id="tabContainer">
+    <button class="group-show-tab-button group-show-active" data-tab="expenses">Expenses</button>
+    <button class="group-show-tab-button" data-tab="members">Members</button>
+    <button class="group-show-tab-button" data-tab="settle">Settle Up</button>
+  </nav>
 
   <div id="tabContent">
-    <div id="expenses" class="tab-content card" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
-      <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
-          <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">Recent Expenses</h2>
-          <%= link_to new_group_expense_path(@group), class: "add-expense-btn", style: "background-color: #4f46e5; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; font-size: 0.875rem;" do %>
-            <svg style="width: 0.875rem; height: 0.875rem; margin-right: 0.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-            Add Expense
-          <% end %>
-        </div>
-        <div class="expense-list">
-          <% @expenses.take(5).each do |expense| %>
-            <div class="expense-item" style="border-bottom: 1px solid #e2e8f0; padding: 0.75rem 0; display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <p style="font-weight: 600; color: #1a202c; font-size: 0.875rem;"><%= expense.description %></p>
-                <p style="font-size: 0.75rem; color: #718096;">
-                  <%= expense.user.full_name %>
-                  <%= ' (You)' if expense.user == current_user %>
-                  • <%= expense.date.strftime("%b %d, %Y") %>
-                </p>
-                <p style="font-size: 0.75rem; color: #4f46e5;"><%= expense.category %></p>
-              </div>
-              <p style="font-weight: 600; color: #4f46e5; font-size: 0.875rem;"><%= number_to_currency(expense.amount) %></p>
-            </div>
-          <% end %>
-        </div>
-      </div>
-      <div style="padding: 1rem; text-align: center;">
-        <%= link_to 'View All Expenses', group_expenses_path(@group), class: "view-all-link", style: "color: #4f46e5; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-size: 0.875rem;" %>
-      </div>
-    </div>
-
-    <div id="members" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
-      <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
-          <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">Group Members</h2>
-          <%= link_to add_users_group_path(@group), class: "add-member-btn", style: "background-color: #4f46e5; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; font-size: 0.875rem;" do %>
-            <svg style="width: 0.875rem; height: 0.875rem; margin-right: 0.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-            Add Member
-          <% end %>
-        </div>
-        <div class="member-list">
-          <% @user_summaries.each do |summary| %>
-            <div class="member-item" style="border-bottom: 1px solid #e2e8f0; padding: 0.75rem 0; display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <p style="font-weight: 600; color: #1a202c; font-size: 0.875rem;"><%= summary[:user].full_name %> <%= summary[:user] == current_user ? '(You)' : '' %></p>
-                <p style="font-size: 0.75rem; color: #718096;"><%= summary[:user].email %></p>
-              </div>
-              <div style="text-align: right;">
-                <p style="font-weight: 600; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>; font-size: 0.875rem;">
-                  <%= number_to_currency(summary[:net_balance].abs) %>
-                </p>
-                <p style="font-size: 0.75rem; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
-                  (<%= summary[:net_balance] >= 0 ? 'to receive' : 'owes' %>)
-                </p>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-
-    <div id="settle" class="tab-content card" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
-      <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
-        <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Settle Up</h2>
-        <% if @optimized_settlements.any? %>
-          <div class="settlement-list">
-            <% @optimized_settlements.each do |settlement| %>
-              <div class="settlement-item" style="border-bottom: 1px solid #e2e8f0; padding: 0.75rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                <p style="color: #1a202c; font-size: 0.875rem; margin-bottom: 0.5rem; width: 100%;">
-                  <%= settlement[:from] == current_user ? 'You' : settlement[:from].full_name %>
-                  pays
-                  <%= settlement[:to] == current_user ? 'you' : settlement[:to].full_name %>
-                </p>
-                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                  <p style="font-weight: 600; color: #4f46e5; font-size: 0.875rem;"><%= number_to_currency(settlement[:amount]) %></p>
-                  <% if settlement[:from] == current_user %>
-                    <%= button_to "Send", '#', method: :post, class: "settle-btn", style: "background-color: #10B981; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
-                  <% elsif settlement[:to] == current_user %>
-    <%= button_to "Remind", '#', method: :post, class: "settle-btn", style: "background-color: #F59E0B; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
-                  <% else %>
-                    <button disabled class="settle-btn" style="background-color: #E5E7EB; color: #9CA3AF; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: not-allowed; font-size: 0.75rem;">Action</button>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <p style="text-align: center; color: #718096; font-size: 0.875rem;">All settled up! No payments needed.</p>
+    <div id="expenses" class="group-show-tab-content group-show-active">
+      <div class="group-show-tab-header">
+        <h2 class="group-show-section-title">Recent Expenses</h2>
+        <%= link_to new_group_expense_path(@group), class: "group-show-add-button" do %>
+          <svg class="group-show-add-icon" viewBox="0 0 24 24">
+            <path d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Add Expense
         <% end %>
       </div>
+      <div class="group-show-expense-list">
+        <% @expenses.take(5).each do |expense| %>
+          <div class="group-show-expense-item">
+            <div class="group-show-expense-details">
+              <p class="group-show-expense-description"><%= expense.description %></p>
+              <p class="group-show-expense-meta">
+                <%= expense.user.full_name %>
+                <%= ' (You)' if expense.user == current_user %>
+                • <%= expense.date.strftime("%b %d, %Y") %>
+              </p>
+              <p class="group-show-expense-category"><%= expense.category %></p>
+            </div>
+            <p class="group-show-expense-amount"><%= number_to_currency(expense.amount) %></p>
+          </div>
+        <% end %>
+      </div>
+      <div class="group-show-tab-footer">
+        <%= link_to 'View All Expenses', group_expenses_path(@group), class: "group-show-view-all-link" %>
+      </div>
+    </div>
+
+    <div id="members" class="group-show-tab-content">
+      <div class="group-show-tab-header">
+        <h2 class="group-show-section-title">Group Members</h2>
+        <%= link_to manage_group_group_memberships_path(@group), class: "group-show-add-button" do %>          <svg class="group-show-add-icon" viewBox="0 0 24 24">
+        <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+      </svg>
+          Add Member
+        <% end %>
+      </div>
+      <div class="group-show-member-list">
+        <% @user_summaries.each do |summary| %>
+          <div class="group-show-member-item">
+            <div class="group-show-member-details">
+              <p class="group-show-member-name"><%= summary[:user].full_name %> <%= summary[:user] == current_user ? '(You)' : '' %></p>
+              <p class="group-show-member-email"><%= summary[:user].email %></p>
+            </div>
+            <div class="group-show-member-balance">
+              <p class="group-show-member-amount <%= summary[:net_balance] >= 0 ? 'group-show-positive' : 'group-show-negative' %>">
+                <%= number_to_currency(summary[:net_balance].abs) %>
+              </p>
+              <p class="group-show-member-status <%= summary[:net_balance] >= 0 ? 'group-show-positive' : 'group-show-negative' %>">
+                (<%= summary[:net_balance] >= 0 ? 'to receive' : 'owes' %>)
+              </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div id="settle" class="group-show-tab-content">
+      <h2 class="group-show-section-title">Settle Up</h2>
+      <% if @optimized_settlements.any? %>
+        <div class="group-show-settlement-list">
+          <% @optimized_settlements.each do |settlement| %>
+            <div class="group-show-settlement-item">
+              <p class="group-show-settlement-description">
+                <%= settlement[:from] == current_user ? 'You' : settlement[:from].full_name %>
+                pays
+                <%= settlement[:to] == current_user ? 'you' : settlement[:to].full_name %>
+              </p>
+              <div class="group-show-settlement-actions">
+                <p class="group-show-settlement-amount"><%= number_to_currency(settlement[:amount]) %></p>
+                <% if settlement[:from] == current_user %>
+                  <%= button_to "Send", '#', method: :post, class: "group-show-settle-button group-show-send" %>
+                <% elsif settlement[:to] == current_user %>
+                  <%= button_to "Remind", '#', method: :post, class: "group-show-settle-button group-show-remind" %>
+                <% else %>
+                  <button disabled class="group-show-settle-button group-show-disabled">Action</button>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="group-show-no-settlements">All settled up! No payments needed.</p>
+      <% end %>
     </div>
   </div>
 </div>
 
 <style>
+    .group-show-container {
+        max-width: 100%;
+        padding: 1rem;
+        background-color: #f3f4f6;
+    }
+
+    .group-show-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .group-show-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+    }
+
+    .group-show-back-link {
+        color: #4f46e5;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        font-size: 0.875rem;
+    }
+
+    .group-show-back-icon {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.25rem;
+        fill: none;
+        stroke: currentColor;
+    }
+
+    .group-show-overview-card, .group-show-tab-content {
+        background-color: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .group-show-section-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 1rem;
+    }
+
+    .group-show-overview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .group-show-overview-item {
+        text-align: center;
+    }
+
+    .group-show-overview-label {
+        color: #718096;
+        margin-bottom: 0.25rem;
+        font-size: 0.75rem;
+    }
+
+    .group-show-overview-value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #4f46e5;
+    }
+
+    .group-show-overview-subtext {
+        font-size: 0.75rem;
+    }
+
+    .group-show-positive {
+        color: #10B981;
+    }
+
+    .group-show-negative {
+        color: #EF4444;
+    }
+
+    .group-show-tab-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .group-show-tab-button {
+        flex: 1;
+        background-color: transparent;
+        color: #4b5563;
+        border: none;
+        padding: 0.75rem 0.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .group-show-tab-button.group-show-active {
+        background-color: #4f46e5;
+        color: white;
+    }
+
+    .group-show-tab-content {
+        display: none;
+        padding: 1rem;
+    }
+
+    .group-show-tab-content.group-show-active {
+        display: block;
+    }
+
+    .group-show-tab-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .group-show-add-button {
+        background-color: #4f46e5;
+        color: white;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.875rem;
+    }
+
+    .group-show-add-icon {
+        width: 0.875rem;
+        height: 0.875rem;
+        margin-right: 0.25rem;
+        fill: none;
+        stroke: currentColor;
+    }
+
+    .group-show-expense-item, .group-show-member-item, .group-show-settlement-item {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 0.75rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .group-show-expense-description, .group-show-member-name {
+        font-weight: 600;
+        color: #1a202c;
+        font-size: 0.875rem;
+    }
+
+    .group-show-expense-meta, .group-show-member-email {
+        font-size: 0.75rem;
+        color: #718096;
+    }
+
+    .group-show-expense-category {
+        font-size: 0.75rem;
+        color: #4f46e5;
+    }
+
+    .group-show-expense-amount, .group-show-member-amount, .group-show-settlement-amount {
+        font-weight: 600;
+        color: #4f46e5;
+        font-size: 0.875rem;
+    }
+
+    .group-show-tab-footer {
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .group-show-view-all-link {
+        color: #4f46e5;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 0.875rem;
+    }
+
+    .group-show-settle-button {
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.75rem;
+    }
+
+    .group-show-settle-button.group-show-send {
+        background-color: #10B981;
+        color: white;
+    }
+
+    .group-show-settle-button.group-show-remind {
+        background-color: #F59E0B;
+        color: white;
+    }
+
+    .group-show-settle-button.group-show-disabled {
+        background-color: #E5E7EB;
+        color: #9CA3AF;
+        cursor: not-allowed;
+    }
+
+    .group-show-no-settlements {
+        text-align: center;
+        color: #718096;
+        font-size: 0.875rem;
+    }
+
     @media (min-width: 640px) {
         .group-show-container {
             padding: 2rem;
         }
-        .header {
+
+        .group-show-header {
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
         }
-        h1 {
+
+        .group-show-title {
             font-size: 2rem;
             margin-bottom: 0;
         }
-        .overview-grid {
+
+        .group-show-overview-grid {
             grid-template-columns: repeat(4, 1fr);
         }
-        .tab-button {
+
+        .group-show-tab-button {
             font-size: 1rem;
             padding: 0.75rem 1.5rem;
         }
-        .expense-item, .member-item, .settlement-item {
+
+        .group-show-expense-item, .group-show-member-item, .group-show-settlement-item {
             flex-wrap: nowrap;
         }
-        .settlement-item p {
-            width: auto;
-            margin-bottom: 0;
-        }
     }
 
-    .animate-fade-in {
-        animation: fadeIn 0.5s ease-out;
+    .group-show-animate-fade-in {
+        animation: groupShowFadeIn 0.5s ease-out;
     }
 
-    @keyframes fadeIn {
+    @keyframes groupShowFadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
     }
 
-    .tab-button:hover, .back-link:hover, .add-expense-btn:hover, .add-member-btn:hover, .view-all-link:hover, .settle-btn:hover {
+    .group-show-hover-effect:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .tab-button:active, .back-link:active, .add-expense-btn:active, .add-member-btn:active, .view-all-link:active, .settle-btn:active {
+    .group-show-hover-effect:active {
         transform: translateY(0);
     }
 </style>
@@ -196,43 +421,30 @@
         const headerContainer = document.getElementById('headerContainer');
         const overviewCard = document.getElementById('overviewCard');
         const tabContainer = document.getElementById('tabContainer');
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
+        const tabButtons = document.querySelectorAll('.group-show-tab-button');
+        const tabContents = document.querySelectorAll('.group-show-tab-content');
 
-        // Fade in and slide down for header
-        headerContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        headerContainer.style.opacity = '1';
-        headerContainer.style.transform = 'translateY(0)';
-
-        // Fade in and slide up for overview card and tab container
-        overviewCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        tabContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        overviewCard.style.opacity = '1';
-        overviewCard.style.transform = 'translateY(0)';
-        tabContainer.style.opacity = '1';
-        tabContainer.style.transform = 'translateY(0)';
+        // Animate in the header, overview card, and tab container
+        [headerContainer, overviewCard, tabContainer].forEach(el => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        });
 
         function showTab(tabName) {
             tabButtons.forEach(button => {
                 if (button.dataset.tab === tabName) {
-                    button.style.backgroundColor = '#4f46e5';
-                    button.style.color = 'white';
+                    button.classList.add('group-show-active');
                 } else {
-                    button.style.backgroundColor = 'transparent';
-                    button.style.color = '#4b5563';
+                    button.classList.remove('group-show-active');
                 }
             });
 
             tabContents.forEach(content => {
                 if (content.id === tabName) {
+                    content.classList.add('group-show-active');
                     content.style.display = 'block';
-                    setTimeout(() => {
-                        content.style.opacity = '1';
-                        content.style.transform = 'translateY(0)';
-                    }, 50);
                 } else {
-                    content.style.opacity = '0';
-                    content.style.transform = 'translateY(20px)';
+                    content.classList.remove('group-show-active');
                     content.style.display = 'none';
                 }
             });
@@ -246,22 +458,22 @@
         showTab('expenses');
 
         // Animate numbers
-        function animateValue(obj, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = '$' + (progress * (end - start) + start).toFixed(2);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        document.querySelectorAll('.animate-number').forEach(el => {
+        document.querySelectorAll('.group-show-animate-number').forEach(el => {
             const value = parseFloat(el.innerText.replace(/[^0-9.-]+/g,""));
             animateValue(el, 0, value, 1000);
         });
     });
+
+    function animateValue(obj, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = '$' + (progress * (end - start) + start).toFixed(2);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
 </script>

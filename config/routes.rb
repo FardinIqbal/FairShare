@@ -24,14 +24,13 @@ Rails.application.routes.draw do
 
   # Group routes with nested resources
   resources :groups do
-    member do
-      get 'add_users'
-      post 'add_user'
-      post 'add_multiple_users'
-    end
-
     resources :expenses
-    resources :group_memberships, only: [:index, :create, :destroy]
+    resources :group_memberships, only: [:index, :create, :destroy] do
+      collection do
+        get 'manage', to: 'group_memberships#manage'
+        post 'add_multiple', to: 'group_memberships#add_multiple'
+      end
+    end
   end
 
   # New route for expense group selection
