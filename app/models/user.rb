@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :groups, through: :group_memberships
   has_many :expenses
   has_many :balances
+  has_many :payments_made, class_name: 'Payment', foreign_key: 'payer_id'
+  has_many :payments_received, class_name: 'Payment', foreign_key: 'recipient_id'
 
   has_many :friendships
   has_many :friends, through: :friendships
@@ -18,12 +20,10 @@ class User < ApplicationRecord
 
   has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
 
-
   # Validations
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :email, presence: true, uniqueness: true
-
 
   # Instance Methods
   def full_name
@@ -37,5 +37,13 @@ class User < ApplicationRecord
   def balance_in_group(group)
     balance = balances.find_by(group: group)
     balance ? balance.amount : 0
+  end
+
+  def pending_payments
+    payments_made.where(status: :pending_approval)
+  end
+
+  def pending_approvals
+    payments_received.where(status: :pending_approval)
   end
 end

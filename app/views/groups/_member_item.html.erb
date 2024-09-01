@@ -1,0 +1,17 @@
+<!-- app/views/groups/_member_item.html.erb -->
+<div style="border-bottom: 1px solid #e2e8f0; padding: 0.75rem 0; display: flex; justify-content: space-between; align-items: center;">
+  <div>
+    <p style="font-weight: 600; color: #1a202c; font-size: 0.875rem;">
+      <%= summary[:user].full_name %> <%= summary[:user] == current_user ? '(You)' : '' %>
+    </p>
+    <p style="font-size: 0.75rem; color: #718096;"><%= summary[:user].email %></p>
+  </div>
+  <div style="text-align: right;">
+    <p style="font-weight: 600; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>; font-size: 0.875rem;">
+      <%= number_to_currency(summary[:net_balance].abs) %>
+    </p>
+    <p style="font-size: 0.75rem; color: <%= summary[:net_balance] >= 0 ? '#10B981' : '#EF4444' %>;">
+      (<%= summary[:net_balance] >= 0 ? 'to receive' : 'owes' %>)
+    </p>
+  </div>
+</div>

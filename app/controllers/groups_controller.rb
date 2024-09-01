@@ -10,7 +10,7 @@ class GroupsController < ApplicationController
     @expenses = @group.expenses.order(date: :desc)
     @total_expenses = @group.total_expenses
     @per_person_share = @total_expenses.to_f / @group.users.count
-    @group.update_balances
+    @group.update_balances_with_pending_payments
 
     @user_summaries = @group.users.map do |user|
       user_expenses = @group.expenses.where(user: user)
@@ -36,6 +36,8 @@ class GroupsController < ApplicationController
 
     @members = @group.users
     @non_members = User.where.not(id: @members.pluck(:id))
+
+    @pending_payments = @group.payments.pending_approval
   end
 
   def new
@@ -66,14 +68,25 @@ class GroupsController < ApplicationController
   end
 
   def destroy
-    @group.destroy
-    redirect_to groups_url, notice: 'Group was successfully deleted.'
+    if @group.leader == current_user
+      @group.destroy
+      redirect_to groups_url, notice: 'Group was successfully deleted.'
+    else
+      redirect_to @group, alert: 'Only the group leader can delete the group.'
+    end
   end
 
   private
 
   def set_group
-    @group = current_user.groups.find(params[:id])
+    @group = Group.find(params[:id])
+    unless current_user.groups.include?(@group)
+      flash[:alert] = "You don't have access to this group."
+      redirect_to groups_path
+    end
+  rescue ActiveRecord::RecordNotFound
+    flash[:alert] = "The group you're looking for doesn't exist."
+    redirect_to groups_path
   end
 
   def group_params

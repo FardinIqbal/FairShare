@@ -1,0 +1,16 @@
+<!-- app/views/dashboard/_owed_tab.html.erb -->
+<div id="owed" class="tab-content" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
+  <div style="padding: 1rem;">
+    <h3 style="font-size: 1rem; font-weight: 600; color: #EF4444; margin-bottom: 0.5rem;">You Owe</h3>
+    <%= render partial: 'owed_item', collection: @owed_amounts[:owed_to_others], as: :debt, locals: { type: :owed } %>
+
+    <h3 style="font-size: 1rem; font-weight: 600; color: #10B981; margin-top: 1rem; margin-bottom: 0.5rem;">You are Owed</h3>
+    <%= render partial: 'owed_item', collection: @owed_amounts[:owed_by_others], as: :debt, locals: { type: :owed_to_you } %>
+
+    <h3 style="font-size: 1rem; font-weight: 600; color: #4F46E5; margin-top: 1rem; margin-bottom: 0.5rem;">Pending Payments</h3>
+    <%= render partial: 'pending_payment', collection: current_user.pending_payments, as: :payment %>
+
+    <h3 style="font-size: 1rem; font-weight: 600; color: #4F46E5; margin-top: 1rem; margin-bottom: 0.5rem;">Payments to Approve</h3>
+    <%= render partial: 'payment_to_approve', collection: current_user.pending_approvals, as: :payment %>
+  </div>
+</div>

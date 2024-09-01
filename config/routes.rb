@@ -27,8 +27,16 @@ Rails.application.routes.draw do
     resources :expenses
     resources :group_memberships, only: [:index, :create, :destroy] do
       collection do
-        get 'manage', to: 'group_memberships#manage'
-        post 'add_multiple', to: 'group_memberships#add_multiple'
+        get 'manage'
+        post 'add_multiple'
+      end
+    end
+    resources :payments, only: [:index, :new, :create] do
+      member do
+        post :mark_as_paid
+        post :approve
+        post :reject
+        post :remind
       end
     end
   end
@@ -36,11 +44,9 @@ Rails.application.routes.draw do
   # New route for expense group selection
   get 'expenses/new', to: 'expenses#new_with_group_selection', as: 'new_expense_with_group_selection'
 
-  # Payment routes
-  post 'payments/pay', to: 'payments#pay'
-  post 'payments/remind', to: 'payments#remind'
-  post '/pay_debt', to: 'payments#pay', as: :pay_debt
-  post '/remind_payment', to: 'payments#remind', as: :remind_payment
+  # Dashboard action routes
+  post '/pay_debt', to: 'dashboard#pay_debt'
+  post '/remind_payment', to: 'dashboard#remind_payment'
 
   # Health check route
   get "up" => "rails/health#show", as: :rails_health_check

@@ -1,0 +1,12 @@
+<!-- app/views/dashboard/_owed_item.html.erb -->
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: <%= type == :owed ? '#FEE2E2' : '#D1FAE5' %>; border-radius: 0.5rem; margin-bottom: 0.5rem;">
+  <span style="font-weight: 500; color: #1F2937; font-size: 0.875rem;"><%= debt[:group].name %></span>
+  <div style="display: flex; align-items: center;">
+    <span style="font-weight: 600; color: <%= type == :owed ? '#EF4444' : '#10B981' %>; margin-right: 0.5rem; font-size: 0.875rem;"><%= number_to_currency(debt[:amount]) %></span>
+    <% if type == :owed %>
+      <%= button_to "Pay", pay_debt_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "pay-btn", style: "background-color: #EF4444; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
+    <% else %>
+      <%= button_to "Remind", remind_payment_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "remind-btn", style: "background-color: #10B981; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
+    <% end %>
+  </div>
+</div>

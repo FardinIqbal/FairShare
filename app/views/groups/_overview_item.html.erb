@@ -1,0 +1,8 @@
+<!-- app/views/groups/_overview_item.html.erb -->
+<div style="text-align: center;">
+  <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;"><%= title %></p>
+  <p style="font-size: 1.25rem; font-weight: 600; color: <%= color %>;" class="animate-number"><%= value %></p>
+  <% if local_assigns[:subtitle] %>
+    <p style="font-size: 0.75rem; color: <%= color %>;"><%= subtitle %></p>
+  <% end %>
+</div>

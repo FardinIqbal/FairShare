@@ -27,6 +27,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 gem 'devise'
+gem "view_component", require: "view_component/engine"
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"

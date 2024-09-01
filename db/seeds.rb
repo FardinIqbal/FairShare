@@ -11,7 +11,6 @@ Friendship.destroy_all
 Group.destroy_all
 User.destroy_all
 
-# Helper method to create a user
 def create_user(first_name, last_name)
   User.create!(
     first_name: first_name,
@@ -76,7 +75,7 @@ puts "Creating expenses..."
 created_groups.each do |group|
   case group.name
   when "NYC Roommates"
-    6.times do |i|
+    12.times do |i|
       Expense.create!(
         description: "Rent - Month #{i+1}",
         amount: 3000,
@@ -111,7 +110,7 @@ created_groups.each do |group|
       user: group.users.sample,
       group: group
     )
-    %w[Paris Rome Barcelona Berlin].each do |city|
+    %w[Paris Rome Barcelona Berlin Amsterdam].each do |city|
       Expense.create!(
         description: "Hotel in #{city}",
         amount: rand(600..1000),
@@ -128,9 +127,17 @@ created_groups.each do |group|
         user: group.users.sample,
         group: group
       )
+      Expense.create!(
+        description: "#{city} dining",
+        amount: rand(150..400),
+        category: "Food",
+        date: rand(30..60).days.ago.to_date,
+        user: group.users.sample,
+        group: group
+      )
     end
   when "Friday Night Poker"
-    12.times do |i|
+    24.times do |i|
       Expense.create!(
         description: "Poker night snacks and drinks",
         amount: rand(50..100),
@@ -165,12 +172,20 @@ created_groups.each do |group|
       user: group.users.sample,
       group: group
     )
+    Expense.create!(
+      description: "Ski equipment rental",
+      amount: 800,
+      category: "Other",
+      date: 3.days.ago.to_date,
+      user: group.users.sample,
+      group: group
+    )
   else
-    5.times do
+    10.times do
       Expense.create!(
         description: Faker::Lorem.words(number: 3).join(' ').capitalize,
         amount: rand(20..200),
-        category: %w[Food Entertainment Transportation Other].sample,
+        category: Expense::CATEGORIES.sample,
         date: rand(1..90).days.ago.to_date,
         user: group.users.sample,
         group: group
@@ -193,7 +208,6 @@ created_groups.each do |group|
     end
   end
 end
-
 
 puts "Creating friendships..."
 users.combination(2).to_a.sample(50).each do |user, friend|
@@ -218,7 +232,7 @@ created_groups.each do |group|
         recipient: recipient,
         group: group,
         amount: rand(10.0..100.0).round(2),
-        status: %w[completed completed pending].sample,
+        status: %w[completed completed pending_approval pending_approval rejected].sample,
         notes: ["Paying my share", "Thanks for covering!", "Here's what I owe", "Splitting the cost"].sample,
         created_at: rand(1..90).days.ago
       )
@@ -226,6 +240,19 @@ created_groups.each do |group|
   end
 end
 
+puts "Creating notifications..."
+users.each do |user|
+  5.times do
+    Notification.create!(
+      recipient: user,
+      actor: users.sample,
+      action: ['new_expense', 'payment_request', 'group_invite', 'expense_update', 'payment_approved'].sample,
+      notifiable: [Group, Expense, Payment].sample.all.sample,
+      message: Faker::Lorem.sentence,
+      created_at: rand(1..30).days.ago
+    )
+  end
+end
 
 puts "Seed data creation completed!"
 
@@ -236,3 +263,4 @@ puts "#{Expense.count} expenses"
 puts "#{Balance.count} balances"
 puts "#{Friendship.count} friendships"
 puts "#{Payment.count} payments"
+puts "#{Notification.count} notifications"

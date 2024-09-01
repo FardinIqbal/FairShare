@@ -2,7 +2,7 @@ class GroupMembershipsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group
 
-  def index
+  def manage
     @members = @group.users
     @non_members = User.where.not(id: @members.pluck(:id))
   end
@@ -16,45 +16,30 @@ class GroupMembershipsController < ApplicationController
       create_new_member_notification(@user)
       respond_to do |format|
         format.html { redirect_to group_path(@group), notice: "#{@user.full_name} was successfully added to the group." }
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.remove(ActionView::RecordIdentifier.dom_id(@user)),
-            turbo_stream.append('current_group_members', render_to_string(partial: 'group_memberships/member', locals: { member: @user, group: @group }))
-          ]
-        end
+        format.json { render json: { success: true, html: render_to_string(partial: 'member', locals: { member: @user, group: @group }) } }
       end
     else
-      redirect_to group_path(@group), alert: "Failed to add #{@user.full_name} to the group."
+      respond_to do |format|
+        format.html { redirect_to group_path(@group), alert: "Failed to add #{@user.full_name} to the group." }
+        format.json { render json: { success: false, message: "Failed to add user to the group." }, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @user = User.find(params[:id])
-
-    if @user == current_user
-      redirect_to group_path(@group), alert: "You cannot remove yourself from the group."
-      return
-    end
-
-    if @user == @group.leader
-      redirect_to group_path(@group), alert: "The group leader cannot be removed."
-      return
-    end
-
     @group_membership = @group.group_memberships.find_by(user_id: @user.id)
 
     if @group_membership.destroy
       respond_to do |format|
         format.html { redirect_to group_path(@group), notice: "#{@user.full_name} was successfully removed from the group." }
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.remove(ActionView::RecordIdentifier.dom_id(@user)),
-            turbo_stream.append('available_group_members', render_to_string(partial: 'group_memberships/non_member', locals: { user: @user, group: @group }))
-          ]
-        end
+        format.json { render json: { success: true, html: render_to_string(partial: 'non_member', locals: { user: @user, group: @group }) } }
       end
     else
-      redirect_to group_path(@group), alert: "Failed to remove #{@user.full_name} from the group."
+      respond_to do |format|
+        format.html { redirect_to group_path(@group), alert: "Failed to remove #{@user.full_name} from the group." }
+        format.json { render json: { success: false, message: "Failed to remove user from the group." }, status: :unprocessable_entity }
+      end
     end
   end
 

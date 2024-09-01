@@ -4,6 +4,7 @@ class Group < ApplicationRecord
   has_many :users, through: :group_memberships
   has_many :expenses
   has_many :balances, dependent: :destroy
+  has_many :payments
   belongs_to :leader, class_name: "User"
 
   # Validations
@@ -54,5 +55,20 @@ class Group < ApplicationRecord
     end
 
     debts
+  end
+
+  def pending_payments
+    payments.where(status: :pending_approval)
+  end
+
+  def update_balances_with_pending_payments
+    update_balances
+    pending_payments.each do |payment|
+      payer_balance = balances.find_by(user: payment.payer)
+      recipient_balance = balances.find_by(user: payment.recipient)
+
+      payer_balance.update!(amount: payer_balance.amount + payment.amount)
+      recipient_balance.update!(amount: recipient_balance.amount - payment.amount)
+    end
   end
 end
