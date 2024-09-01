@@ -1,235 +1,58 @@
-<header style="background-color: white; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); position: sticky; top: 0; z-index: 1000;">
-  <nav style="max-width: 1280px; margin: 0 auto; padding: 0.75rem 1rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <%= link_to "FairShare", root_path, class: "logo", data: { turbo: false } %>
-
-      <div class="nav-links">
-        <%= link_to "Home", root_path, class: "nav-link", data: { turbo: false } %>
-        <%= link_to "Groups", groups_path, class: "nav-link", data: { turbo: false } %>
-        <%= link_to "Activity", "#", class: "nav-link", data: { turbo: false } %>
-        <% if user_signed_in? %>
-          <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "btn-secondary", data: { turbo: false } %>
-        <% else %>
-          <%= link_to "Sign in", new_user_session_path, class: "btn-primary", data: { turbo: false } %>
-          <%= link_to "Sign up", new_user_registration_path, class: "btn-secondary", data: { turbo: false } %>
+<header class="bg-white dark:bg-slate-800 shadow-sm sticky top-0 z-50">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex">
+        <%= link_to root_path, class: "flex-shrink-0 flex items-center", data: { turbo: false } do %>
+          <span class="text-2xl font-bold text-primary-600 dark:text-primary-400">FairShare</span>
         <% end %>
       </div>
 
-      <button id="mobile-menu-button" class="hamburger-menu" aria-label="Open menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <div class="hidden sm:ml-6 sm:flex sm:items-center">
+        <%= link_to "Home", root_path, class: "px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out", data: { turbo: false } %>
+        <%= link_to "Groups", groups_path, class: "px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out", data: { turbo: false } %>
+        <%= link_to "Activity", "#", class: "px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out", data: { turbo: false } %>
+
+        <% if user_signed_in? %>
+          <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-150 ease-in-out", data: { turbo: false } %>
+        <% else %>
+          <%= link_to "Sign in", new_user_session_path, class: "ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-150 ease-in-out", data: { turbo: false } %>
+          <%= link_to "Sign up", new_user_registration_path, class: "ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-150 ease-in-out", data: { turbo: false } %>
+        <% end %>
+      </div>
+
+      <div class="flex items-center sm:hidden">
+        <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-button">
+          <span class="sr-only">Open main menu</span>
+          <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
     </div>
   </nav>
 
-  <!-- Mobile Navigation -->
-  <div id="mobile-menu" class="mobile-menu">
-    <button id="close-menu-button" class="close-button" aria-label="Close menu">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
-    <%= link_to "Home", root_path, class: "mobile-nav-link", data: { turbo: false } %>
-    <%= link_to "Groups", groups_path, class: "mobile-nav-link", data: { turbo: false } %>
-    <%= link_to "Activity", "#", class: "mobile-nav-link", data: { turbo: false } %>
-    <% if user_signed_in? %>
-      <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "mobile-nav-link", data: { turbo: false } %>
-    <% else %>
-      <%= link_to "Sign in", new_user_session_path, class: "mobile-nav-link", data: { turbo: false } %>
-      <%= link_to "Sign up", new_user_registration_path, class: "mobile-nav-link", data: { turbo: false } %>
-    <% end %>
+  <div class="sm:hidden hidden" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      <%= link_to "Home", root_path, class: "block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out", data: { turbo: false } %>
+      <%= link_to "Groups", groups_path, class: "block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out", data: { turbo: false } %>
+      <%= link_to "Activity", "#", class: "block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out", data: { turbo: false } %>
+      <% if user_signed_in? %>
+        <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "w-full text-left block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out", data: { turbo: false } %>
+      <% else %>
+        <%= link_to "Sign in", new_user_session_path, class: "block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out", data: { turbo: false } %>
+        <%= link_to "Sign up", new_user_registration_path, class: "block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150 ease-in-out", data: { turbo: false } %>
+      <% end %>
+    </div>
   </div>
 </header>
-
-<style>
-    .logo {
-        color: #4f46e5;
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-decoration: none;
-        transition: color 0.3s ease, transform 0.3s ease;
-    }
-    .logo:hover {
-        color: #4338ca;
-        transform: scale(1.05);
-    }
-    .nav-links {
-        display: flex;
-        align-items: center;
-    }
-    .nav-link {
-        margin-right: 1.5rem;
-        font-size: 1rem;
-        color: #6b7280;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background-color: #4f46e5;
-        transition: width 0.3s ease;
-    }
-    .nav-link:hover {
-        color: #4f46e5;
-    }
-    .nav-link:hover::after {
-        width: 100%;
-    }
-    .btn-primary, .btn-secondary {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-    .btn-primary {
-        background-color: #4f46e5;
-        color: white;
-    }
-    .btn-secondary {
-        background-color: white;
-        color: #4f46e5;
-        border: 1px solid #4f46e5;
-        margin-left: 0.5rem;
-    }
-    .btn-primary:hover, .btn-secondary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .btn-primary:hover {
-        background-color: #4338ca;
-    }
-    .btn-secondary:hover {
-        background-color: #4f46e5;
-        color: white;
-    }
-    .hamburger-menu {
-        display: none;
-        flex-direction: column;
-        justify-content: space-around;
-        width: 2rem;
-        height: 2rem;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        z-index: 10;
-        transition: transform 0.3s ease;
-    }
-    .hamburger-menu:hover {
-        transform: scale(1.1);
-    }
-    .hamburger-menu span {
-        width: 2rem;
-        height: 0.25rem;
-        background: #4f46e5;
-        border-radius: 10px;
-        transition: all 0.3s linear;
-        position: relative;
-        transform-origin: 1px;
-    }
-    .mobile-menu {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: white;
-        z-index: 1001;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    .mobile-menu.open {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    .close-button {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: none;
-        border: none;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-    }
-    .close-button:hover {
-        transform: rotate(90deg);
-    }
-    .close-button svg {
-        width: 24px;
-        height: 24px;
-        color: #4f46e5;
-    }
-    .mobile-nav-link {
-        color: #4f46e5;
-        text-decoration: none;
-        padding: 1rem;
-        font-size: 1.25rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    .mobile-nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background-color: #4f46e5;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-    .mobile-nav-link:hover {
-        background-color: #f3f4f6;
-        transform: translateX(5px);
-    }
-    .mobile-nav-link:hover::after {
-        transform: translateX(0);
-    }
-    @media (max-width: 768px) {
-        .nav-links {
-            display: none;
-        }
-        .hamburger-menu {
-            display: flex;
-        }
-    }
-</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const closeMenuButton = document.getElementById('close-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
 
         mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.style.display = 'flex';
-            setTimeout(() => {
-                mobileMenu.classList.add('open');
-            }, 10);
-        });
-
-        closeMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.remove('open');
-            setTimeout(() => {
-                mobileMenu.style.display = 'none';
-            }, 300);
+            mobileMenu.classList.toggle('hidden');
         });
     });
 </script>
