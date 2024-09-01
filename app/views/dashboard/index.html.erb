@@ -1,272 +1,94 @@
-<!-- app/views/dashboard/index.html.erb -->
-<div style="max-width: 100%; padding: 1rem; background-color: #f3f4f6; font-family: Arial, sans-serif;">
-  <div style="max-width: 1024px; margin: 0 auto;">
-    <h1 style="font-size: 2rem; font-weight: 800; color: #1a202c; margin-bottom: 1.5rem; opacity: 0; transform: translateY(-20px); transition: opacity 0.5s ease, transform 0.5s ease;" id="dashboardTitle">Dashboard</h1>
-
-    <!-- Summary Card -->
-    <div id="summaryCard" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease;">
-      <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0;">
-        <h2 style="font-size: 1.125rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Summary</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
-          <div style="text-align: center;">
-            <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Total Balance</p>
-            <p class="animate-number" style="font-size: 1.25rem; font-weight: 600; color: <%= @total_balance >= 0 ? '#10B981' : '#EF4444' %>;"><%= number_to_currency(@total_balance.abs) %></p>
-            <p style="font-size: 0.75rem; color: <%= @total_balance >= 0 ? '#10B981' : '#EF4444' %>;">(<%= @total_balance >= 0 ? 'You are owed' : 'You owe' %>)</p>
+<!-- app/views/static_pages/home.html.erb -->
+<div class="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+    <div class="text-center mb-16 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
+        Welcome to <span class="text-primary-500 animate-pulse">FairShare</span>
+      </h1>
+      <p class="mt-3 max-w-md mx-auto text-xl text-gray-500 sm:text-2xl md:mt-5 md:max-w-3xl">
+        Your go-to platform for easy expense sharing and group finance management.
+      </p>
+      <div class="mt-10 max-w-md mx-auto sm:flex sm:justify-center md:mt-12">
+        <% if user_signed_in? %>
+          <%= link_to 'View My Groups', groups_path, class: "w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 md:py-4 md:text-lg md:px-10 transition duration-150 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
+        <% else %>
+          <div class="rounded-md shadow">
+            <%= link_to 'Sign Up', new_user_registration_path, class: "w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 md:py-4 md:text-lg md:px-10 transition duration-150 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
           </div>
-          <div style="text-align: center;">
-            <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Total Expenses</p>
-            <p class="animate-number" style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;"><%= number_to_currency(@total_expenses) %></p>
-            <p style="font-size: 0.75rem; color: #718096;">all groups</p>
+          <div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
+            <%= link_to 'Log In', new_user_session_path, class: "w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-primary-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10 transition duration-150 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
           </div>
-          <div style="text-align: center;">
-            <p style="color: #718096; margin-bottom: 0.25rem; font-size: 0.75rem;">Active Groups</p>
-            <p style="font-size: 1.25rem; font-weight: 600; color: #4f46e5;"><%= @groups.count %></p>
-          </div>
-        </div>
+        <% end %>
       </div>
     </div>
 
-    <!-- Tab Container -->
-    <div style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease;" id="tabContainer">
-      <div style="background-color: white; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden; display: flex;">
-        <button class="tab-button" data-tab="owed" style="flex: 1; background-color: #4f46e5; color: white; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Owed</button>
-        <button class="tab-button" data-tab="expenses" style="flex: 1; background-color: #f3f4f6; color: #4b5563; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Expenses</button>
-        <button class="tab-button" data-tab="activities" style="flex: 1; background-color: #f3f4f6; color: #4b5563; border: none; padding: 0.75rem 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.3s ease;">Activities</button>
-      </div>
+    <div class="mt-24 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
+      <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-12">
+        Why Choose FairShare?
+      </h2>
+      <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+        <% [
+             { title: "Easy Group Management", description: "Create and manage multiple groups for different occasions or shared living situations.", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" },
+             { title: "Effortless Expense Tracking", description: "Add and categorize expenses quickly, keeping a clear record of all shared costs.", icon: "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" },
+             { title: "Smart Balance Calculation", description: "Automatically calculate who owes what, eliminating the hassle of manual calculations.", icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" },
+             { title: "Simplified Settlements", description: "Easily settle up with friends and keep track of who has paid their share.", icon: "M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" }
+           ].each do |feature| %>
+          <div class="relative bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1">
+            <dt>
+              <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-primary-500 text-white">
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<%= feature[:icon] %>" />
+                </svg>
+              </div>
+              <p class="ml-16 text-lg leading-6 font-medium text-gray-900"><%= feature[:title] %></p>
+            </dt>
+            <dd class="mt-2 ml-16 text-base text-gray-500">
+              <%= feature[:description] %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
     </div>
 
-    <!-- Tab Content -->
-    <div id="tabContent">
-      <!-- Owed Tab -->
-      <div id="owed" class="tab-content" style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
-        <div style="padding: 1rem;">
-          <h3 style="font-size: 1rem; font-weight: 600; color: #EF4444; margin-bottom: 0.5rem;">You Owe</h3>
-          <% @owed_amounts[:owed_to_others].each do |debt| %>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: #FEE2E2; border-radius: 0.5rem; margin-bottom: 0.5rem;">
-              <span style="font-weight: 500; color: #1F2937; font-size: 0.875rem;"><%= debt[:group].name %></span>
-              <div style="display: flex; align-items: center;">
-                <span style="font-weight: 600; color: #EF4444; margin-right: 0.5rem; font-size: 0.875rem;"><%= number_to_currency(debt[:amount]) %></span>
-                <%= button_to "Pay", pay_debt_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "pay-btn", style: "background-color: #EF4444; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
-              </div>
-            </div>
-          <% end %>
-
-          <h3 style="font-size: 1rem; font-weight: 600; color: #10B981; margin-top: 1rem; margin-bottom: 0.5rem;">You are Owed</h3>
-          <% @owed_amounts[:owed_by_others].each do |debt| %>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: #D1FAE5; border-radius: 0.5rem; margin-bottom: 0.5rem;">
-              <span style="font-weight: 500; color: #1F2937; font-size: 0.875rem;"><%= debt[:group].name %></span>
-              <div style="display: flex; align-items: center;">
-                <span style="font-weight: 600; color: #10B981; margin-right: 0.5rem; font-size: 0.875rem;"><%= number_to_currency(debt[:amount]) %></span>
-                <%= button_to "Remind", remind_payment_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "remind-btn", style: "background-color: #10B981; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
-              </div>
-            </div>
-          <% end %>
-
-          <h3 style="font-size: 1rem; font-weight: 600; color: #4F46E5; margin-top: 1rem; margin-bottom: 0.5rem;">Pending Payments</h3>
-          <% @pending_payments.each do |payment| %>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: #EEF2FF; border-radius: 0.5rem; margin-bottom: 0.5rem;">
-              <span style="font-weight: 500; color: #1F2937; font-size: 0.875rem;"><%= payment.group.name %></span>
-              <div style="display: flex; align-items: center;">
-                <span style="font-weight: 600; color: #4F46E5; margin-right: 0.5rem; font-size: 0.875rem;"><%= number_to_currency(payment.amount) %></span>
-                <span style="font-size: 0.75rem; color: #6B7280;">Pending Approval</span>
-              </div>
-            </div>
-          <% end %>
-
-          <h3 style="font-size: 1rem; font-weight: 600; color: #4F46E5; margin-top: 1rem; margin-bottom: 0.5rem;">Payments to Approve</h3>
-          <% @pending_approvals.each do |payment| %>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: #EEF2FF; border-radius: 0.5rem; margin-bottom: 0.5rem;">
-              <span style="font-weight: 500; color: #1F2937; font-size: 0.875rem;"><%= payment.group.name %></span>
-              <div style="display: flex; align-items: center;">
-                <span style="font-weight: 600; color: #4F46E5; margin-right: 0.5rem; font-size: 0.875rem;"><%= number_to_currency(payment.amount) %></span>
-                <%= link_to "Review", group_path(payment.group), class: "review-btn", style: "background-color: #4F46E5; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; text-decoration: none; font-size: 0.75rem;" %>
-              </div>
-            </div>
+    <div class="mt-24 bg-white rounded-lg shadow-xl overflow-hidden opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
+      <div class="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div class="max-w-3xl mx-auto text-center">
+          <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+            <span class="block">Ready to get started?</span>
+            <span class="block text-primary-600">Join FairShare today.</span>
+          </h2>
+          <p class="mt-4 text-xl text-gray-500">
+            Sign up now and experience hassle-free expense sharing with your friends, roommates, or travel buddies.
+          </p>
+          <% unless user_signed_in? %>
+            <%= link_to 'Create your account', new_user_registration_path, class: "mt-8 inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition duration-150 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
           <% end %>
         </div>
       </div>
-
-      <!-- Expenses Tab -->
-      <div id="expenses" class="tab-content" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
-        <div style="padding: 1rem;">
-          <h3 style="font-size: 1rem; font-weight: 600; color: #1a202c; margin-bottom: 0.5rem;">Expense Breakdown</h3>
-          <div style="height: 300px;">
-            <canvas id="expenseChart"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- Activities Tab -->
-      <div id="activities" class="tab-content" style="display: none; background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease;">
-        <div style="padding: 1rem;">
-          <h3 style="font-size: 1rem; font-weight: 600; color: #1a202c; margin-bottom: 0.5rem;">Recent Activities</h3>
-          <ul style="list-style-type: none; padding: 0;">
-            <% @recent_activities.each do |activity| %>
-              <li style="border-left: 3px solid #4F46E5; padding-left: 0.5rem; margin-bottom: 0.75rem;">
-                <div style="font-size: 0.75rem; color: #6B7280;"><%= activity.created_at.strftime("%B %d, %Y") %></div>
-                <div style="font-weight: 500; color: #1F2937; margin: 0.25rem 0; font-size: 0.875rem;"><%= activity.description %></div>
-                <div style="font-size: 0.75rem; color: #6B7280;"><%= activity.group.name %> - <%= activity.user.full_name %></div>
-              </li>
-            <% end %>
-          </ul>
-        </div>
+      <div class="relative h-64 sm:h-72 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full">
+        <%= image_tag "valiant-made-UrzN-8K1PCE-unsplash.jpg", class: "absolute inset-0 w-full h-full object-cover object-left-top", alt: "People collaborating on finances" %>
       </div>
     </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const dashboardTitle = document.getElementById('dashboardTitle');
-        const summaryCard = document.getElementById('summaryCard');
-        const tabContainer = document.getElementById('tabContainer');
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const animatedElements = document.querySelectorAll('[data-animate]');
 
-        // Fade in and slide down for title
-        dashboardTitle.style.opacity = '1';
-        dashboardTitle.style.transform = 'translateY(0)';
-
-        // Fade in and slide up for summary card and tab container
-        summaryCard.style.opacity = '1';
-        summaryCard.style.transform = 'translateY(0)';
-        tabContainer.style.opacity = '1';
-        tabContainer.style.transform = 'translateY(0)';
-
-        function showTab(tabName) {
-            tabButtons.forEach(button => {
-                if (button.dataset.tab === tabName) {
-                    button.style.backgroundColor = '#4f46e5';
-                    button.style.color = 'white';
-                } else {
-                    button.style.backgroundColor = '#f3f4f6';
-                    button.style.color = '#4b5563';
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
                 }
             });
-
-            tabContents.forEach(content => {
-                if (content.id === tabName) {
-                    content.style.display = 'block';
-                    setTimeout(() => {
-                        content.style.opacity = '1';
-                        content.style.transform = 'translateY(0)';
-                    }, 50);
-                } else {
-                    content.style.opacity = '0';
-                    content.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        content.style.display = 'none';
-                    }, 300);
-                }
-            });
-        }
-
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => showTab(button.dataset.tab));
+        }, {
+            threshold: 0.1
         });
 
-        // Show initial tab
-        showTab('owed');
-
-        // Animate numbers
-        function animateValue(obj, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = '$' + (progress * (end - start) + start).toFixed(2);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        document.querySelectorAll('.animate-number').forEach(el => {
-            const value = parseFloat(el.innerText.replace(/[^0-9.-]+/g,""));
-            animateValue(el, 0, value, 1000);
-        });
-
-        // Create expense chart
-        var ctx = document.getElementById('expenseChart').getContext('2d');
-        var expenseChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: <%= raw @expense_categories.keys.to_json %>,
-                datasets: [{
-                    data: <%= raw @expense_categories.values.to_json %>,
-                    backgroundColor: [
-                        '#4F46E5', '#818CF8', '#10B981', '#F59E0B', '#EF4444', '#6B7280'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 12
-                            },
-                            padding: 20
-                        }
-                    }
-                },
-                animation: {
-                    animateScale: true,
-                    animateRotate: true
-                }
-            }
-        });
-
-        // Add hover effects to buttons
-        const buttons = document.querySelectorAll('.pay-btn, .remind-btn, .review-btn');
-        buttons.forEach(button => {
-            button.addEventListener('mouseover', function() {
-                this.style.transform = 'translateY(-2px)';
-                this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            });
-            button.addEventListener('mouseout', function() {
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = 'none';
-            });
+        animatedElements.forEach(el => {
+            observer.observe(el);
         });
     });
 </script>
-
-<style>
-    @media (min-width: 640px) {
-        .dashboard-container {
-            padding: 2rem;
-        }
-        #dashboardTitle {
-            font-size: 2.5rem;
-        }
-        .summary-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-        .tab-button {
-            font-size: 1rem;
-            padding: 0.75rem 1.5rem;
-        }
-    }
-
-    @media (min-width: 1024px) {
-        .dashboard-container {
-            max-width: 1024px;
-            margin: 0 auto;
-        }
-    }
-
-    .pay-btn:hover, .remind-btn:hover, .review-btn:hover, .tab-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .pay-btn:active, .remind-btn:active, .review-btn:active, .tab-button:active {
-        transform: translateY(0);
-    }
-</style>
