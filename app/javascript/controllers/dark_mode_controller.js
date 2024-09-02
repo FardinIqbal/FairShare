@@ -19,8 +19,9 @@ export default class extends Controller {
   }
 
   updateTheme() {
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (localStorage.theme === 'dark' || !localStorage.theme) { // Default to dark mode
       document.documentElement.classList.add('dark')
+      localStorage.theme = 'dark' // Ensure it's set to dark in localStorage
     } else {
       document.documentElement.classList.remove('dark')
     }
