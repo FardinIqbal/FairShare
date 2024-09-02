@@ -1,61 +1,61 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
-  <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
+<div class="min-h-screen flex items-center justify-center bg-gray-900 p-6">
+  <div class="w-full max-w-4xl bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
     <!-- Sign-In Form Section -->
-    <div class="md:w-1/2 p-8 md:border-r border-gray-200 dark:border-gray-700">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h2>
-      <p class="text-gray-600 dark:text-gray-400 mb-6">Sign in to your FairShare account</p>
+    <div class="md:w-1/2 p-8 md:border-r border-gray-700">
+      <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+      <p class="text-gray-400 mb-6">Sign in to your account</p>
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-4" }) do |f| %>
         <div>
-          <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition" %>
+          <%= f.label :email, class: "block text-sm font-medium text-gray-300" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "w-full p-3 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" %>
         </div>
 
         <div>
-          <%= f.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-          <%= f.password_field :password, autocomplete: "current-password", required: true, class: "w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition" %>
+          <%= f.label :password, class: "block text-sm font-medium text-gray-300" %>
+          <%= f.password_field :password, autocomplete: "current-password", required: true, class: "w-full p-3 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" %>
         </div>
 
         <div class="flex items-center justify-between">
           <div class="flex items-center">
-            <%= f.check_box :remember_me, class: "h-4 w-4 text-indigo-600 dark:text-indigo-400 focus:ring-indigo-500 dark:focus:ring-indigo-400 border-gray-300 dark:border-gray-600 rounded" %>
-            <%= f.label :remember_me, class: "ml-2 block text-sm text-gray-700 dark:text-gray-300" %>
+            <%= f.check_box :remember_me, class: "h-4 w-4 text-indigo-400 focus:ring-indigo-400 border-gray-600 rounded" %>
+            <%= f.label :remember_me, class: "ml-2 block text-sm text-gray-300" %>
           </div>
-          <%= link_to "Forgot your password?", new_password_path(resource_name), class: "text-sm text-indigo-600 dark:text-indigo-400 hover:underline" %>
+          <%= link_to "Forgot your password?", new_password_path(resource_name), class: "text-sm text-indigo-400 hover:underline" %>
         </div>
 
         <div>
-          <%= f.submit "Sign in", class: "w-full py-3 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white rounded-md font-medium transition" %>
+          <%= f.submit "Sign in", class: "w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-md font-medium transition" %>
         </div>
       <% end %>
 
       <div class="mt-4 text-center">
-        <p class="text-sm text-gray-600 dark:text-gray-400">Don't have an account?</p>
-        <%= link_to "Sign up", new_registration_path(resource_name), class: "text-indigo-600 dark:text-indigo-400 hover:underline font-medium" %>
+        <p class="text-sm text-gray-400">Don't have an account?</p>
+        <%= link_to "Sign up", new_registration_path(resource_name), class: "text-indigo-400 hover:underline font-medium" %>
       </div>
     </div>
 
     <!-- Info Section -->
-    <div class="md:w-1/2 p-8 bg-indigo-50 dark:bg-gray-700">
-      <h3 class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">Welcome Back to FairShare</h3>
-      <p class="text-gray-600 dark:text-gray-300 mb-6">We're excited to see you again! Log in to access your groups, track expenses, and settle up with friends.</p>
+    <div class="md:w-1/2 p-8 bg-gray-700">
+      <h3 class="text-xl font-semibold text-indigo-400 mb-4">Welcome Back</h3>
+      <p class="text-gray-300 mb-6">We're excited to see you again! Log in to access your groups, track expenses, and settle up with friends.</p>
 
-      <h3 class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">What's New in FairShare?</h3>
-      <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+      <h3 class="text-xl font-semibold text-indigo-400 mb-4">What's New?</h3>
+      <ul class="space-y-3 text-gray-300">
         <li class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
           Faster expense splitting
         </li>
         <li class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
           Improved financial insights
         </li>
         <li class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Real-time balance updates
@@ -63,10 +63,10 @@
       </ul>
 
       <div class="mt-8">
-        <h3 class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">What Our Users Say</h3>
-        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
-          <p class="text-gray-800 dark:text-gray-300 italic">"FairShare has revolutionized how my friends and I handle group expenses. It's a game-changer!"</p>
-          <p class="text-right font-semibold text-gray-700 dark:text-gray-400 mt-4">- Alex M., San Francisco</p>
+        <h3 class="text-xl font-semibold text-indigo-400 mb-4">What Our Users Say</h3>
+        <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
+          <p class="text-gray-300 italic">"This app has revolutionized how my friends and I handle group expenses. It's a game-changer!"</p>
+          <p class="text-right font-semibold text-gray-400 mt-4">- Alex M., San Francisco</p>
         </div>
       </div>
     </div>

@@ -1,18 +1,18 @@
-<div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-4xl w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 transition-all duration-300 ease-in-out opacity-0 transform translate-y-4 profile-card">
+<div class="min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl w-full bg-gray-800 shadow-lg rounded-lg p-8 transition-all duration-300 ease-in-out opacity-0 transform translate-y-4 profile-card">
     <div class="mb-8 text-center">
-      <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">Edit Profile</h2>
-      <p class="text-gray-600 dark:text-gray-400">Update your account information</p>
+      <h2 class="text-3xl font-extrabold text-white">Edit Profile</h2>
+      <p class="text-gray-400">Update your account information</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div class="flex flex-col items-center">
-        <div class="w-24 h-24 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white text-3xl font-bold rounded-full flex items-center justify-center mb-4 avatar transition-all duration-300 ease-in-out transform hover:scale-110">
+        <div class="w-24 h-24 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-3xl font-bold rounded-full flex items-center justify-center mb-4 avatar transition-all duration-300 ease-in-out transform hover:scale-110">
           <%= current_user.first_name[0] %><%= current_user.last_name[0] %>
         </div>
         <div class="text-center">
-          <p class="text-xl font-semibold text-gray-900 dark:text-white user-name"><%= current_user.full_name %></p>
-          <p class="text-gray-600 dark:text-gray-400 user-email"><%= current_user.email %></p>
+          <p class="text-xl font-semibold text-white user-name"><%= current_user.full_name %></p>
+          <p class="text-gray-400 user-email"><%= current_user.email %></p>
         </div>
       </div>
 
@@ -21,44 +21,44 @@
           <%= render "devise/shared/error_messages", resource: resource %>
 
           <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
-            <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email address", class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+            <%= f.label :email, class: "block text-sm font-medium text-gray-300" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email address", class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-            <div class="text-sm text-red-600 dark:text-red-400">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+            <div class="text-sm text-red-400">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
           <% end %>
 
           <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
-            <%= f.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-            <%= f.password_field :password, autocomplete: "new-password", placeholder: "New password (leave blank if no change)", class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+            <%= f.label :password, class: "block text-sm font-medium text-gray-300" %>
+            <%= f.password_field :password, autocomplete: "new-password", placeholder: "New password (leave blank if no change)", class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
-            <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-            <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm new password", class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+            <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-300" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm new password", class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
-            <%= f.label :current_password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-            <%= f.password_field :current_password, autocomplete: "current-password", placeholder: "Current password (required)", class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+            <%= f.label :current_password, class: "block text-sm font-medium text-gray-300" %>
+            <%= f.password_field :current_password, autocomplete: "current-password", placeholder: "Current password (required)", class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <div class="form-actions">
-            <%= f.submit "Update Profile", class: "w-full inline-flex justify-center py-3 px-4 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 dark:from-indigo-500 dark:to-purple-500 dark:hover:from-indigo-600 dark:hover:to-purple-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
+            <%= f.submit "Update Profile", class: "w-full inline-flex justify-center py-3 px-4 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
           </div>
         <% end %>
       </div>
     </div>
 
-    <div class="mt-12 border-t border-gray-200 dark:border-gray-700 pt-6">
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Delete Account</h3>
-      <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Once you delete your account, all of your data will be permanently removed. This action cannot be undone.</p>
+    <div class="mt-12 border-t border-gray-700 pt-6">
+      <h3 class="text-lg font-semibold text-white mb-4">Delete Account</h3>
+      <p class="text-sm text-gray-400 mb-6">Once you delete your account, all of your data will be permanently removed. This action cannot be undone.</p>
       <%= button_to "Delete Account", registration_path(resource_name), data: { confirm: "Are you absolutely sure you want to delete your account? This action cannot be undone." }, method: :delete, class: "inline-flex items-center px-6 py-3 bg-red-600 text-white text-base font-medium rounded-md hover:bg-red-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
     </div>
 
     <div class="mt-8 text-center">
-      <%= link_to "← Back to Profile", user_path(current_user), class: "inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-500 font-semibold text-base transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:underline" %>
+      <%= link_to "← Back to Profile", user_path(current_user), class: "inline-flex items-center text-indigo-400 hover:text-indigo-500 font-semibold text-base transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:underline" %>
     </div>
   </div>
 </div>

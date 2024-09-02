@@ -1,65 +1,65 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
-  <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
+<div class="min-h-screen flex items-center justify-center bg-gray-900 p-6">
+  <div class="w-full max-w-4xl bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
     <!-- Sign-Up Form Section -->
-    <div class="md:w-1/2 p-8 md:border-r border-gray-200 dark:border-gray-700">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Join FairShare</h2>
-      <p class="text-gray-600 dark:text-gray-400 mb-6">Start your journey to hassle-free expense sharing</p>
+    <div class="md:w-1/2 p-8 md:border-r border-gray-700">
+      <h2 class="text-3xl font-bold text-white mb-2">Join FairShare</h2>
+      <p class="text-gray-400 mb-6">Start your journey to hassle-free expense sharing</p>
 
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-4" }) do |f| %>
         <div>
-          <%= f.label :first_name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-          <%= f.text_field :first_name, autofocus: true, placeholder: "Your first name", class: "w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition" %>
+          <%= f.label :first_name, class: "block text-sm font-medium text-gray-300" %>
+          <%= f.text_field :first_name, autofocus: true, placeholder: "Your first name", class: "w-full p-3 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" %>
         </div>
 
         <div>
-          <%= f.label :last_name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-          <%= f.text_field :last_name, placeholder: "Your last name", class: "w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition" %>
+          <%= f.label :last_name, class: "block text-sm font-medium text-gray-300" %>
+          <%= f.text_field :last_name, placeholder: "Your last name", class: "w-full p-3 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" %>
         </div>
 
         <div>
-          <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-          <%= f.email_field :email, autocomplete: "email", placeholder: "Your email address", class: "w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition" %>
+          <%= f.label :email, class: "block text-sm font-medium text-gray-300" %>
+          <%= f.email_field :email, autocomplete: "email", placeholder: "Your email address", class: "w-full p-3 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" %>
         </div>
 
         <div>
-          <%= f.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-          <%= f.password_field :password, autocomplete: "new-password", placeholder: "Create a password (#{@minimum_password_length} characters minimum)", class: "w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition" %>
+          <%= f.label :password, class: "block text-sm font-medium text-gray-300" %>
+          <%= f.password_field :password, autocomplete: "new-password", placeholder: "Create a password (#{@minimum_password_length} characters minimum)", class: "w-full p-3 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" %>
         </div>
 
         <div>
-          <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm your password", class: "w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition" %>
+          <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-300" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm your password", class: "w-full p-3 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" %>
         </div>
 
         <div>
-          <%= f.submit "Sign Up", class: "w-full py-3 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white rounded-md font-medium transition" %>
+          <%= f.submit "Sign Up", class: "w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-md font-medium transition focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-400 shadow-lg" %>
         </div>
       <% end %>
 
       <div class="mt-4 text-center">
-        <p class="text-sm text-gray-600 dark:text-gray-400">Already have an account?</p>
-        <%= link_to "Sign in", new_session_path(resource_name), class: "text-indigo-600 dark:text-indigo-400 hover:underline font-medium" %>
+        <p class="text-sm text-gray-400">Already have an account?</p>
+        <%= link_to "Sign in", new_session_path(resource_name), class: "text-indigo-400 hover:underline font-medium" %>
       </div>
     </div>
 
     <!-- Info Section -->
-    <div class="md:w-1/2 p-8 bg-indigo-50 dark:bg-gray-700">
-      <h3 class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">Why Join FairShare?</h3>
-      <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+    <div class="md:w-1/2 p-8 bg-gray-700">
+      <h3 class="text-xl font-semibold text-indigo-400 mb-4">Why Join FairShare?</h3>
+      <ul class="space-y-3 text-gray-300">
         <li class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Easy expense tracking and splitting
         </li>
         <li class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           Manage multiple groups for different occasions
         </li>
         <li class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
           </svg>
           Clear financial summaries and reports
@@ -67,16 +67,16 @@
       </ul>
 
       <div class="mt-8">
-        <h3 class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">What Our Users Say</h3>
-        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
-          <p class="text-gray-800 dark:text-gray-300 italic">"FairShare has made managing expenses with my roommates so much easier. No more awkward money conversations!"</p>
-          <p class="text-right font-semibold text-gray-700 dark:text-gray-400 mt-4">- Sarah K., New York</p>
+        <h3 class="text-xl font-semibold text-indigo-400 mb-4">What Our Users Say</h3>
+        <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
+          <p class="text-gray-300 italic">"FairShare has made managing expenses with my roommates so much easier. No more awkward money conversations!"</p>
+          <p class="text-right font-semibold text-gray-400 mt-4">- Sarah K., New York</p>
         </div>
       </div>
 
       <div class="mt-8">
-        <h3 class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">Featured: Real-time Balance Updates</h3>
-        <p class="text-gray-600 dark:text-gray-300">Stay on top of your finances with instant notifications and live balance tracking across all your groups.</p>
+        <h3 class="text-xl font-semibold text-indigo-400 mb-4">Featured: Real-time Balance Updates</h3>
+        <p class="text-gray-300">Stay on top of your finances with instant notifications and live balance tracking across all your groups.</p>
       </div>
     </div>
   </div>
