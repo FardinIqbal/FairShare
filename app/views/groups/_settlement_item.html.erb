@@ -1,18 +1,18 @@
-<!-- app/views/groups/_settlement_item.html.erb -->
-<div style="border-bottom: 1px solid #e2e8f0; padding: 0.75rem 0; display: flex; flex-direction: column;">
-  <p style="color: #1a202c; font-size: 0.875rem; margin-bottom: 0.5rem;">
+<div class="border-b border-gray-200 dark:border-gray-700 py-3 flex flex-col space-y-2">
+  <p class="text-gray-900 dark:text-gray-100 text-sm">
     <%= settlement[:from] == current_user ? 'You' : settlement[:from].full_name %>
     pays
     <%= settlement[:to] == current_user ? 'you' : settlement[:to].full_name %>
   </p>
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <p style="font-weight: 600; color: #4f46e5; font-size: 0.875rem;"><%= number_to_currency(settlement[:amount]) %></p>
+  <div class="flex justify-between items-center">
+    <p class="font-semibold text-indigo-600 dark:text-indigo-400 text-sm"><%= number_to_currency(settlement[:amount]) %></p>
+
     <% if settlement[:from] == current_user %>
-      <%= button_to "Mark as Paid", mark_as_paid_group_payment_path(@group, recipient_id: settlement[:to].id, amount: settlement[:amount]), method: :post, class: "settle-btn", style: "background-color: #10B981; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
+      <%= button_to "Mark as Paid", mark_as_paid_group_payment_path(@group, recipient_id: settlement[:to].id, amount: settlement[:amount]), method: :post, class: "inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg text-xs" %>
     <% elsif settlement[:to] == current_user %>
-      <%= button_to "Remind", remind_group_payment_path(@group, user_id: settlement[:from].id, amount: settlement[:amount]), method: :post, class: "settle-btn", style: "background-color: #F59E0B; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.75rem;" %>
+      <%= button_to "Remind", remind_group_payment_path(@group, user_id: settlement[:from].id, amount: settlement[:amount]), method: :post, class: "inline-flex items-center justify-center px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-yellow-500 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg text-xs" %>
     <% else %>
-      <button disabled class="settle-btn" style="background-color: #E5E7EB; color: #9CA3AF; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: not-allowed; font-size: 0.75rem;">Action</button>
+      <button disabled class="inline-flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-500 font-semibold rounded-md cursor-not-allowed text-xs">Action</button>
     <% end %>
   </div>
 </div>

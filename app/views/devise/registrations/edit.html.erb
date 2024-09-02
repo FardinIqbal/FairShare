@@ -1,357 +1,70 @@
-<!-- app/views/devise/registrations/edit.html.erb -->
-<div class="edit-profile-container">
-  <div class="profile-card">
-    <div class="profile-header">
-      <h2>Edit Profile</h2>
-      <p>Update your account information</p>
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 transition-all duration-300 ease-in-out opacity-0 transform translate-y-4 profile-card">
+    <div class="mb-8 text-center">
+      <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">Edit Profile</h2>
+      <p class="text-gray-600 dark:text-gray-400">Update your account information</p>
     </div>
 
-    <div class="profile-content">
-      <div class="user-info-section">
-        <div class="avatar">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="flex flex-col items-center">
+        <div class="w-24 h-24 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white text-3xl font-bold rounded-full flex items-center justify-center mb-4 avatar transition-all duration-300 ease-in-out transform hover:scale-110">
           <%= current_user.first_name[0] %><%= current_user.last_name[0] %>
         </div>
-        <div class="user-details">
-          <p class="user-name"><%= current_user.full_name %></p>
-          <p class="user-email"><%= current_user.email %></p>
-        </div>
-        <div class="account-stats">
-          <div class="stat">
-            <span class="stat-value"><%= current_user.groups.count %></span>
-            <span class="stat-label">Groups</span>
-          </div>
-          <div class="stat">
-            <span class="stat-value"><%= current_user.expenses.count %></span>
-            <span class="stat-label">Expenses</span>
-          </div>
+        <div class="text-center">
+          <p class="text-xl font-semibold text-gray-900 dark:text-white user-name"><%= current_user.full_name %></p>
+          <p class="text-gray-600 dark:text-gray-400 user-email"><%= current_user.email %></p>
         </div>
       </div>
 
-      <div class="form-section">
-        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "edit-profile-form" }) do |f| %>
+      <div class="col-span-2 form-section">
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
           <%= render "devise/shared/error_messages", resource: resource %>
 
-          <div class="form-group">
-            <%= f.label :email %>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email address" %>
+          <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
+            <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email address", class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-            <div class="pending-confirmation">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+            <div class="text-sm text-red-600 dark:text-red-400">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
           <% end %>
 
-          <div class="form-group">
-            <%= f.label :password %>
-            <%= f.password_field :password, autocomplete: "new-password", placeholder: "New password (leave blank if no change)" %>
+          <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
+            <%= f.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <%= f.password_field :password, autocomplete: "new-password", placeholder: "New password (leave blank if no change)", class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
-          <div class="form-group">
-            <%= f.label :password_confirmation %>
-            <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm new password" %>
+          <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
+            <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm new password", class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
-          <div class="form-group">
-            <%= f.label :current_password %>
-            <%= f.password_field :current_password, autocomplete: "current-password", placeholder: "Current password (required)" %>
+          <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
+            <%= f.label :current_password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <%= f.password_field :current_password, autocomplete: "current-password", placeholder: "Current password (required)", class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <div class="form-actions">
-            <%= f.submit "Update Profile", class: "update-button" %>
+            <%= f.submit "Update Profile", class: "w-full inline-flex justify-center py-3 px-4 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 dark:from-indigo-500 dark:to-purple-500 dark:hover:from-indigo-600 dark:hover:to-purple-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
           </div>
         <% end %>
       </div>
     </div>
 
-    <div class="danger-zone">
-      <h3>Delete Account</h3>
-      <p>Once you delete your account, all of your data will be permanently removed. This action cannot be undone.</p>
-      <%= button_to "Delete Account", registration_path(resource_name), data: { confirm: "Are you absolutely sure you want to delete your account? This action cannot be undone." }, method: :delete, class: "delete-button" %>
+    <div class="mt-12 border-t border-gray-200 dark:border-gray-700 pt-6">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Delete Account</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Once you delete your account, all of your data will be permanently removed. This action cannot be undone.</p>
+      <%= button_to "Delete Account", registration_path(resource_name), data: { confirm: "Are you absolutely sure you want to delete your account? This action cannot be undone." }, method: :delete, class: "inline-flex items-center px-6 py-3 bg-red-600 text-white text-base font-medium rounded-md hover:bg-red-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
     </div>
 
-    <div class="back-link">
-      <%= link_to "← Back to Profile", user_path(current_user) %>
+    <div class="mt-8 text-center">
+      <%= link_to "← Back to Profile", user_path(current_user), class: "inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-500 font-semibold text-base transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:underline" %>
     </div>
   </div>
 </div>
 
-<style>
-    .edit-profile-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #f3f4f6;
-        padding: 20px;
-    }
-
-    .profile-card {
-        max-width: 900px;
-        width: 100%;
-        background-color: white;
-        padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    .profile-card:hover {
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    .profile-header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .profile-header h2 {
-        font-size: 28px;
-        color: #1a202c;
-        margin-bottom: 10px;
-    }
-
-    .profile-header p {
-        color: #4b5563;
-        font-size: 16px;
-    }
-
-    .profile-content {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .user-info-section {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    .avatar {
-        width: 100px;
-        height: 100px;
-        background-color: #4f46e5;
-        color: white;
-        font-size: 36px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        margin-bottom: 15px;
-        transition: all 0.3s ease;
-    }
-
-    .avatar:hover {
-        transform: scale(1.1);
-    }
-
-    .user-details {
-        text-align: center;
-    }
-
-    .user-name {
-        font-size: 20px;
-        font-weight: 600;
-        color: #1a202c;
-    }
-
-    .user-email {
-        font-size: 16px;
-        color: #4b5563;
-    }
-
-    .account-stats {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-
-    .stat {
-        text-align: center;
-        margin: 0 20px;
-    }
-
-    .stat-value {
-        font-size: 24px;
-        font-weight: 600;
-        color: #4f46e5;
-    }
-
-    .stat-label {
-        font-size: 14px;
-        color: #4b5563;
-    }
-
-    .form-section {
-        width: 100%;
-    }
-
-    .edit-profile-form {
-        margin-top: 30px;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        color: #4b5563;
-        font-size: 14px;
-    }
-
-    .form-group input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #d1d5db;
-        border-radius: 5px;
-        font-size: 14px;
-        transition: all 0.3s ease;
-    }
-
-    .form-group input:focus {
-        outline: none;
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
-    }
-
-    .update-button {
-        width: 100%;
-        padding: 12px;
-        background-color: #4f46e5;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .update-button:hover {
-        background-color: #4338ca;
-        transform: translateY(-2px);
-    }
-
-    .danger-zone {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .danger-zone h3 {
-        font-size: 20px;
-        color: #1a202c;
-        margin-bottom: 10px;
-    }
-
-    .danger-zone p {
-        font-size: 14px;
-        color: #4b5563;
-        margin-bottom: 20px;
-    }
-
-    .delete-button {
-        padding: 10px 20px;
-        background-color: #ef4444;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .delete-button:hover {
-        background-color: #dc2626;
-    }
-
-    .back-link {
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    .back-link a {
-        color: #4f46e5;
-        text-decoration: none;
-        font-size: 14px;
-        transition: all 0.3s ease;
-    }
-
-    .back-link a:hover {
-        text-decoration: underline;
-    }
-
-    @media (min-width: 768px) {
-        .profile-content {
-            flex-direction: row;
-            align-items: flex-start;
-        }
-
-        .user-info-section {
-            width: 30%;
-            margin-right: 40px;
-            margin-bottom: 0;
-        }
-
-        .form-section {
-            width: 70%;
-        }
-
-        .account-stats {
-            flex-direction: column;
-        }
-
-        .stat {
-            margin: 10px 0;
-        }
-    }
-
-    @media (max-width: 767px) {
-        .profile-card {
-            padding: 20px;
-        }
-
-        .user-info-section {
-            margin-bottom: 30px;
-        }
-
-        .avatar {
-            width: 80px;
-            height: 80px;
-            font-size: 28px;
-        }
-
-        .user-name {
-            font-size: 18px;
-        }
-
-        .user-email {
-            font-size: 14px;
-        }
-
-        .account-stats {
-            margin-top: 15px;
-        }
-
-        .stat-value {
-            font-size: 20px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-        }
-    }
-</style>
-
 <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
+    document.addEventListener('DOMContentLoaded', () => {
         const profileCard = document.querySelector('.profile-card');
         setTimeout(() => {
             profileCard.style.opacity = '1';
@@ -363,7 +76,7 @@
             setTimeout(() => {
                 group.style.opacity = '1';
                 group.style.transform = 'translateY(0)';
-            }, 200 + (100 * index));
+            }, 150 + (100 * index));
         });
     });
 </script>

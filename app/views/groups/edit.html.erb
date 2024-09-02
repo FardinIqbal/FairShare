@@ -1,11 +1,10 @@
-<!-- app/views/groups/edit.html.erb -->
-<div class="max-w-2xl mx-auto mt-8">
-  <h1 class="text-3xl font-bold mb-6">Edit Group</h1>
+<div class="max-w-2xl mx-auto mt-12 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+  <h1 class="text-4xl font-extrabold mb-8 text-gray-900 dark:text-white">Edit Group</h1>
 
-  <%= render 'form', group: @group %>
+  <%= render 'form', group: @group, submit_label: "Save Changes" %>
 
-  <div class="mt-4 space-x-4">
-    <%= link_to 'Show Group', @group, class: "text-indigo-600 hover:text-indigo-900" %>
-    <%= link_to 'Back to Groups', groups_path, class: "text-indigo-600 hover:text-indigo-900" %>
+  <div class="mt-6 flex justify-between items-center space-x-4">
+    <%= link_to 'Show Group', @group, class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-600 font-medium transition-colors duration-300 ease-in-out" %>
+    <%= link_to 'Back to Groups', groups_path, class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-600 font-medium transition-colors duration-300 ease-in-out" %>
   </div>
 </div>

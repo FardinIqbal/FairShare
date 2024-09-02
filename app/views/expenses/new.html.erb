@@ -1,83 +1,37 @@
-<div class="expense-container">
-  <div class="expense-header">
-    <h1 class="expense-title">
+<div class="expense-container max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow-md mt-8">
+  <div class="expense-header text-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">
       <%= @group ? "Add New Expense for #{@group.name}" : "Add New Expense" %>
     </h1>
-    <p class="expense-subtitle">
+    <p class="text-gray-600 dark:text-gray-400 mt-2">
       Keep track of your expenses easily. Fill out the form below to add a new expense to your group.
     </p>
   </div>
 
-  <div class="expense-content">
-    <div class="expense-form-wrapper">
-      <%= form_with(model: [@group, @expense].compact, local: true, class: "expense-form") do |form| %>
-        <% if @expense.errors.any? %>
-          <div class="error-explanation">
-            <h2><%= pluralize(@expense.errors.count, "error") %> prohibited this expense from being saved:</h2>
-            <ul>
-              <% @expense.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-
-        <% unless @group %>
-          <div class="form-group">
-            <%= form.label :group_id, "Select Group" %>
-            <%= form.collection_select :group_id, current_user.groups, :id, :name, { prompt: "Choose a group" }, { class: "form-input" } %>
-          </div>
-        <% end %>
-
-        <div class="form-group">
-          <%= form.label :amount %>
-          <div class="amount-input-wrapper">
-            <span class="currency-symbol">$</span>
-            <%= form.number_field :amount, step: 0.01, class: "form-input amount-input", placeholder: "0.00" %>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <%= form.label :description %>
-          <%= form.text_area :description, class: "form-input", rows: 3, placeholder: "What was this expense for?" %>
-        </div>
-
-        <div class="form-group">
-          <%= form.label :date %>
-          <%= form.date_field :date, value: Date.current, class: "form-input" %>
-        </div>
-
-        <div class="form-group">
-          <%= form.label :category %>
-          <%= form.select :category, Expense::CATEGORIES, { prompt: "Select a category" }, { class: "form-input" } %>
-        </div>
-
-        <div class="btn-container">
-          <button type="submit" class="btn btn-primary">Add Expense</button>
-          <a href="#" class="btn btn-secondary">Cancel</a>
-        </div>
-      <% end %>
+  <div class="expense-content grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="expense-form-wrapper bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+      <%= render 'form', group: @group, expense: @expense %>
     </div>
 
-    <div class="expense-sidebar">
-      <div class="expense-tips">
-        <h2>Expense Tips</h2>
-        <ul>
+    <div class="expense-sidebar space-y-6">
+      <div class="expense-tips bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Expense Tips</h2>
+        <ul class="list-disc list-inside text-gray-600 dark:text-gray-400">
           <li>Be specific in the description</li>
           <li>Choose the appropriate category</li>
           <li>Add expenses promptly</li>
         </ul>
       </div>
 
-      <div class="expense-summary">
-        <h2>Group Summary</h2>
-        <div class="summary-item">
-          <span>Total Expenses:</span>
-          <span><%= number_to_currency(@group.expenses.sum(:amount)) %></span>
+      <div class="expense-summary bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Group Summary</h2>
+        <div class="summary-item flex justify-between py-2">
+          <span class="text-gray-800 dark:text-gray-100">Total Expenses:</span>
+          <span class="font-bold text-gray-800 dark:text-gray-100"><%= number_to_currency(@group.expenses.sum(:amount)) %></span>
         </div>
-        <div class="summary-item">
-          <span>Your Balance:</span>
-          <span class="<%= current_user.balance_in_group(@group) >= 0 ? 'positive-balance' : 'negative-balance' %>">
+        <div class="summary-item flex justify-between py-2">
+          <span class="text-gray-800 dark:text-gray-100">Your Balance:</span>
+          <span class="<%= current_user.balance_in_group(@group) >= 0 ? 'text-green-600' : 'text-red-600' %> font-bold">
             <%= number_to_currency(current_user.balance_in_group(@group).abs) %>
             <%= current_user.balance_in_group(@group) >= 0 ? 'to receive' : 'to pay' %>
           </span>
@@ -86,296 +40,3 @@
     </div>
   </div>
 </div>
-
-
-<style>
-    :root {
-        --primary-color: #4F46E5;
-        --secondary-color: #E5E7EB;
-        --background-color: #F9FAFB;
-        --text-color: #1F2937;
-        --heading-color: #111827;
-        --hover-color: #4338CA;
-        --transition-speed: 0.3s;
-    }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: var(--background-color);
-        color: var(--text-color);
-        line-height: 1.5;
-    }
-
-    .expense-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 2rem 1rem;
-        animation: fadeIn 0.5s ease-out;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .expense-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-
-    .expense-title {
-        color: var(--primary-color);
-        font-size: 2rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        transition: color var(--transition-speed);
-    }
-
-    .expense-title:hover {
-        color: var(--hover-color);
-    }
-
-    .expense-subtitle {
-        color: #6B7280;
-        font-size: 1rem;
-    }
-
-    .expense-content {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-    }
-
-    .expense-form-wrapper {
-        flex: 1 1 500px;
-        background-color: white;
-        border-radius: 0.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        padding: 1.5rem;
-        transition: box-shadow var(--transition-speed);
-    }
-
-    .expense-form-wrapper:hover {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .expense-sidebar {
-        flex: 1 1 250px;
-    }
-
-    .form-group {
-        margin-bottom: 1rem;
-    }
-
-    label {
-        display: block;
-        font-weight: 500;
-        margin-bottom: 0.25rem;
-        color: var(--heading-color);
-        transition: color var(--transition-speed);
-    }
-
-    label:hover {
-        color: var(--primary-color);
-    }
-
-    .form-input {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px solid var(--secondary-color);
-        border-radius: 0.25rem;
-        font-size: 1rem;
-        transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-    }
-
-    .form-input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
-    }
-
-    .form-input:hover {
-        border-color: #D1D5DB;
-    }
-
-    .amount-input-wrapper {
-        position: relative;
-    }
-
-    .currency-symbol {
-        position: absolute;
-        left: 0.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #6B7280;
-        transition: color var(--transition-speed);
-    }
-
-    .amount-input {
-        padding-left: 1.25rem;
-    }
-
-    .amount-input:focus + .currency-symbol {
-        color: var(--primary-color);
-    }
-
-    .btn-container {
-        display: flex;
-        gap: 1rem;
-    }
-
-    .btn {
-        padding: 0.5rem 1rem;
-        border-radius: 0.25rem;
-        font-weight: 500;
-        text-decoration: none;
-        transition: background-color var(--transition-speed), color var(--transition-speed), transform 0.1s, border-color var(--transition-speed);
-        cursor: pointer;
-        display: inline-block;
-        text-align: center;
-    }
-
-    .btn:active {
-        transform: translateY(1px);
-    }
-
-    .btn-primary {
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-    }
-
-    .btn-primary:hover {
-        background-color: var(--hover-color);
-    }
-
-    .btn-secondary {
-        background-color: white;
-        color: var(--primary-color);
-        border: 1px solid var(--primary-color);
-    }
-
-    .btn-secondary:hover {
-        background-color: #F3F4F6;
-        color: var(--hover-color);
-        border-color: var(--hover-color);
-    }
-
-    .expense-tips, .expense-summary {
-        background-color: white;
-        border-radius: 0.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        padding: 1rem;
-        margin-bottom: 1rem;
-        transition: box-shadow var(--transition-speed);
-    }
-
-    .expense-tips:hover, .expense-summary:hover {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .expense-tips h2, .expense-summary h2 {
-        color: var(--heading-color);
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-        transition: color var(--transition-speed);
-    }
-
-    .expense-tips:hover h2, .expense-summary:hover h2 {
-        color: var(--primary-color);
-    }
-
-    .expense-tips ul {
-        list-style-type: none;
-        padding-left: 0;
-    }
-
-    .expense-tips li {
-        margin-bottom: 0.25rem;
-        transition: transform var(--transition-speed);
-    }
-
-    .expense-tips li:hover {
-        transform: translateX(5px);
-    }
-
-    .summary-item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.25rem;
-        padding: 0.25rem;
-        border-radius: 0.25rem;
-        transition: background-color var(--transition-speed);
-    }
-
-    .summary-item:hover {
-        background-color: #F3F4F6;
-    }
-
-    .positive-balance {
-        color: #10B981;
-    }
-
-    .negative-balance {
-        color: #EF4444;
-    }
-
-    @media (max-width: 768px) {
-        .expense-content {
-            flex-direction: column;
-        }
-
-        .expense-form-wrapper, .expense-sidebar {
-            flex-basis: 100%;
-        }
-
-        .expense-title {
-            font-size: 1.75rem;
-        }
-
-        .expense-subtitle {
-            font-size: 0.875rem;
-        }
-
-        .btn-container {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .btn {
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 0.5rem;
-        }
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.querySelector('.expense-form');
-        const amountInput = form.querySelector('input[name="expense[amount]"]');
-
-        amountInput.addEventListener('input', function() {
-            let value = this.value;
-            value = value.replace(/[^0-9.]/g, '');
-            const parts = value.split('.');
-            if (parts.length > 1) {
-                parts[1] = parts[1].slice(0, 2);
-                value = parts.join('.');
-            }
-            this.value = value;
-        });
-
-        // Add subtle animation to form inputs
-        const formInputs = document.querySelectorAll('.form-input');
-        formInputs.forEach(input => {
-            input.addEventListener('focus', function() {
-                this.style.transition = 'transform 0.3s';
-                this.style.transform = 'scale(1.02)';
-            });
-            input.addEventListener('blur', function() {
-                this.style.transform = 'scale(1)';
-            });
-        });
-    });
-</script>

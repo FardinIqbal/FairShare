@@ -1,20 +1,17 @@
-<!-- app/views/groups/_form.html.erb -->
-<%= form_with(model: group, local: true, id: "group-form", style: "margin-top: 1.5rem;") do |form| %>
+<%= form_with(model: group, local: true, id: "group-form", class: "space-y-6") do |form| %>
   <% if group.errors.any? %>
-    <div id="error_explanation" style="background-color: #FEE2E2; border: 1px solid #F87171; color: #B91C1C; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-      <div style="display: flex; align-items: flex-start;">
-        <div style="flex-shrink: 0;">
-          <svg style="width: 1.25rem; height: 1.25rem;" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-        </div>
-        <div style="margin-left: 0.75rem;">
-          <h2 style="font-size: 0.875rem; font-weight: 600; color: #991B1B;">
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative transition-all duration-300 ease-in-out">
+      <div class="flex items-start">
+        <svg class="w-6 h-6 mr-2 fill-current text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293-1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <h3 class="text-sm font-semibold">
             <%= pluralize(group.errors.count, "error") %> prohibited this group from being saved:
-          </h2>
-          <ul style="margin-top: 0.5rem; list-style-type: disc; list-style-position: inside;">
+          </h3>
+          <ul class="list-disc ml-4 text-sm">
             <% group.errors.full_messages.each do |message| %>
-              <li style="font-size: 0.875rem;"><%= message %></li>
+              <li><%= message %></li>
             <% end %>
           </ul>
         </div>
@@ -22,58 +19,31 @@
     </div>
   <% end %>
 
-  <div class="form-field" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(10px); transition: all 0.3s ease-out;">
-    <%= form.label :name, style: "display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;" %>
-    <%= form.text_field :name, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s ease;" %>
+  <div class="form-field opacity-0 transform translate-y-4 transition-all duration-500">
+    <%= form.label :name, class: "block text-sm font-semibold text-gray-700 dark:text-gray-300" %>
+    <%= form.text_field :name, class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
   </div>
 
-  <div class="form-field" style="margin-bottom: 1.5rem; opacity: 0; transform: translateY(10px); transition: all 0.3s ease-out;">
-    <%= form.label :description, style: "display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;" %>
-    <%= form.text_area :description, rows: 4, style: "width: 100%; padding: 0.75rem; border: 2px solid #D1D5DB; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s ease;" %>
+  <div class="form-field opacity-0 transform translate-y-4 transition-all duration-500">
+    <%= form.label :description, class: "block text-sm font-semibold text-gray-700 dark:text-gray-300" %>
+    <%= form.text_area :description, rows: 4, class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
   </div>
 
-  <div style="text-align: right; opacity: 0; transform: translateY(10px); transition: all 0.3s ease-out;">
-    <%= form.submit "Create Group", style: "background-color: #4338ca; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 1rem;" %>
+  <div class="form-field opacity-0 transform translate-y-4 transition-all duration-500 flex justify-end">
+    <%= form.submit submit_label || "Save Changes", class: "inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
   </div>
 <% end %>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('group-form');
-        const formFields = form.querySelectorAll('.form-field, div[style*="text-align: right"]');
+        const formFields = form.querySelectorAll('.form-field');
 
         // Animate form fields
         formFields.forEach((field, index) => {
             setTimeout(() => {
-                field.style.opacity = '1';
-                field.style.transform = 'translateY(0)';
-            }, index * 200);
-        });
-
-        // Input focus effects
-        const inputs = form.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('focus', () => {
-                input.style.borderColor = '#4338ca';
-                input.style.boxShadow = '0 0 0 3px rgba(67, 56, 202, 0.1)';
-            });
-            input.addEventListener('blur', () => {
-                input.style.borderColor = '#D1D5DB';
-                input.style.boxShadow = 'none';
-            });
-        });
-
-        // Submit button hover effect
-        const submitButton = form.querySelector('input[type="submit"]');
-        submitButton.addEventListener('mouseenter', () => {
-            submitButton.style.backgroundColor = '#3730a3';
-            submitButton.style.transform = 'translateY(-2px)';
-            submitButton.style.boxShadow = '0 4px 6px rgba(67, 56, 202, 0.25)';
-        });
-        submitButton.addEventListener('mouseleave', () => {
-            submitButton.style.backgroundColor = '#4338ca';
-            submitButton.style.transform = 'translateY(0)';
-            submitButton.style.boxShadow = 'none';
+                field.classList.remove('opacity-0', 'translate-y-4');
+            }, index * 150);
         });
     });
 </script>

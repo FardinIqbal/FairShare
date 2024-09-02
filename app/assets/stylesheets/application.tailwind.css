@@ -11,28 +11,3 @@
 }
 
 */
-@layer components {
-    .expense-card {
-        @apply bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition duration-300 ease-in-out;
-    }
-
-    .expense-link {
-        @apply block p-4;
-    }
-
-    .expense-title {
-        @apply text-lg font-semibold text-indigo-600 truncate pr-2;
-    }
-
-    .expense-amount {
-        @apply text-lg font-bold text-gray-900 whitespace-nowrap;
-    }
-
-    .expense-info {
-        @apply flex items-center text-sm text-gray-500;
-    }
-
-    .expense-icon {
-        @apply h-4 w-4 mr-1 text-gray-400;
-    }
-}

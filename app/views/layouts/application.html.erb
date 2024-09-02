@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-50 dark:bg-slate-900">
+<html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,20 +12,26 @@
   <%= javascript_importmap_tags %>
 </head>
 
-<body class="h-full flex flex-col text-slate-900 dark:text-gray-50">
-<%= render 'layouts/header' %>
+<body class="h-full font-sans antialiased bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+<div class="flex flex-col min-h-screen">
+  <%= render 'shared/header' %>
+  <%= render 'shared/flash_messages' %>
 
-<div class="flex-grow overflow-y-auto">
-  <%= render 'layouts/flash' %>
-
-  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-16 md:mb-0">
-    <%= yield %>
+  <main class="flex-grow">
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <%= yield %>
+    </div>
   </main>
 
-  <%= render 'layouts/footer' %>
+  <footer class="mt-auto">
+    <%= render 'shared/footer' %>
+  </footer>
+
+  <!-- Spacer for mobile bottom navigation -->
+  <div class="h-16 lg:hidden"></div>
 </div>
 
-<%= render 'layouts/bottom_nav' %>
+<%= render 'shared/dark_mode_toggle' %>
 
 <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
 </body>
