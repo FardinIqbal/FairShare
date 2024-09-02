@@ -12,7 +12,7 @@
   <%= javascript_importmap_tags %>
 </head>
 
-<body class="h-full font-sans antialiased bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+<body class="h-full font-sans antialiased bg-gray-900 text-white transition-colors duration-300">
 <div class="flex flex-col min-h-screen">
   <%= render 'shared/header' %>
   <%= render 'shared/flash_messages' %>
@@ -30,8 +30,6 @@
   <!-- Spacer for mobile bottom navigation -->
   <div class="h-16 lg:hidden"></div>
 </div>
-
-<%= render 'shared/dark_mode_toggle' %>
 
 <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
 </body>
