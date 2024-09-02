@@ -1,71 +1,72 @@
-<!--app/views/dashboard/index.html.erb-->
+<!-- app/views/dashboard/index.html.erb -->
 <div class="bg-gradient-to-br from-gray-50 via-gray-100 to-white dark:from-gray-900 dark:via-gray-800 dark:to-black min-h-screen transition-colors duration-300">
   <div class="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+
     <!-- Page Title -->
-    <div class="text-center mb-16 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
+    <div class="text-center mb-16">
       <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
         Dashboard
       </h1>
     </div>
 
     <!-- Summary Card -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8 hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-105 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
       <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Summary</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="text-center">
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Balance</p>
-          <p class="text-2xl font-semibold transition-colors duration-300 ease-in-out" style="color: <%= @total_balance >= 0 ? '#10B981' : '#EF4444' %>;">
+          <p class="text-2xl font-semibold <%= @total_balance >= 0 ? 'text-green-400' : 'text-red-400' %>">
             <%= number_to_currency(@total_balance.abs) %>
           </p>
-          <p class="text-sm transition-colors duration-300 ease-in-out" style="color: <%= @total_balance >= 0 ? '#10B981' : '#EF4444' %>;">
+          <p class="text-sm <%= @total_balance >= 0 ? 'text-green-400' : 'text-red-400' %>">
             (<%= @total_balance >= 0 ? 'You are owed' : 'You owe' %>)
           </p>
         </div>
         <div class="text-center">
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Expenses</p>
-          <p class="text-2xl font-semibold text-indigo-400 transition-transform duration-300 ease-in-out transform hover:scale-110"><%= number_to_currency(@total_expenses) %></p>
+          <p class="text-2xl font-semibold text-indigo-400"><%= number_to_currency(@total_expenses) %></p>
           <p class="text-sm text-gray-600 dark:text-gray-400">all groups</p>
         </div>
         <div class="text-center">
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Active Groups</p>
-          <p class="text-2xl font-semibold text-indigo-400 transition-transform duration-300 ease-in-out transform hover:scale-110"><%= @groups.count %></p>
+          <p class="text-2xl font-semibold text-indigo-400"><%= @groups.count %></p>
         </div>
       </div>
     </div>
 
     <!-- You Owe Section -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8 hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-105 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
       <h3 class="text-xl font-semibold text-red-400 mb-4">You Owe</h3>
       <% @owed_amounts[:owed_to_others].each do |debt| %>
-        <div class="flex justify-between items-center p-4 bg-red-100 dark:bg-red-900 bg-opacity-20 rounded-lg mb-3 hover:bg-opacity-30 transition-all duration-300 ease-in-out transform hover:scale-105">
+        <div class="flex justify-between items-center p-4 bg-red-100 dark:bg-red-900 bg-opacity-20 rounded-lg mb-3">
           <span class="font-medium text-gray-800 dark:text-gray-200"><%= debt[:group].name %></span>
           <div class="flex items-center">
             <span class="font-semibold text-red-400 mr-4 text-lg"><%= number_to_currency(debt[:amount]) %></span>
-            <%= button_to "Pay", pay_debt_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "bg-red-600 text-white font-semibold py-1 px-4 rounded-md text-sm transition-all duration-300 ease-in-out transform hover:scale-110 hover:bg-red-700" %>
+            <%= button_to "Pay", pay_debt_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "bg-red-600 text-white font-semibold py-1 px-4 rounded-md text-sm hover:bg-red-700" %>
           </div>
         </div>
       <% end %>
     </div>
 
     <!-- You are Owed Section -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8 hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-105 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
       <h3 class="text-xl font-semibold text-green-400 mb-4">You are Owed</h3>
       <% @owed_amounts[:owed_by_others].each do |debt| %>
-        <div class="flex justify-between items-center p-4 bg-green-100 dark:bg-green-900 bg-opacity-20 rounded-lg mb-3 hover:bg-opacity-30 transition-all duration-300 ease-in-out transform hover:scale-105">
+        <div class="flex justify-between items-center p-4 bg-green-100 dark:bg-green-900 bg-opacity-20 rounded-lg mb-3">
           <span class="font-medium text-gray-800 dark:text-gray-200"><%= debt[:group].name %></span>
           <div class="flex items-center">
             <span class="font-semibold text-green-400 mr-4 text-lg"><%= number_to_currency(debt[:amount]) %></span>
-            <%= button_to "Remind", remind_payment_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "bg-green-600 text-white font-semibold py-1 px-4 rounded-md text-sm transition-all duration-300 ease-in-out transform hover:scale-110 hover:bg-green-700" %>
+            <%= button_to "Remind", remind_payment_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "bg-green-600 text-white font-semibold py-1 px-4 rounded-md text-sm hover:bg-green-700" %>
           </div>
         </div>
       <% end %>
     </div>
 
     <!-- Pending Payments Section -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8 hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-105 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
       <h3 class="text-xl font-semibold text-indigo-400 mb-4">Pending Payments</h3>
       <% @pending_payments.each do |payment| %>
-        <div class="flex justify-between items-center p-4 bg-indigo-100 dark:bg-indigo-900 bg-opacity-20 rounded-lg mb-3 hover:bg-opacity-30 transition-all duration-300 ease-in-out transform hover:scale-105">
+        <div class="flex justify-between items-center p-4 bg-indigo-100 dark:bg-indigo-900 bg-opacity-20 rounded-lg mb-3">
           <span class="font-medium text-gray-800 dark:text-gray-200"><%= payment.group.name %></span>
           <div class="flex items-center">
             <span class="font-semibold text-indigo-400 mr-4 text-lg"><%= number_to_currency(payment.amount) %></span>
@@ -76,38 +77,17 @@
     </div>
 
     <!-- Payments to Approve Section -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8 hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-105 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
       <h3 class="text-xl font-semibold text-indigo-400 mb-4">Payments to Approve</h3>
       <% @pending_approvals.each do |payment| %>
-        <div class="flex justify-between items-center p-4 bg-indigo-100 dark:bg-indigo-900 bg-opacity-20 rounded-lg mb-3 hover:bg-opacity-30 transition-all duration-300 ease-in-out transform hover:scale-105">
+        <div class="flex justify-between items-center p-4 bg-indigo-100 dark:bg-indigo-900 bg-opacity-20 rounded-lg mb-3">
           <span class="font-medium text-gray-800 dark:text-gray-200"><%= payment.group.name %></span>
           <div class="flex items-center">
             <span class="font-semibold text-indigo-400 mr-4 text-lg"><%= number_to_currency(payment.amount) %></span>
-            <%= link_to "Review", group_path(payment.group), class: "bg-indigo-600 text-white font-semibold py-1 px-4 rounded-md text-sm transition-all duration-300 ease-in-out transform hover:scale-110 hover:bg-indigo-700" %>
+            <%= link_to "Review", group_path(payment.group), class: "bg-indigo-600 text-white font-semibold py-1 px-4 rounded-md text-sm hover:bg-indigo-700" %>
           </div>
         </div>
       <% end %>
     </div>
   </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const animatedElements = document.querySelectorAll('[data-animate]');
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, {
-            threshold: 0.1
-        });
-
-        animatedElements.forEach(el => {
-            observer.observe(el);
-        });
-    });
-</script>

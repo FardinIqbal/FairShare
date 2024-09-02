@@ -1,8 +1,11 @@
 <div data-controller="dark-mode" class="fixed bottom-20 right-4 lg:bottom-4">
   <button data-action="click->dark-mode#toggleDarkMode" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200 shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900">
     <span class="sr-only">Toggle dark mode</span>
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-dark-mode-target="icon">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+    <svg xmlns="http://www.w3.org/2000/svg" data-dark-mode-target="icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <!-- Moon Icon for Dark Mode -->
+      <path data-dark-mode-target="moonIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+      <!-- Sun Icon for Light Mode (Hidden by Default) -->
+      <path data-dark-mode-target="sunIcon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v2m0 12v2m8-8h-2M4 12H2m15.364-6.364l-1.414 1.414M6.364 17.364l-1.414-1.414M18.364 17.364l-1.414-1.414M6.364 6.364l-1.414-1.414M12 8a4 4 0 100 8 4 4 0 000-8z" />
     </svg>
   </button>
 </div>

@@ -1,20 +1,22 @@
-<!-- app/views/static_pages/home.html.erb -->
 <div class="bg-gradient-to-br from-gray-50 via-gray-100 to-white dark:from-gray-900 dark:via-gray-800 dark:to-black min-h-screen transition-colors duration-300">
   <div class="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
     <div class="text-center mb-16 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out" data-animate>
       <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
-        Welcome to <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 animate-pulse">FairShare</span>
+        Welcome to <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-indigo-300 dark:to-purple-300 animate-pulse">FairShare</span>
       </h1>
       <p class="mt-3 max-w-lg mx-auto text-xl text-gray-600 dark:text-gray-300">
         Your go-to platform for easy expense sharing and group finance management.
       </p>
+      <p class="mt-2 max-w-lg mx-auto text-lg text-gray-500 dark:text-gray-400">
+        Simplify group expenses, track balances, and settle up with ease. Whether it's for roommates, travel buddies, or any group activity, FairShare has you covered.
+      </p>
       <div class="mt-8 max-w-lg mx-auto">
         <% if user_signed_in? %>
-          <%= link_to 'View My Groups', groups_path, class: "inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 dark:from-indigo-500 dark:to-purple-500 dark:hover:from-indigo-600 dark:hover:to-purple-600 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-in-out" %>
+          <%= link_to 'View My Groups', groups_path, class: "inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 dark:from-indigo-400 dark:to-purple-400 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-in-out" %>
         <% else %>
           <div class="inline-flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-            <%= link_to 'Sign Up', new_user_registration_path, class: "flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 dark:from-indigo-500 dark:to-purple-500 dark:hover:from-indigo-600 dark:hover:to-purple-600 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-in-out" %>
-            <%= link_to 'Log In', new_user_session_path, class: "flex items-center justify-center px-6 py-3 border border-indigo-600 dark:border-indigo-400 text-base font-medium rounded-md text-indigo-600 dark:text-indigo-400 bg-white dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-gray-700 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-in-out" %>
+            <%= link_to 'Sign Up', new_user_registration_path, class: "flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 dark:from-indigo-400 dark:to-purple-400 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-in-out" %>
+            <%= link_to 'Log In', new_user_session_path, class: "flex items-center justify-center px-6 py-3 border border-indigo-500 dark:border-indigo-400 text-base font-medium rounded-md text-indigo-600 dark:text-indigo-300 bg-white dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-gray-700 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-in-out" %>
           </div>
         <% end %>
       </div>
@@ -31,9 +33,9 @@
              { title: "Smart Balance Calculation", description: "Automatically calculate who owes what, eliminating the hassle of manual calculations.", icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" },
              { title: "Simplified Settlements", description: "Easily settle up with friends and keep track of who has paid their share.", icon: "M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" }
            ].each do |feature| %>
-          <div class="relative p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 ease-in-out">
+          <div class="relative p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-2 transition-all duration-300 ease-in-out">
             <dt>
-              <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white">
+              <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400 text-white">
                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<%= feature[:icon] %>" />
                 </svg>
@@ -52,19 +54,19 @@
       <div class="px-6 py-10">
         <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">
           Ready to get started?
-          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">Join FairShare today.</span>
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-indigo-300 dark:to-purple-300">Join FairShare today.</span>
         </h2>
         <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
           Sign up now and experience hassle-free expense sharing with your friends, roommates, or travel buddies.
         </p>
         <% unless user_signed_in? %>
-          <a href="<%= new_user_registration_path %>" class="inline-flex mt-8 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 dark:from-indigo-500 dark:to-purple-500 dark:hover:from-indigo-600 dark:hover:to-purple-600 text-white text-lg font-medium rounded-md hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-in-out">
+          <a href="<%= new_user_registration_path %>" class="inline-flex mt-8 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 dark:from-indigo-400 dark:to-purple-400 text-white text-lg font-medium rounded-md hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-in-out">
             Create your account
           </a>
         <% end %>
       </div>
-      <div class="relative mt-8 aspect-w-5 aspect-h-3">
-        <%= image_tag "valiant-made-UrzN-8K1PCE-unsplash.jpg", class: "w-full h-full object-cover object-left-top rounded-md transform translate-x-6 translate-y-6 hover:scale-105 transition-all duration-700 ease-in-out", alt: "People collaborating on finances" %>
+      <div class="relative mt-8 aspect-w-5 aspect-h-3 lg:aspect-w-6 lg:aspect-h-3">
+        <%= image_tag "valiant-made-UrzN-8K1PCE-unsplash.jpg", class: "w-full h-full object-cover object-center rounded-md hover:scale-105 transition-all duration-700 ease-in-out", alt: "People collaborating on finances" %>
       </div>
     </div>
   </div>
@@ -88,6 +90,12 @@
     @media (max-width: 640px) {
         h1 {
             font-size: 2rem !important;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .aspect-w-6 {
+            width: 100%;
         }
     }
 </style>

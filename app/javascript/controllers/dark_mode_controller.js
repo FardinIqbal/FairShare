@@ -1,8 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+  static targets = ["icon", "sunIcon", "moonIcon"]
+
   connect() {
     this.updateTheme()
+    this.updateIcon()
   }
 
   toggleDarkMode() {
@@ -12,6 +15,7 @@ export default class extends Controller {
       localStorage.theme = 'dark'
     }
     this.updateTheme()
+    this.updateIcon()
   }
 
   updateTheme() {
@@ -19,6 +23,16 @@ export default class extends Controller {
       document.documentElement.classList.add('dark')
     } else {
       document.documentElement.classList.remove('dark')
+    }
+  }
+
+  updateIcon() {
+    if (document.documentElement.classList.contains('dark')) {
+      this.moonIconTarget.classList.add('hidden')
+      this.sunIconTarget.classList.remove('hidden')
+    } else {
+      this.sunIconTarget.classList.add('hidden')
+      this.moonIconTarget.classList.remove('hidden')
     }
   }
 }
