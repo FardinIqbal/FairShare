@@ -1,44 +1,55 @@
-<!-- app/views/groups/show.html.erb -->
-<div class="max-w-full p-4 bg-gray-100 dark:bg-gray-900 min-h-screen font-sans">
+<div class="max-w-full p-4 bg-gray-900 min-h-screen font-sans text-white">
   <div class="max-w-4xl mx-auto">
     <header id="headerContainer" class="mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
       <div class="flex justify-between items-center">
-        <%= link_to groups_path, class: "flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-500 transition-colors duration-300 text-sm font-medium mb-2" do %>
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <%= link_to groups_path, class: "flex items-center text-indigo-300 hover:text-indigo-400 transition-colors duration-300 text-sm font-medium mb-2" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
           </svg>
           Back to Groups
         <% end %>
         <div class="flex space-x-2">
-          <%= link_to 'Edit Group', edit_group_path(@group), class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
-
-          <%= button_to 'Delete Group', @group, method: :delete, data: { confirm: 'Are you sure?' }, class: "inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
+          <%= link_to 'Edit Group', edit_group_path(@group), class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition ease-in-out duration-300 shadow-md" %>
+          <%= button_to 'Delete Group', @group, method: :delete, data: { confirm: 'Are you sure?' }, class: "inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition ease-in-out duration-300 shadow-md" %>
         </div>
       </div>
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mt-4"><%= @group.name %></h1>
+      <h1 class="text-3xl font-bold mt-4"><%= @group.name %></h1>
     </header>
 
     <!-- Group Overview Card -->
-    <div id="overviewCard" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Group Overview</h2>
+    <div id="overviewCard" class="bg-gray-800 rounded-lg shadow-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
+      <h2 class="text-xl font-semibold mb-4">Group Overview</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <%= render partial: 'overview_item', locals: { title: 'Total Expenses', value: number_to_currency(@total_expenses), color: '#4f46e5' } %>
-        <%= render partial: 'overview_item', locals: { title: 'Your Balance', value: number_to_currency(@current_user_summary[:net_balance].abs), color: @current_user_summary[:net_balance] >= 0 ? '#10B981' : '#EF4444', subtitle: @current_user_summary[:net_balance] >= 0 ? 'You are owed' : 'You owe' } %>
-        <%= render partial: 'overview_item', locals: { title: 'Total Members', value: @group.users.count, color: '#4f46e5' } %>
-        <%= render partial: 'overview_item', locals: { title: 'Top Category', value: @most_expensive_category || 'N/A', color: '#4f46e5' } %>
+        <div class="text-center">
+          <p class="text-sm text-gray-400 mb-1">Total Expenses</p>
+          <p class="text-2xl font-semibold text-indigo-400"><%= number_to_currency(@total_expenses) %></p>
+        </div>
+        <div class="text-center">
+          <p class="text-sm text-gray-400 mb-1">Your Balance</p>
+          <p class="text-2xl font-semibold" style="color: <%= @current_user_summary[:net_balance] >= 0 ? '#34D399' : '#F87171' %>;"><%= number_to_currency(@current_user_summary[:net_balance].abs) %></p>
+          <p class="text-sm" style="color: <%= @current_user_summary[:net_balance] >= 0 ? '#34D399' : '#F87171' %>;"><%= @current_user_summary[:net_balance] >= 0 ? 'You are owed' : 'You owe' %></p>
+        </div>
+        <div class="text-center">
+          <p class="text-sm text-gray-400 mb-1">Total Members</p>
+          <p class="text-2xl font-semibold text-indigo-400"><%= @group.users.count %></p>
+        </div>
+        <div class="text-center">
+          <p class="text-sm text-gray-400 mb-1">Top Category</p>
+          <p class="text-2xl font-semibold text-indigo-400"><%= @most_expensive_category || 'N/A' %></p>
+        </div>
       </div>
     </div>
 
     <!-- Tabs -->
     <div id="tabContainer" class="mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow flex">
-        <button class="tab-button flex-1 py-3 text-center font-semibold transition-colors duration-300 bg-indigo-600 text-white" data-tab="expenses">
+      <div class="bg-gray-800 rounded-lg shadow flex">
+        <button class="tab-button flex-1 py-3 text-center font-semibold transition-colors duration-300 bg-indigo-600 text-white hover:bg-indigo-700" data-tab="expenses">
           Expenses
         </button>
-        <button class="tab-button flex-1 py-3 text-center font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300" data-tab="members">
+        <button class="tab-button flex-1 py-3 text-center font-semibold text-gray-300 bg-gray-700 hover:bg-gray-600" data-tab="members">
           Members
         </button>
-        <button class="tab-button flex-1 py-3 text-center font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300" data-tab="settle">
+        <button class="tab-button flex-1 py-3 text-center font-semibold text-gray-300 bg-gray-700 hover:bg-gray-600" data-tab="settle">
           Settle Up
         </button>
       </div>
@@ -47,11 +58,11 @@
     <!-- Tab Content -->
     <div id="tabContent">
       <!-- Expenses Tab -->
-      <div id="expenses" class="tab-content bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
+      <div id="expenses" class="tab-content bg-gray-800 rounded-lg shadow-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Recent Expenses</h2>
-          <%= link_to new_group_expense_path(@group), class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" do %>
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <h2 class="text-xl font-semibold">Recent Expenses</h2>
+          <%= link_to new_group_expense_path(@group), class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition ease-in-out duration-300 shadow-md" do %>
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
             Add Expense
@@ -61,16 +72,16 @@
           <%= render partial: 'expense_item', collection: @expenses.take(5), as: :expense %>
         </div>
         <div class="text-center mt-4">
-          <%= link_to 'View All Expenses', group_expenses_path(@group), class: "text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-500 font-semibold transition-colors duration-300" %>
+          <%= link_to 'View All Expenses', group_expenses_path(@group), class: "text-indigo-300 hover:text-indigo-400 font-semibold transition-colors duration-300" %>
         </div>
       </div>
 
       <!-- Members Tab -->
-      <div id="members" class="tab-content hidden bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
+      <div id="members" class="tab-content hidden bg-gray-800 rounded-lg shadow-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Group Members</h2>
-          <%= link_to manage_group_group_memberships_path(@group), class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" do %>
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <h2 class="text-xl font-semibold">Group Members</h2>
+          <%= link_to manage_group_group_memberships_path(@group), class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition ease-in-out duration-300 shadow-md" do %>
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
             </svg>
             Manage Members
@@ -82,14 +93,14 @@
       </div>
 
       <!-- Settle Up Tab -->
-      <div id="settle" class="tab-content hidden bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Settle Up</h2>
+      <div id="settle" class="tab-content hidden bg-gray-800 rounded-lg shadow-lg p-6 mb-6 opacity-0 transform translate-y-4 transition-all duration-500">
+        <h2 class="text-xl font-semibold mb-4">Settle Up</h2>
         <% if @optimized_settlements.any? %>
           <div class="settlement-list space-y-4">
             <%= render partial: 'settlement_item', collection: @optimized_settlements, as: :settlement %>
           </div>
         <% else %>
-          <p class="text-center text-gray-600 dark:text-gray-400">All settled up! No payments needed.</p>
+          <p class="text-center text-gray-400">All settled up! No payments needed.</p>
         <% end %>
       </div>
     </div>
@@ -111,11 +122,11 @@
 
         function showTab(tabName) {
             tabButtons.forEach(button => {
-                button.classList.remove('bg-gray-100', 'dark:bg-gray-900', 'text-gray-600', 'dark:text-gray-300');
+                button.classList.remove('bg-indigo-600', 'text-white');
                 if (button.dataset.tab === tabName) {
                     button.classList.add('bg-indigo-600', 'text-white');
                 } else {
-                    button.classList.add('bg-gray-100', 'dark:bg-gray-900', 'text-gray-600', 'dark:text-gray-300');
+                    button.classList.add('bg-gray-700', 'text-gray-300');
                 }
             });
 

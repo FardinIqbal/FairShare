@@ -1,5 +1,6 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
-  darkMode: 'class', // Enable dark mode support
   content: [
     './public/*.html',
     './app/helpers/**/*.rb',
@@ -9,7 +10,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter var', ...require('tailwindcss/defaultTheme').fontFamily.sans],
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
     },
   },
@@ -17,5 +18,5 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
-  ],
+  ]
 }

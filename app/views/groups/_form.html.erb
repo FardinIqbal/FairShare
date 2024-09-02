@@ -1,15 +1,15 @@
 <%= form_with(model: group, local: true, id: "group-form", class: "space-y-6") do |form| %>
   <% if group.errors.any? %>
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative transition-all duration-300 ease-in-out">
+    <div class="bg-red-700 border border-red-600 text-red-100 px-4 py-3 rounded-lg relative transition-all duration-300 ease-in-out">
       <div class="flex items-start">
-        <svg class="w-6 h-6 mr-2 fill-current text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+        <svg class="w-6 h-6 mr-2 fill-current text-red-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293-1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
         </svg>
         <div>
-          <h3 class="text-sm font-semibold">
+          <h3 class="text-sm font-semibold text-red-100">
             <%= pluralize(group.errors.count, "error") %> prohibited this group from being saved:
           </h3>
-          <ul class="list-disc ml-4 text-sm">
+          <ul class="list-disc ml-4 text-sm text-red-200">
             <% group.errors.full_messages.each do |message| %>
               <li><%= message %></li>
             <% end %>
@@ -20,17 +20,17 @@
   <% end %>
 
   <div class="form-field opacity-0 transform translate-y-4 transition-all duration-500">
-    <%= form.label :name, class: "block text-sm font-semibold text-gray-700 dark:text-gray-300" %>
-    <%= form.text_field :name, class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+    <%= form.label :name, class: "block text-sm font-semibold text-gray-300" %>
+    <%= form.text_field :name, class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
   </div>
 
   <div class="form-field opacity-0 transform translate-y-4 transition-all duration-500">
-    <%= form.label :description, class: "block text-sm font-semibold text-gray-700 dark:text-gray-300" %>
-    <%= form.text_area :description, rows: 4, class: "mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+    <%= form.label :description, class: "block text-sm font-semibold text-gray-300" %>
+    <%= form.text_area :description, rows: 4, class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
   </div>
 
   <div class="form-field opacity-0 transform translate-y-4 transition-all duration-500 flex justify-end">
-    <%= form.submit submit_label || "Save Changes", class: "inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
+    <%= form.submit submit_label || "Save Changes", class: "inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
   </div>
 <% end %>
 

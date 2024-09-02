@@ -1,18 +1,18 @@
-<div class="border-b border-gray-200 dark:border-gray-700 py-3 flex flex-col space-y-2">
-  <p class="text-gray-900 dark:text-gray-100 text-sm">
+<div class="border-b border-gray-700 py-3 flex flex-col space-y-2">
+  <p class="text-gray-100 text-sm">
     <%= settlement[:from] == current_user ? 'You' : settlement[:from].full_name %>
     pays
     <%= settlement[:to] == current_user ? 'you' : settlement[:to].full_name %>
   </p>
   <div class="flex justify-between items-center">
-    <p class="font-semibold text-indigo-600 dark:text-indigo-400 text-sm"><%= number_to_currency(settlement[:amount]) %></p>
+    <p class="font-semibold text-indigo-400 text-sm"><%= number_to_currency(settlement[:amount]) %></p>
 
     <% if settlement[:from] == current_user %>
-      <%= button_to "Mark as Paid", mark_as_paid_group_payment_path(@group, recipient_id: settlement[:to].id, amount: settlement[:amount]), method: :post, class: "inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg text-xs" %>
+      <%= button_to "Mark as Paid", mark_as_paid_group_payment_path(@group, recipient_id: settlement[:to].id, amount: settlement[:amount]), method: :post, class: "inline-flex items-center justify-center px-4 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg text-xs" %>
     <% elsif settlement[:to] == current_user %>
-      <%= button_to "Remind", remind_group_payment_path(@group, user_id: settlement[:from].id, amount: settlement[:amount]), method: :post, class: "inline-flex items-center justify-center px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-yellow-500 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg text-xs" %>
+      <%= button_to "Remind", remind_group_payment_path(@group, user_id: settlement[:from].id, amount: settlement[:amount]), method: :post, class: "inline-flex items-center justify-center px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg text-xs" %>
     <% else %>
-      <button disabled class="inline-flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-500 font-semibold rounded-md cursor-not-allowed text-xs">Action</button>
+      <button disabled class="inline-flex items-center justify-center px-4 py-2 bg-gray-700 text-gray-400 font-semibold rounded-md cursor-not-allowed text-xs">Action</button>
     <% end %>
   </div>
 </div>
