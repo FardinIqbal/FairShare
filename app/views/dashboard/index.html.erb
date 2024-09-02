@@ -15,34 +15,34 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="text-center">
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Balance</p>
-          <p class="text-2xl font-semibold <%= @total_balance >= 0 ? 'text-green-400' : 'text-red-400' %>">
+          <p class="text-2xl font-semibold <%= @total_balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>">
             <%= number_to_currency(@total_balance.abs) %>
           </p>
-          <p class="text-sm <%= @total_balance >= 0 ? 'text-green-400' : 'text-red-400' %>">
+          <p class="text-sm <%= @total_balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>">
             (<%= @total_balance >= 0 ? 'You are owed' : 'You owe' %>)
           </p>
         </div>
         <div class="text-center">
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Expenses</p>
-          <p class="text-2xl font-semibold text-indigo-400"><%= number_to_currency(@total_expenses) %></p>
+          <p class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400"><%= number_to_currency(@total_expenses) %></p>
           <p class="text-sm text-gray-600 dark:text-gray-400">all groups</p>
         </div>
         <div class="text-center">
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Active Groups</p>
-          <p class="text-2xl font-semibold text-indigo-400"><%= @groups.count %></p>
+          <p class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400"><%= @groups.count %></p>
         </div>
       </div>
     </div>
 
     <!-- You Owe Section -->
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-      <h3 class="text-xl font-semibold text-red-400 mb-4">You Owe</h3>
+      <h3 class="text-xl font-semibold text-red-600 dark:text-red-400 mb-4">You Owe</h3>
       <% @owed_amounts[:owed_to_others].each do |debt| %>
-        <div class="flex justify-between items-center p-4 bg-red-100 dark:bg-red-900 bg-opacity-20 rounded-lg mb-3">
+        <div class="flex justify-between items-center p-4 bg-red-50 dark:bg-red-900 bg-opacity-20 rounded-lg mb-3">
           <span class="font-medium text-gray-800 dark:text-gray-200"><%= debt[:group].name %></span>
           <div class="flex items-center">
-            <span class="font-semibold text-red-400 mr-4 text-lg"><%= number_to_currency(debt[:amount]) %></span>
-            <%= button_to "Pay", pay_debt_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "bg-red-600 text-white font-semibold py-1 px-4 rounded-md text-sm hover:bg-red-700" %>
+            <span class="font-semibold text-red-600 dark:text-red-400 mr-4 text-lg"><%= number_to_currency(debt[:amount]) %></span>
+            <%= button_to "Pay", pay_debt_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "bg-red-600 text-white font-semibold py-1 px-4 rounded-md text-sm hover:bg-red-700 dark:hover:bg-red-500" %>
           </div>
         </div>
       <% end %>
@@ -50,13 +50,13 @@
 
     <!-- You are Owed Section -->
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-      <h3 class="text-xl font-semibold text-green-400 mb-4">You are Owed</h3>
+      <h3 class="text-xl font-semibold text-green-600 dark:text-green-400 mb-4">You are Owed</h3>
       <% @owed_amounts[:owed_by_others].each do |debt| %>
-        <div class="flex justify-between items-center p-4 bg-green-100 dark:bg-green-900 bg-opacity-20 rounded-lg mb-3">
+        <div class="flex justify-between items-center p-4 bg-green-50 dark:bg-green-900 bg-opacity-20 rounded-lg mb-3">
           <span class="font-medium text-gray-800 dark:text-gray-200"><%= debt[:group].name %></span>
           <div class="flex items-center">
-            <span class="font-semibold text-green-400 mr-4 text-lg"><%= number_to_currency(debt[:amount]) %></span>
-            <%= button_to "Remind", remind_payment_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "bg-green-600 text-white font-semibold py-1 px-4 rounded-md text-sm hover:bg-green-700" %>
+            <span class="font-semibold text-green-600 dark:text-green-400 mr-4 text-lg"><%= number_to_currency(debt[:amount]) %></span>
+            <%= button_to "Remind", remind_payment_path(group_id: debt[:group].id, amount: debt[:amount]), method: :post, class: "bg-green-600 text-white font-semibold py-1 px-4 rounded-md text-sm hover:bg-green-700 dark:hover:bg-green-500" %>
           </div>
         </div>
       <% end %>
@@ -64,12 +64,12 @@
 
     <!-- Pending Payments Section -->
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-      <h3 class="text-xl font-semibold text-indigo-400 mb-4">Pending Payments</h3>
+      <h3 class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">Pending Payments</h3>
       <% @pending_payments.each do |payment| %>
-        <div class="flex justify-between items-center p-4 bg-indigo-100 dark:bg-indigo-900 bg-opacity-20 rounded-lg mb-3">
+        <div class="flex justify-between items-center p-4 bg-indigo-50 dark:bg-indigo-900 bg-opacity-20 rounded-lg mb-3">
           <span class="font-medium text-gray-800 dark:text-gray-200"><%= payment.group.name %></span>
           <div class="flex items-center">
-            <span class="font-semibold text-indigo-400 mr-4 text-lg"><%= number_to_currency(payment.amount) %></span>
+            <span class="font-semibold text-indigo-600 dark:text-indigo-400 mr-4 text-lg"><%= number_to_currency(payment.amount) %></span>
             <span class="text-sm text-gray-600 dark:text-gray-400">Pending Approval</span>
           </div>
         </div>
@@ -78,13 +78,13 @@
 
     <!-- Payments to Approve Section -->
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-      <h3 class="text-xl font-semibold text-indigo-400 mb-4">Payments to Approve</h3>
+      <h3 class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">Payments to Approve</h3>
       <% @pending_approvals.each do |payment| %>
-        <div class="flex justify-between items-center p-4 bg-indigo-100 dark:bg-indigo-900 bg-opacity-20 rounded-lg mb-3">
+        <div class="flex justify-between items-center p-4 bg-indigo-50 dark:bg-indigo-900 bg-opacity-20 rounded-lg mb-3">
           <span class="font-medium text-gray-800 dark:text-gray-200"><%= payment.group.name %></span>
           <div class="flex items-center">
-            <span class="font-semibold text-indigo-400 mr-4 text-lg"><%= number_to_currency(payment.amount) %></span>
-            <%= link_to "Review", group_path(payment.group), class: "bg-indigo-600 text-white font-semibold py-1 px-4 rounded-md text-sm hover:bg-indigo-700" %>
+            <span class="font-semibold text-indigo-600 dark:text-indigo-400 mr-4 text-lg"><%= number_to_currency(payment.amount) %></span>
+            <%= link_to "Review", group_path(payment.group), class: "bg-indigo-600 text-white font-semibold py-1 px-4 rounded-md text-sm hover:bg-indigo-700 dark:hover:bg-indigo-500" %>
           </div>
         </div>
       <% end %>
