@@ -6,13 +6,18 @@
   <title><%= content_for?(:title) ? yield(:title) : "FairShare" %></title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-
+  <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
+  <style>
+      /* Enforce dark mode background */
+      body {
+          background: linear-gradient(to bottom right, #1f2937, #111827, #000000);
+      }
+  </style>
 </head>
 
-<body class="h-full font-sans antialiased bg-gray-900 text-white transition-colors duration-300">
+<body class="h-full font-sans antialiased text-white transition-colors duration-300">
 <div class="flex flex-col min-h-screen">
   <%= render 'shared/header' %>
   <%= render 'shared/flash_messages' %>
