@@ -22,7 +22,7 @@
 
           <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
             <%= f.label :email, class: "block text-sm font-medium text-gray-300" %>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email address", class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email address", class: "mt-1 block w-full px-4 sm:px-3 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
@@ -31,21 +31,21 @@
 
           <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
             <%= f.label :password, class: "block text-sm font-medium text-gray-300" %>
-            <%= f.password_field :password, autocomplete: "new-password", placeholder: "New password (leave blank if no change)", class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+            <%= f.password_field :password, autocomplete: "new-password", placeholder: "New password (leave blank if no change)", class: "mt-1 block w-full px-4 sm:px-3 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
             <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-300" %>
-            <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm new password", class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm new password", class: "mt-1 block w-full px-4 sm:px-3 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <div class="form-group opacity-0 transform translate-y-4 transition-all duration-300">
             <%= f.label :current_password, class: "block text-sm font-medium text-gray-300" %>
-            <%= f.password_field :current_password, autocomplete: "current-password", placeholder: "Current password (required)", class: "mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
+            <%= f.password_field :current_password, autocomplete: "current-password", placeholder: "Current password (required)", class: "mt-1 block w-full px-4 sm:px-3 py-2 border border-gray-600 rounded-md text-gray-300 bg-gray-800 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 ease-in-out" %>
           </div>
 
           <div class="form-actions">
-            <%= f.submit "Update Profile", class: "w-full inline-flex justify-center py-3 px-4 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
+            <%= f.submit "Update Profile", class: "w-full inline-flex justify-center py-3 sm:px-4 px-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg whitespace-nowrap" %>
           </div>
         <% end %>
       </div>
@@ -54,14 +54,21 @@
     <div class="mt-12 border-t border-gray-700 pt-6">
       <h3 class="text-lg font-semibold text-white mb-4">Delete Account</h3>
       <p class="text-sm text-gray-400 mb-6">Once you delete your account, all of your data will be permanently removed. This action cannot be undone.</p>
-      <%= button_to "Delete Account", registration_path(resource_name), data: { confirm: "Are you absolutely sure you want to delete your account? This action cannot be undone." }, method: :delete, class: "inline-flex items-center px-6 py-3 bg-red-600 text-white text-base font-medium rounded-md hover:bg-red-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
+      <%= button_to "Delete Account", registration_path(resource_name), data: { confirm: "Are you absolutely sure you want to delete your account? This action cannot be undone." }, method: :delete, class: "inline-flex items-center px-6 sm:px-4 py-3 bg-red-600 text-white text-base font-medium rounded-md hover:bg-red-700 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg whitespace-nowrap" %>
     </div>
 
     <div class="mt-8 text-center">
-      <%= link_to "← Back to Profile", user_path(current_user), class: "inline-flex items-center text-indigo-400 hover:text-indigo-500 font-semibold text-base transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:underline" %>
+      <%= link_to "← Back to Profile", user_path(current_user), class: "inline-flex items-center text-indigo-400 hover:text-indigo-500 font-semibold text-base transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:underline whitespace-nowrap" %>
     </div>
   </div>
 </div>
+
+<!-- Sign In/Sign Up Buttons -->
+<div class="flex items-center space-x-4">
+  <%= link_to "Sign In", new_user_session_path, class: "inline-block px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
+  <%= link_to "Sign Up", new_user_registration_path, class: "inline-block px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" %>
+</div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -80,3 +87,18 @@
         });
     });
 </script>
+
+<style>
+    @media (max-width: 640px) {
+        .flex.items-center.space-x-4 {
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .flex.items-center.space-x-4 a {
+            padding-left: 2rem;
+            padding-right: 2rem;
+            font-size: 0.875rem; /* Make text smaller on small screens */
+        }
+    }
+</style>
