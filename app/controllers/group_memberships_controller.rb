@@ -9,19 +9,31 @@ class GroupMembershipsController < ApplicationController
 
   def create
     @user = User.find(params[:user_id])
+
+    if @group.users.include?(@user)
+      respond_to do |format|
+        format.html { redirect_to manage_group_group_memberships_path(@group), alert: "#{@user.full_name} is already a member of this group." }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("user_#{@user.id}", partial: 'member', locals: { member: @user, group: @group }) }
+      end
+      return
+    end
+
     @group_membership = @group.group_memberships.build(user: @user)
 
     if @group_membership.save
-      @group.balances.create(user: @user, amount: 0)
+      @group.balances.find_or_create_by(user: @user) do |balance|
+        balance.amount = 0
+      end
+
       create_new_member_notification(@user)
       respond_to do |format|
-        format.html { redirect_to group_path(@group), notice: "#{@user.full_name} was successfully added to the group." }
-        format.json { render json: { success: true, html: render_to_string(partial: 'member', locals: { member: @user, group: @group }) } }
+        format.html { redirect_to manage_group_group_memberships_path(@group), notice: "#{@user.full_name} was successfully added to the group." }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("user_#{@user.id}", partial: 'member', locals: { member: @user, group: @group }) }
       end
     else
       respond_to do |format|
-        format.html { redirect_to group_path(@group), alert: "Failed to add #{@user.full_name} to the group." }
-        format.json { render json: { success: false, message: "Failed to add user to the group." }, status: :unprocessable_entity }
+        format.html { redirect_to manage_group_group_memberships_path(@group), alert: "Failed to add #{@user.full_name} to the group." }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("user_#{@user.id}", partial: 'non_member', locals: { user: @user, group: @group }) }
       end
     end
   end
@@ -32,13 +44,13 @@ class GroupMembershipsController < ApplicationController
 
     if @group_membership.destroy
       respond_to do |format|
-        format.html { redirect_to group_path(@group), notice: "#{@user.full_name} was successfully removed from the group." }
-        format.json { render json: { success: true, html: render_to_string(partial: 'non_member', locals: { user: @user, group: @group }) } }
+        format.html { redirect_to manage_group_group_memberships_path(@group), notice: "#{@user.full_name} was successfully removed from the group." }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("user_#{@user.id}", partial: 'non_member', locals: { user: @user, group: @group }) }
       end
     else
       respond_to do |format|
-        format.html { redirect_to group_path(@group), alert: "Failed to remove #{@user.full_name} from the group." }
-        format.json { render json: { success: false, message: "Failed to remove user from the group." }, status: :unprocessable_entity }
+        format.html { redirect_to manage_group_group_memberships_path(@group), alert: "Failed to remove #{@user.full_name} from the group." }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("user_#{@user.id}", partial: 'member', locals: { member: @user, group: @group }) }
       end
     end
   end

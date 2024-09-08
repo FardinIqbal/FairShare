@@ -1,9 +1,12 @@
-<div class="gmm-member-item" data-user-id="<%= user.id %>" data-name="<%= user.full_name.downcase %>" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #e2e8f0; transition: all 0.3s ease;">
-  <div style="flex: 1;">
-    <p style="font-weight: 500; color: #1a202c; font-size: 1rem;"><%= user.full_name %></p>
-    <p style="font-size: 0.875rem; color: #4b5563;"><%= user.email %></p>
+<!-- app/views/group_memberships/_non_member.html.erb -->
+
+<%= turbo_frame_tag dom_id(user) do %>
+  <div class="member-item flex items-center justify-between p-4 bg-gray-800 rounded-lg transition duration-300 ease-in-out hover:bg-gray-700" data-name="<%= user.full_name.downcase %>">
+    <span class="text-white"><%= user.full_name %></span>
+    <% if group.users.include?(user) %>
+      <span class="text-sm text-indigo-400">Already a member</span>
+    <% else %>
+      <%= button_to 'Add', group_group_memberships_path(group, user_id: user.id), method: :post, class: "bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition duration-300 ease-in-out" %>
+    <% end %>
   </div>
-  <div>
-    <%= button_to "Add", group_group_memberships_path(group, user_id: user.id), method: :post, remote: true, class: "gmm-action-btn gmm-add-btn", style: "background-color: #10B981; color: white; font-weight: 500; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.3s ease;" %>
-  </div>
-</div>
+<% end %>
