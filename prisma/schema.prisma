@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User synced from Supabase Auth
+model User {
+  id         String @id // Supabase user ID
+  email      String  @unique
+  name       String?
+  avatarUrl  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Groups this user belongs to
+  memberships GroupMember[]
+
+  // Expenses this user paid for
+  expensesPaid Expense[]
+
+  // This user's share of expenses
+  expenseShares ExpenseShare[]
+
+  // Settlements this user made (paid someone)
+  settlementsMade Settlement[] @relation("SettlementsFrom")
+
+  // Settlements this user received (got paid)
+  settlementsReceived Settlement[] @relation("SettlementsTo")
+}
+
+// A group of people sharing expenses (roommates, trip, etc.)
+model Group {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  inviteCode  String   @unique @default(cuid()) // Simple invite link
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members     GroupMember[]
+  expenses    Expense[]
+  settlements Settlement[]
+}
+
+// Group membership
+model GroupMember {
+  id       String   @id @default(cuid())
+  userId   String
+  groupId  String
+  role     Role     @default(MEMBER)
+  joinedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, groupId])
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum SplitType {
+  EQUAL
+  CUSTOM
+}
+
+// An expense someone paid
+model Expense {
+  id          String    @id @default(cuid())
+  description String
+  amount      Decimal   @db.Decimal(10, 2) // Total amount paid
+  paidById    String
+  groupId     String
+  category    String?
+  splitType   SplitType @default(EQUAL)
+  date        DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  paidBy User  @relation(fields: [paidById], references: [id], onDelete: Cascade)
+  group  Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  // How the expense is split
+  shares ExpenseShare[]
+}
+
+// Each person's share of an expense
+model ExpenseShare {
+  id        String  @id @default(cuid())
+  expenseId String
+  userId    String
+  amount    Decimal @db.Decimal(10, 2) // What this person owes
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, userId])
+}
+
+// A settlement (payment) between two users
+model Settlement {
+  id         String   @id @default(cuid())
+  groupId    String
+  fromUserId String   // Who paid
+  toUserId   String   // Who received
+  amount     Decimal  @db.Decimal(10, 2)
+  settledAt  DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  group    Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  fromUser User  @relation("SettlementsFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser   User  @relation("SettlementsTo", fields: [toUserId], references: [id], onDelete: Cascade)
+}

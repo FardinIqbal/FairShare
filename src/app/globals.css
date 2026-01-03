@@ -1,26 +1,196 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light Mode - Sepia/Aged Paper Aesthetic */
+  --background: #F8F5ED;
+  --background-elevated: #FFFDF7;
+  --background-warm: #F3EEE3;
+  --foreground: #2C2416;
+  --foreground-secondary: #5C5244;
+  --foreground-tertiary: #9A8F7D;
+
+  /* Primary accent - Rich Forest Green */
+  --accent: #1B4332;
+  --accent-hover: #2D6A4F;
+  --accent-light: rgba(27, 67, 50, 0.08);
+
+  /* Gold accent for highlights - warmer for sepia */
+  --gold: #B5872B;
+  --gold-light: rgba(181, 135, 43, 0.12);
+
+  /* Semantic colors - muted, sophisticated */
+  --success: #2D6A4F;
+  --success-light: rgba(45, 106, 79, 0.1);
+  --warning: #B5872B;
+  --warning-light: rgba(181, 135, 43, 0.1);
+  --error: #8B3535;
+  --error-light: rgba(139, 53, 53, 0.08);
+
+  /* Borders - sepia tinted */
+  --border: rgba(44, 36, 22, 0.1);
+  --border-strong: rgba(44, 36, 22, 0.18);
+
+  /* Shadows - warm sepia */
+  --shadow-sm: 0 1px 2px rgba(44, 36, 22, 0.06);
+  --shadow-md: 0 4px 12px -2px rgba(44, 36, 22, 0.1);
+  --shadow-lg: 0 12px 32px -8px rgba(44, 36, 22, 0.14);
+  --shadow-xl: 0 24px 48px -12px rgba(44, 36, 22, 0.18);
+
+  /* Radius - refined, less rounded */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+}
+
+/* Dark mode via class (for next-themes) */
+.dark {
+  /* Dark Mode - Deep Navy Club Aesthetic */
+  --background: #0D1117;
+  --background-elevated: #161B22;
+  --background-warm: #121820;
+  --foreground: #F5F3ED;
+  --foreground-secondary: #B8B4A8;
+  --foreground-tertiary: #7D7A72;
+
+  /* Accent - Muted teal/green for dark mode */
+  --accent: #40916C;
+  --accent-hover: #52B788;
+  --accent-light: rgba(64, 145, 108, 0.15);
+
+  /* Gold - brighter brass for dark mode */
+  --gold: #D4A43A;
+  --gold-light: rgba(212, 164, 58, 0.15);
+
+  /* Semantic colors */
+  --success: #40916C;
+  --success-light: rgba(64, 145, 108, 0.12);
+  --warning: #D4A43A;
+  --warning-light: rgba(212, 164, 58, 0.12);
+  --error: #C95555;
+  --error-light: rgba(201, 85, 85, 0.1);
+
+  /* Borders - subtle light on dark */
+  --border: rgba(245, 243, 237, 0.08);
+  --border-strong: rgba(245, 243, 237, 0.15);
+
+  /* Shadows - deep */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+}
+
+/* Also support system preference as fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: #0D1117;
+    --background-elevated: #161B22;
+    --background-warm: #121820;
+    --foreground: #F5F3ED;
+    --foreground-secondary: #B8B4A8;
+    --foreground-tertiary: #7D7A72;
+    --accent: #40916C;
+    --accent-hover: #52B788;
+    --accent-light: rgba(64, 145, 108, 0.15);
+    --gold: #D4A43A;
+    --gold-light: rgba(212, 164, 58, 0.15);
+    --success: #40916C;
+    --success-light: rgba(64, 145, 108, 0.12);
+    --warning: #D4A43A;
+    --warning-light: rgba(212, 164, 58, 0.12);
+    --error: #C95555;
+    --error-light: rgba(201, 85, 85, 0.1);
+    --border: rgba(245, 243, 237, 0.08);
+    --border-strong: rgba(245, 243, 237, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: "Inter", var(--font-geist-sans), system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+/* Elegant heading styles */
+h1, h2, h3 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* Smooth transitions for theme changes */
+*, *::before, *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Focus styles - subtle gold */
+:focus-visible {
+  outline: 1.5px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Selection - warm gold */
+::selection {
+  background: var(--gold-light);
+  color: var(--foreground);
+}
+
+/* Scrollbar styling - refined */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground-tertiary);
+}
+
+/* Elegant underline animation for links */
+.link-underline {
+  position: relative;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+
+.link-underline:hover::after {
+  width: 100%;
 }
