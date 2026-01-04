@@ -9,6 +9,39 @@ interface CustomSplit {
   amount: number;
 }
 
+interface PercentageSplit {
+  userId: string;
+  percentage: number;
+}
+
+interface ShareSplit {
+  userId: string;
+  shares: number;
+}
+
+// Helper to calculate next recurring date
+function getNextRecurringDate(frequency: string, fromDate: Date = new Date()): Date {
+  const next = new Date(fromDate);
+  switch (frequency) {
+    case "DAILY":
+      next.setDate(next.getDate() + 1);
+      break;
+    case "WEEKLY":
+      next.setDate(next.getDate() + 7);
+      break;
+    case "BIWEEKLY":
+      next.setDate(next.getDate() + 14);
+      break;
+    case "MONTHLY":
+      next.setMonth(next.getMonth() + 1);
+      break;
+    case "YEARLY":
+      next.setFullYear(next.getFullYear() + 1);
+      break;
+  }
+  return next;
+}
+
 export async function addExpense(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -23,7 +56,12 @@ export async function addExpense(formData: FormData) {
   const category = formData.get("category") as string | null;
   const splitType = (formData.get("splitType") as string) || "EQUAL";
   const customSplitsJson = formData.get("customSplits") as string | null;
+  const percentageSplitsJson = formData.get("percentageSplits") as string | null;
+  const shareSplitsJson = formData.get("shareSplits") as string | null;
   const includedMembersJson = formData.get("includedMembers") as string | null;
+  const currency = (formData.get("currency") as string) || "USD";
+  const isRecurring = formData.get("isRecurring") === "true";
+  const recurringFrequency = formData.get("recurringFrequency") as string | null;
 
   if (!groupId || !description || !amountStr) {
     throw new Error("Missing required fields");
@@ -67,6 +105,37 @@ export async function addExpense(formData: FormData) {
     }
 
     shares = customSplits.filter(s => s.amount > 0);
+  } else if (splitType === "PERCENTAGE" && percentageSplitsJson) {
+    // Percentage split
+    const percentageSplits: PercentageSplit[] = JSON.parse(percentageSplitsJson);
+
+    // Validate percentages add up to 100
+    const totalPercentage = percentageSplits.reduce((sum, s) => sum + s.percentage, 0);
+    if (Math.abs(totalPercentage - 100) > 0.01) {
+      throw new Error(`Percentages (${totalPercentage.toFixed(0)}%) must equal 100%`);
+    }
+
+    shares = percentageSplits
+      .filter(s => s.percentage > 0)
+      .map(s => ({
+        userId: s.userId,
+        amount: (amount * s.percentage) / 100,
+      }));
+  } else if (splitType === "SHARES" && shareSplitsJson) {
+    // Shares split
+    const shareSplits: ShareSplit[] = JSON.parse(shareSplitsJson);
+    const totalShares = shareSplits.reduce((sum, s) => sum + s.shares, 0);
+
+    if (totalShares === 0) {
+      throw new Error("Total shares must be greater than 0");
+    }
+
+    shares = shareSplits
+      .filter(s => s.shares > 0)
+      .map(s => ({
+        userId: s.userId,
+        amount: (amount * s.shares) / totalShares,
+      }));
   } else {
     // Equal split among included members
     let includedMembers = allMembers;
@@ -94,7 +163,15 @@ export async function addExpense(formData: FormData) {
       paidById: user.id,
       groupId,
       category: category || null,
-      splitType: splitType as "EQUAL" | "CUSTOM",
+      splitType: splitType as "EQUAL" | "CUSTOM" | "PERCENTAGE" | "SHARES",
+      currency,
+      isRecurring,
+      recurringFrequency: isRecurring && recurringFrequency
+        ? recurringFrequency as "DAILY" | "WEEKLY" | "BIWEEKLY" | "MONTHLY" | "YEARLY"
+        : null,
+      nextRecurringDate: isRecurring && recurringFrequency
+        ? getNextRecurringDate(recurringFrequency)
+        : null,
       shares: {
         create: shares,
       },
@@ -102,6 +179,7 @@ export async function addExpense(formData: FormData) {
   });
 
   revalidatePath(`/groups/${groupId}`);
+  revalidatePath("/dashboard");
 }
 
 export async function updateExpense(formData: FormData) {
@@ -474,4 +552,217 @@ export async function getSettlements(groupId: string) {
     amount: Number(s.amount),
     settledAt: s.settledAt,
   }));
+}
+
+// Process due recurring expenses for a group
+export async function processRecurringExpenses(groupId: string) {
+  const now = new Date();
+
+  // Find all recurring expenses that are due
+  const dueExpenses = await prisma.expense.findMany({
+    where: {
+      groupId,
+      isRecurring: true,
+      nextRecurringDate: {
+        lte: now,
+      },
+    },
+    include: {
+      shares: true,
+    },
+  });
+
+  for (const expense of dueExpenses) {
+    if (!expense.recurringFrequency) continue;
+
+    // Create a new instance of the recurring expense
+    await prisma.expense.create({
+      data: {
+        description: expense.description,
+        amount: expense.amount,
+        paidById: expense.paidById,
+        groupId: expense.groupId,
+        category: expense.category,
+        splitType: expense.splitType,
+        currency: expense.currency,
+        date: now,
+        parentExpenseId: expense.id,
+        shares: {
+          create: expense.shares.map(s => ({
+            userId: s.userId,
+            amount: s.amount,
+          })),
+        },
+      },
+    });
+
+    // Update the next recurring date
+    await prisma.expense.update({
+      where: { id: expense.id },
+      data: {
+        nextRecurringDate: getNextRecurringDate(expense.recurringFrequency, now),
+      },
+    });
+  }
+
+  revalidatePath(`/groups/${groupId}`);
+  revalidatePath("/dashboard");
+
+  return dueExpenses.length;
+}
+
+// Toggle debt simplification for a group
+export async function toggleSimplifyDebts(groupId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  // Verify user is a member
+  const membership = await prisma.groupMember.findUnique({
+    where: {
+      userId_groupId: {
+        userId: user.id,
+        groupId,
+      },
+    },
+  });
+
+  if (!membership) {
+    throw new Error("Not a member of this group");
+  }
+
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+  });
+
+  if (!group) {
+    throw new Error("Group not found");
+  }
+
+  await prisma.group.update({
+    where: { id: groupId },
+    data: {
+      simplifyDebts: !group.simplifyDebts,
+    },
+  });
+
+  revalidatePath(`/groups/${groupId}`);
+}
+
+// Export group data as CSV
+export async function exportGroupToCSV(groupId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  // Verify membership
+  const membership = await prisma.groupMember.findUnique({
+    where: {
+      userId_groupId: {
+        userId: user.id,
+        groupId,
+      },
+    },
+  });
+
+  if (!membership) {
+    throw new Error("Not a member of this group");
+  }
+
+  // Get group with all data
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    include: {
+      members: { include: { user: true } },
+      expenses: {
+        include: {
+          paidBy: true,
+          shares: { include: { user: true } },
+        },
+        orderBy: { date: "desc" },
+      },
+      settlements: {
+        include: {
+          fromUser: true,
+          toUser: true,
+        },
+        orderBy: { settledAt: "desc" },
+      },
+    },
+  });
+
+  if (!group) {
+    throw new Error("Group not found");
+  }
+
+  // Build CSV content
+  const lines: string[] = [];
+
+  // Header info
+  lines.push(`# FairShare Export - ${group.name}`);
+  lines.push(`# Exported: ${new Date().toISOString()}`);
+  lines.push("");
+
+  // Members section
+  lines.push("## Members");
+  lines.push("Name,Email,Role,Joined");
+  for (const member of group.members) {
+    const name = member.user.name || "";
+    const email = member.user.email;
+    const role = member.role;
+    const joined = member.joinedAt.toISOString().split("T")[0];
+    lines.push(`"${name}","${email}","${role}","${joined}"`);
+  }
+  lines.push("");
+
+  // Expenses section
+  lines.push("## Expenses");
+  lines.push("Date,Description,Amount,Paid By,Category,Split Type,Participants");
+  for (const expense of group.expenses) {
+    const date = expense.date.toISOString().split("T")[0];
+    const description = expense.description.replace(/"/g, '""');
+    const amount = Number(expense.amount).toFixed(2);
+    const paidBy = expense.paidBy.name || expense.paidBy.email;
+    const category = expense.category || "";
+    const splitType = expense.splitType;
+    const participants = expense.shares
+      .map(s => `${s.user.name || s.user.email}: $${Number(s.amount).toFixed(2)}`)
+      .join("; ");
+    lines.push(`"${date}","${description}","${amount}","${paidBy}","${category}","${splitType}","${participants}"`);
+  }
+  lines.push("");
+
+  // Settlements section
+  if (group.settlements.length > 0) {
+    lines.push("## Settlements");
+    lines.push("Date,From,To,Amount");
+    for (const settlement of group.settlements) {
+      const date = settlement.settledAt.toISOString().split("T")[0];
+      const from = settlement.fromUser.name || settlement.fromUser.email;
+      const to = settlement.toUser.name || settlement.toUser.email;
+      const amount = Number(settlement.amount).toFixed(2);
+      lines.push(`"${date}","${from}","${to}","${amount}"`);
+    }
+    lines.push("");
+  }
+
+  // Summary section
+  const totalExpenses = group.expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+  const totalSettlements = group.settlements.reduce((sum, s) => sum + Number(s.amount), 0);
+  lines.push("## Summary");
+  lines.push(`Total Expenses,$${totalExpenses.toFixed(2)}`);
+  lines.push(`Total Settlements,$${totalSettlements.toFixed(2)}`);
+  lines.push(`Number of Expenses,${group.expenses.length}`);
+  lines.push(`Number of Members,${group.members.length}`);
+
+  return {
+    filename: `fairshare-${group.name.toLowerCase().replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}.csv`,
+    content: lines.join("\n"),
+  };
 }

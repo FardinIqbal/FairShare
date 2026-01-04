@@ -2,11 +2,15 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
-import { getSimplifiedDebts } from "@/lib/actions/expenses";
+import { getSimplifiedDebts, processRecurringExpenses } from "@/lib/actions/expenses";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AddExpenseForm } from "@/components/add-expense-form";
 import { SettleUpCard } from "@/components/settle-up-card";
 import { ExpenseItem } from "@/components/expense-item";
+import { ExportButton } from "@/components/export-button";
+import { InviteQRCode } from "@/components/qr-code";
+import { SimplifyDebtsToggle } from "@/components/simplify-debts-toggle";
+import { getCurrencySymbol } from "@/lib/constants";
 
 interface PageProps {
   params: Promise<{ groupId: string }>;
@@ -56,6 +60,9 @@ export default async function GroupPage({ params }: PageProps) {
     redirect("/dashboard");
   }
 
+  // Process any due recurring expenses
+  await processRecurringExpenses(groupId);
+
   const debts = await getSimplifiedDebts(groupId);
   const currentUserDebts = debts.filter((d) => d.from.id === user.id || d.to.id === user.id);
 
@@ -86,6 +93,9 @@ export default async function GroupPage({ params }: PageProps) {
     amount: Number(e.amount),
     category: e.category,
     splitType: e.splitType,
+    currency: e.currency,
+    isRecurring: e.isRecurring,
+    recurringFrequency: e.recurringFrequency,
     date: e.date,
     paidBy: {
       id: e.paidBy.id,
@@ -149,6 +159,7 @@ export default async function GroupPage({ params }: PageProps) {
                 )}
               </div>
             </div>
+            <ExportButton groupId={groupId} />
           </div>
 
           {/* Stats */}
@@ -191,6 +202,7 @@ export default async function GroupPage({ params }: PageProps) {
               groupId={groupId}
               members={membersForComponents}
               currentUserId={user.id}
+              defaultCurrency={group.defaultCurrency}
             />
 
             {/* Expenses list */}
@@ -226,6 +238,12 @@ export default async function GroupPage({ params }: PageProps) {
 
           {/* Sidebar */}
           <div className="space-y-8">
+            {/* Debt simplification toggle */}
+            <SimplifyDebtsToggle
+              groupId={groupId}
+              enabled={group.simplifyDebts}
+            />
+
             {/* Settle up */}
             <SettleUpCard
               groupId={groupId}
@@ -255,14 +273,13 @@ export default async function GroupPage({ params }: PageProps) {
               </ul>
 
               <div className="mt-6 pt-6 border-t border-[var(--border)]">
-                <p className="text-sm uppercase tracking-[0.1em] text-[var(--gold)] mb-3">Invite link</p>
-                <div className="bg-[var(--background)] rounded-md p-3 border border-[var(--border)]">
-                  <code className="text-xs text-[var(--foreground-secondary)] break-all">
-                    {`${process.env.NEXT_PUBLIC_SUPABASE_URL ? "https://fairshare.vercel.app" : "http://localhost:3000"}/invite/${group.inviteCode}`}
-                  </code>
-                </div>
-                <p className="text-xs text-[var(--foreground-tertiary)] mt-2">
-                  Share this link to invite others to the group
+                <p className="text-sm uppercase tracking-[0.1em] text-[var(--gold)] mb-4">Invite members</p>
+                <InviteQRCode
+                  inviteCode={group.inviteCode}
+                  baseUrl={process.env.NEXT_PUBLIC_SUPABASE_URL ? "https://fairshare.vercel.app" : "http://localhost:3000"}
+                />
+                <p className="text-xs text-[var(--foreground-tertiary)] mt-3 text-center">
+                  Scan QR code or share the link
                 </p>
               </div>
             </div>

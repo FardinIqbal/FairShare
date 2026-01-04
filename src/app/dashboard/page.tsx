@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getUserGroups } from "@/lib/actions/groups";
+import { getUserGroups, getTotalBalances, getRecentActivity } from "@/lib/actions/groups";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export default async function Dashboard() {
@@ -12,7 +12,11 @@ export default async function Dashboard() {
     redirect("/sign-in");
   }
 
-  const groups = await getUserGroups();
+  const [groups, balances, recentActivity] = await Promise.all([
+    getUserGroups(),
+    getTotalBalances(),
+    getRecentActivity(),
+  ]);
   const firstName = user.user_metadata?.name?.split(' ')[0] || 'there';
 
   async function signOut() {
@@ -21,6 +25,8 @@ export default async function Dashboard() {
     await supabase.auth.signOut();
     redirect("/");
   }
+
+  const netBalance = balances.youAreOwed - balances.youOwe;
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
@@ -60,16 +66,35 @@ export default async function Dashboard() {
           </h1>
         </div>
 
+        {/* Net Balance Hero */}
+        <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-8 mb-8">
+          <div className="text-center">
+            <p className="text-sm text-[var(--foreground-secondary)] mb-2">Your net balance</p>
+            <p className={`font-serif text-4xl ${
+              netBalance > 0 ? 'text-[var(--success)]' : netBalance < 0 ? 'text-[var(--error)]' : 'text-[var(--foreground)]'
+            }`}>
+              {netBalance >= 0 ? '+' : '-'}${Math.abs(netBalance).toFixed(2)}
+            </p>
+            <p className="text-sm text-[var(--foreground-tertiary)] mt-2">
+              {netBalance > 0 ? "You're owed money overall" : netBalance < 0 ? "You owe money overall" : "All settled up!"}
+            </p>
+          </div>
+        </div>
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
           <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-6">
             <p className="text-sm text-[var(--foreground-secondary)] mb-2">You are owed</p>
-            <p className="font-serif text-2xl text-[var(--success)]">$0.00</p>
+            <p className={`font-serif text-2xl ${balances.youAreOwed > 0 ? 'text-[var(--success)]' : 'text-[var(--foreground)]'}`}>
+              ${balances.youAreOwed.toFixed(2)}
+            </p>
           </div>
 
           <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-6">
             <p className="text-sm text-[var(--foreground-secondary)] mb-2">You owe</p>
-            <p className="font-serif text-2xl text-[var(--error)]">$0.00</p>
+            <p className={`font-serif text-2xl ${balances.youOwe > 0 ? 'text-[var(--error)]' : 'text-[var(--foreground)]'}`}>
+              ${balances.youOwe.toFixed(2)}
+            </p>
           </div>
 
           <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-6">
@@ -77,6 +102,71 @@ export default async function Dashboard() {
             <p className="font-serif text-2xl text-[var(--foreground)]">{groups.length}</p>
           </div>
         </div>
+
+        {/* Pending Debts & Recent Activity */}
+        {(balances.pendingDebts.length > 0 || recentActivity.length > 0) && (
+          <div className="grid lg:grid-cols-2 gap-8 mb-12">
+            {/* Pending Debts */}
+            {balances.pendingDebts.length > 0 && (
+              <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)]">
+                <div className="px-6 py-4 border-b border-[var(--border)]">
+                  <h2 className="font-serif text-lg text-[var(--foreground)]">Pending Settlements</h2>
+                </div>
+                <ul className="divide-y divide-[var(--border)]">
+                  {balances.pendingDebts.slice(0, 5).map((debt, i) => (
+                    <li key={i} className="px-6 py-4">
+                      <Link href={`/groups/${debt.groupId}`} className="block hover:opacity-80 transition-opacity">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className={`text-sm ${debt.youOwe ? 'text-[var(--error)]' : 'text-[var(--success)]'}`}>
+                              {debt.youOwe ? 'You owe' : 'Owes you'}{' '}
+                              <span className="font-medium">{debt.person.name || debt.person.email}</span>
+                            </p>
+                            <p className="text-xs text-[var(--foreground-tertiary)] mt-0.5">{debt.groupName}</p>
+                          </div>
+                          <p className={`font-serif text-lg ${debt.youOwe ? 'text-[var(--error)]' : 'text-[var(--success)]'}`}>
+                            ${debt.amount.toFixed(2)}
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Recent Activity */}
+            {recentActivity.length > 0 && (
+              <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)]">
+                <div className="px-6 py-4 border-b border-[var(--border)]">
+                  <h2 className="font-serif text-lg text-[var(--foreground)]">Recent Activity</h2>
+                </div>
+                <ul className="divide-y divide-[var(--border)]">
+                  {recentActivity.map((expense) => (
+                    <li key={expense.id} className="px-6 py-4">
+                      <Link href={`/groups/${expense.group.id}`} className="block hover:opacity-80 transition-opacity">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm text-[var(--foreground)]">{expense.description}</p>
+                            <p className="text-xs text-[var(--foreground-tertiary)] mt-0.5">
+                              {expense.paidBy.name || expense.paidBy.email} paid · {expense.group.name}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-serif text-[var(--foreground)]">${expense.amount.toFixed(2)}</p>
+                            <p className="text-xs text-[var(--foreground-tertiary)]">
+                              {new Date(expense.date).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Decorative divider */}
         <div className="flex items-center gap-4 mb-12">

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { deleteExpense, updateExpense } from "@/lib/actions/expenses";
-import { EXPENSE_CATEGORIES } from "@/lib/constants";
+import { EXPENSE_CATEGORIES, getCurrencySymbol, RECURRING_FREQUENCIES } from "@/lib/constants";
 
 interface ExpenseShare {
   userId: string;
@@ -30,6 +30,9 @@ interface Expense {
   amount: number;
   category: string | null;
   splitType: string;
+  currency: string;
+  isRecurring: boolean;
+  recurringFrequency: string | null;
   date: Date;
   paidBy: {
     id: string;
@@ -148,7 +151,7 @@ export function ExpenseItem({
             />
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-secondary)] text-sm">
-                $
+                {getCurrencySymbol(expense.currency)}
               </span>
               <input
                 type="number"
@@ -225,7 +228,7 @@ export function ExpenseItem({
                     <span>{displayName}</span>
                     {isIncluded && amountNum > 0 && (
                       <span className="ml-auto text-[var(--foreground-secondary)]">
-                        ${(amountNum / includedMembers.length).toFixed(2)}
+                        {getCurrencySymbol(expense.currency)}{(amountNum / includedMembers.length).toFixed(2)}
                       </span>
                     )}
                   </label>
@@ -239,7 +242,7 @@ export function ExpenseItem({
                     <span className="flex-1">{displayName}</span>
                     <div className="relative">
                       <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--foreground-secondary)] text-xs">
-                        $
+                        {getCurrencySymbol(expense.currency)}
                       </span>
                       <input
                         type="number"
@@ -272,8 +275,8 @@ export function ExpenseItem({
               {Math.abs(remaining) < 0.01
                 ? "Balanced"
                 : remaining > 0
-                ? `$${remaining.toFixed(2)} left to assign`
-                : `$${Math.abs(remaining).toFixed(2)} over budget`}
+                ? `${getCurrencySymbol(expense.currency)}${remaining.toFixed(2)} left to assign`
+                : `${getCurrencySymbol(expense.currency)}${Math.abs(remaining).toFixed(2)} over budget`}
             </div>
           )}
 
@@ -331,12 +334,17 @@ export function ExpenseItem({
                   {categoryLabel}
                 </span>
               )}
+              {expense.isRecurring && expense.recurringFrequency && (
+                <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--gold)]/10 text-[var(--gold)]">
+                  {RECURRING_FREQUENCIES.find(f => f.value === expense.recurringFrequency)?.label || "Recurring"}
+                </span>
+              )}
             </div>
             <p className="text-sm text-[var(--foreground-tertiary)]">
               Paid by {isPaidByMe ? "you" : expense.paidBy.name || expense.paidBy.email}
               <span className="mx-1.5">·</span>
               {expense.shares.length === totalMembers
-                ? `$${perPerson.toFixed(2)}/person`
+                ? `${getCurrencySymbol(expense.currency)}${perPerson.toFixed(2)}/person`
                 : `Split ${expense.shares.length} ways`}
             </p>
           </div>
@@ -345,7 +353,7 @@ export function ExpenseItem({
         <div className="flex items-center gap-4">
           <div className="text-right">
             <p className="font-serif text-lg text-[var(--foreground)]">
-              ${expense.amount.toFixed(2)}
+              {getCurrencySymbol(expense.currency)}{expense.amount.toFixed(2)}
             </p>
             <p className="text-xs text-[var(--foreground-tertiary)]">
               {new Date(expense.date).toLocaleDateString()}

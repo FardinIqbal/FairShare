@@ -41,6 +41,10 @@ model Group {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Group settings
+  defaultCurrency     String  @default("USD")
+  simplifyDebts       Boolean @default(true) // Minimize number of transactions
+
   members     GroupMember[]
   expenses    Expense[]
   settlements Settlement[]
@@ -68,6 +72,16 @@ enum Role {
 enum SplitType {
   EQUAL
   CUSTOM
+  PERCENTAGE
+  SHARES
+}
+
+enum RecurringFrequency {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  YEARLY
 }
 
 // An expense someone paid
@@ -82,6 +96,18 @@ model Expense {
   date        DateTime  @default(now())
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  // Currency support
+  currency    String    @default("USD")
+
+  // Recurring expense support
+  isRecurring          Boolean            @default(false)
+  recurringFrequency   RecurringFrequency?
+  recurringEndDate     DateTime?          // Optional end date for recurring
+  nextRecurringDate    DateTime?          // When to create next instance
+  parentExpenseId      String?            // Links to the original recurring expense
+  parentExpense        Expense?           @relation("RecurringExpenses", fields: [parentExpenseId], references: [id], onDelete: SetNull)
+  recurringInstances   Expense[]          @relation("RecurringExpenses")
 
   paidBy User  @relation(fields: [paidById], references: [id], onDelete: Cascade)
   group  Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
