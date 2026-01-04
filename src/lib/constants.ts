@@ -1,13 +1,13 @@
-// Expense category options
+// Expense category options with icons and colors
 export const EXPENSE_CATEGORIES = [
-  { value: "food", label: "Food & Drinks" },
-  { value: "transport", label: "Transport" },
-  { value: "accommodation", label: "Accommodation" },
-  { value: "entertainment", label: "Entertainment" },
-  { value: "shopping", label: "Shopping" },
-  { value: "utilities", label: "Utilities" },
-  { value: "groceries", label: "Groceries" },
-  { value: "other", label: "Other" },
+  { value: "food", label: "Food & Drinks", icon: "utensils", color: "#f97316" },
+  { value: "transport", label: "Transport", icon: "car", color: "#3b82f6" },
+  { value: "accommodation", label: "Accommodation", icon: "home", color: "#8b5cf6" },
+  { value: "entertainment", label: "Entertainment", icon: "ticket", color: "#ec4899" },
+  { value: "shopping", label: "Shopping", icon: "shopping-bag", color: "#10b981" },
+  { value: "utilities", label: "Utilities", icon: "zap", color: "#eab308" },
+  { value: "groceries", label: "Groceries", icon: "shopping-cart", color: "#14b8a6" },
+  { value: "other", label: "Other", icon: "more-horizontal", color: "#6b7280" },
 ] as const;
 
 export type ExpenseCategory = (typeof EXPENSE_CATEGORIES)[number]["value"];

@@ -10,6 +10,8 @@ import { ExpenseItem } from "@/components/expense-item";
 import { ExportButton } from "@/components/export-button";
 import { InviteQRCode } from "@/components/qr-code";
 import { SimplifyDebtsToggle } from "@/components/simplify-debts-toggle";
+import { EmptyState } from "@/components/empty-state";
+import { ActivityFeed } from "@/components/activity-feed";
 import { getCurrencySymbol } from "@/lib/constants";
 
 interface PageProps {
@@ -117,45 +119,45 @@ export default async function GroupPage({ params }: PageProps) {
     <div className="min-h-screen bg-[var(--background)]">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-[var(--background)]/95 backdrop-blur-sm border-b border-[var(--border)]">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-md bg-[var(--accent)] flex items-center justify-center">
-                <span className="text-white font-serif text-lg">F</span>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            <Link href="/dashboard" className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md bg-[var(--accent)] flex items-center justify-center">
+                <span className="text-white font-serif text-base sm:text-lg">F</span>
               </div>
-              <span className="font-serif text-lg text-[var(--foreground)]">FairShare</span>
+              <span className="font-serif text-base sm:text-lg text-[var(--foreground)] hidden sm:block">FairShare</span>
             </Link>
             <span className="text-[var(--foreground-tertiary)]">/</span>
-            <span className="font-medium text-[var(--foreground)]">{group.name}</span>
+            <span className="font-medium text-sm sm:text-base text-[var(--foreground)] truncate">{group.name}</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             <ThemeToggle />
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
+              className="inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
               </svg>
-              Back to dashboard
+              <span className="hidden sm:inline">Back</span>
             </Link>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-5xl mx-auto px-6 py-12">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         {/* Header */}
-        <div className="mb-10">
-          <div className="flex items-start justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-md bg-[var(--accent)] flex items-center justify-center">
-                <span className="text-white font-serif text-2xl">{group.name[0].toUpperCase()}</span>
+        <div className="mb-6 sm:mb-10">
+          <div className="flex items-start justify-between mb-6 sm:mb-8">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-md bg-[var(--accent)] flex items-center justify-center flex-shrink-0">
+                <span className="text-white font-serif text-xl sm:text-2xl">{group.name[0].toUpperCase()}</span>
               </div>
-              <div>
-                <p className="text-sm uppercase tracking-[0.15em] text-[var(--gold)] mb-1">Group</p>
-                <h1 className="font-serif text-2xl text-[var(--foreground)]">{group.name}</h1>
+              <div className="min-w-0">
+                <p className="text-xs sm:text-sm uppercase tracking-[0.15em] text-[var(--gold)] mb-0.5 sm:mb-1">Group</p>
+                <h1 className="font-serif text-xl sm:text-2xl text-[var(--foreground)] truncate">{group.name}</h1>
                 {group.description && (
-                  <p className="text-[var(--foreground-secondary)] mt-1">{group.description}</p>
+                  <p className="text-sm text-[var(--foreground-secondary)] mt-1 hidden sm:block">{group.description}</p>
                 )}
               </div>
             </div>
@@ -163,38 +165,38 @@ export default async function GroupPage({ params }: PageProps) {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-5">
-              <p className="text-sm text-[var(--foreground-secondary)] mb-2">Total spent</p>
-              <p className="font-serif text-2xl text-[var(--foreground)]">${totalExpenses.toFixed(2)}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
+            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-3 sm:p-5">
+              <p className="text-xs sm:text-sm text-[var(--foreground-secondary)] mb-1 sm:mb-2">Total spent</p>
+              <p className="font-serif text-lg sm:text-2xl text-[var(--foreground)]">${totalExpenses.toFixed(2)}</p>
             </div>
-            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-5">
-              <p className="text-sm text-[var(--foreground-secondary)] mb-2">You owe</p>
-              <p className={`font-serif text-2xl ${youOwe > 0 ? 'text-[var(--error)]' : 'text-[var(--foreground)]'}`}>
+            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-3 sm:p-5">
+              <p className="text-xs sm:text-sm text-[var(--foreground-secondary)] mb-1 sm:mb-2">You owe</p>
+              <p className={`font-serif text-lg sm:text-2xl ${youOwe > 0 ? 'text-[var(--error)]' : 'text-[var(--foreground)]'}`}>
                 ${youOwe.toFixed(2)}
               </p>
             </div>
-            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-5">
-              <p className="text-sm text-[var(--foreground-secondary)] mb-2">You are owed</p>
-              <p className={`font-serif text-2xl ${owedToYou > 0 ? 'text-[var(--success)]' : 'text-[var(--foreground)]'}`}>
+            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-3 sm:p-5">
+              <p className="text-xs sm:text-sm text-[var(--foreground-secondary)] mb-1 sm:mb-2">You are owed</p>
+              <p className={`font-serif text-lg sm:text-2xl ${owedToYou > 0 ? 'text-[var(--success)]' : 'text-[var(--foreground)]'}`}>
                 ${owedToYou.toFixed(2)}
               </p>
             </div>
-            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-5">
-              <p className="text-sm text-[var(--foreground-secondary)] mb-2">Members</p>
-              <p className="font-serif text-2xl text-[var(--foreground)]">{group.members.length}</p>
+            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-3 sm:p-5">
+              <p className="text-xs sm:text-sm text-[var(--foreground-secondary)] mb-1 sm:mb-2">Members</p>
+              <p className="font-serif text-lg sm:text-2xl text-[var(--foreground)]">{group.members.length}</p>
             </div>
           </div>
         </div>
 
         {/* Decorative divider */}
-        <div className="flex items-center gap-4 mb-10">
+        <div className="flex items-center gap-4 mb-6 sm:mb-10">
           <div className="flex-1 h-px bg-[var(--border)]" />
           <div className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
           <div className="flex-1 h-px bg-[var(--border)]" />
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-8">
           {/* Main content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Add expense form */}
@@ -207,19 +209,12 @@ export default async function GroupPage({ params }: PageProps) {
 
             {/* Expenses list */}
             <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)]">
-              <div className="px-8 py-5 border-b border-[var(--border)] flex items-center justify-between">
-                <h2 className="font-serif text-xl text-[var(--foreground)]">Recent expenses</h2>
-                <span className="text-sm text-[var(--foreground-tertiary)]">{group.expenses.length} expenses</span>
+              <div className="px-4 sm:px-8 py-4 sm:py-5 border-b border-[var(--border)] flex items-center justify-between">
+                <h2 className="font-serif text-lg sm:text-xl text-[var(--foreground)]">Recent expenses</h2>
+                <span className="text-xs sm:text-sm text-[var(--foreground-tertiary)]">{group.expenses.length} expenses</span>
               </div>
               {group.expenses.length === 0 ? (
-                <div className="px-8 py-16 text-center">
-                  <div className="w-14 h-14 rounded-full border-2 border-[var(--accent)] flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-7 h-7 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  </div>
-                  <p className="text-[var(--foreground-secondary)]">No expenses yet. Add one above!</p>
-                </div>
+                <EmptyState type="expenses" />
               ) : (
                 <ul className="divide-y divide-[var(--border)]">
                   {expensesForComponents.map((expense) => (
@@ -237,7 +232,7 @@ export default async function GroupPage({ params }: PageProps) {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-8">
+          <div className="space-y-4 sm:space-y-8">
             {/* Debt simplification toggle */}
             <SimplifyDebtsToggle
               groupId={groupId}
@@ -251,17 +246,34 @@ export default async function GroupPage({ params }: PageProps) {
               debts={debts}
             />
 
+            {/* Activity Feed */}
+            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-4 sm:p-6">
+              <h2 className="font-serif text-lg sm:text-xl text-[var(--foreground)] mb-4">Recent Activity</h2>
+              <ActivityFeed
+                activities={expensesForComponents.slice(0, 5).map((e) => ({
+                  id: e.id,
+                  type: "expense" as const,
+                  description: e.description,
+                  amount: e.amount,
+                  currency: e.currency,
+                  category: e.category,
+                  user: e.paidBy,
+                  date: e.date,
+                }))}
+              />
+            </div>
+
             {/* Members */}
-            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-6">
-              <h2 className="font-serif text-xl text-[var(--foreground)] mb-5">Members</h2>
-              <ul className="space-y-3">
+            <div className="bg-[var(--background-elevated)] rounded-lg border border-[var(--border)] p-4 sm:p-6">
+              <h2 className="font-serif text-lg sm:text-xl text-[var(--foreground)] mb-4 sm:mb-5">Members</h2>
+              <ul className="space-y-2 sm:space-y-3">
                 {group.members.map((member) => (
                   <li key={member.id} className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-md bg-[var(--accent)] flex items-center justify-center text-white font-serif text-sm">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-[var(--accent)] flex items-center justify-center text-white font-serif text-sm">
                       {(member.user.name?.[0] || member.user.email[0]).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[var(--foreground)] truncate">
+                      <p className="text-sm sm:text-base text-[var(--foreground)] truncate">
                         {member.user.name || member.user.email}
                         {member.userId === user.id && (
                           <span className="text-[var(--foreground-tertiary)] ml-1">(you)</span>
@@ -272,11 +284,11 @@ export default async function GroupPage({ params }: PageProps) {
                 ))}
               </ul>
 
-              <div className="mt-6 pt-6 border-t border-[var(--border)]">
-                <p className="text-sm uppercase tracking-[0.1em] text-[var(--gold)] mb-4">Invite members</p>
+              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-[var(--border)]">
+                <p className="text-xs sm:text-sm uppercase tracking-[0.1em] text-[var(--gold)] mb-3 sm:mb-4">Invite members</p>
                 <InviteQRCode
                   inviteCode={group.inviteCode}
-                  baseUrl={process.env.NEXT_PUBLIC_SUPABASE_URL ? "https://fairshare.vercel.app" : "http://localhost:3000"}
+                  baseUrl={process.env.NEXT_PUBLIC_SUPABASE_URL ? "https://fairshare-two-bice.vercel.app" : "http://localhost:3000"}
                 />
                 <p className="text-xs text-[var(--foreground-tertiary)] mt-3 text-center">
                   Scan QR code or share the link

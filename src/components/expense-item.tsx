@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { deleteExpense, updateExpense } from "@/lib/actions/expenses";
 import { EXPENSE_CATEGORIES, getCurrencySymbol, RECURRING_FREQUENCIES } from "@/lib/constants";
+import { CategoryIcon } from "./category-icon";
 
 interface ExpenseShare {
   userId: string;
@@ -308,41 +309,22 @@ export function ExpenseItem({
   }
 
   return (
-    <li className="px-8 py-5 hover:bg-[var(--background-warm)] transition-colors group">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-md bg-[var(--accent-light)] flex items-center justify-center">
-            <svg
-              className="w-5 h-5 text-[var(--accent)]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <p className="font-medium text-[var(--foreground)]">{expense.description}</p>
-              {categoryLabel && (
-                <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--accent-light)] text-[var(--accent)]">
-                  {categoryLabel}
-                </span>
-              )}
+    <li className="px-4 sm:px-8 py-4 sm:py-5 hover:bg-[var(--background-warm)] transition-colors group">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+          <CategoryIcon category={expense.category} size="md" />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="font-medium text-[var(--foreground)] truncate">{expense.description}</p>
               {expense.isRecurring && expense.recurringFrequency && (
-                <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--gold)]/10 text-[var(--gold)]">
+                <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--gold)]/10 text-[var(--gold)] whitespace-nowrap">
                   {RECURRING_FREQUENCIES.find(f => f.value === expense.recurringFrequency)?.label || "Recurring"}
                 </span>
               )}
             </div>
-            <p className="text-sm text-[var(--foreground-tertiary)]">
+            <p className="text-xs sm:text-sm text-[var(--foreground-tertiary)] truncate">
               Paid by {isPaidByMe ? "you" : expense.paidBy.name || expense.paidBy.email}
-              <span className="mx-1.5">·</span>
+              <span className="mx-1 sm:mx-1.5">·</span>
               {expense.shares.length === totalMembers
                 ? `${getCurrencySymbol(expense.currency)}${perPerson.toFixed(2)}/person`
                 : `Split ${expense.shares.length} ways`}
@@ -350,9 +332,9 @@ export function ExpenseItem({
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
           <div className="text-right">
-            <p className="font-serif text-lg text-[var(--foreground)]">
+            <p className="font-serif text-base sm:text-lg text-[var(--foreground)]">
               {getCurrencySymbol(expense.currency)}{expense.amount.toFixed(2)}
             </p>
             <p className="text-xs text-[var(--foreground-tertiary)]">
